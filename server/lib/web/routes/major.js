@@ -185,8 +185,16 @@ Server.post("/exordial", function (req, res) {
 					});
 				});
 			});
+		} else {
+			MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
+				if($body.nick == nick){
+					text = text.slice(0, 100).trim();
+					MainDB.users.update([ '_id', req.session.id ]).set([ 'exordial', text ]).on(function($res){
+						res.send({ text: text });
+					});
+				} else res.send({error: 601});
+			});
 		}
-		else res.send({error: 601});
 	});
 });
 Server.post("/newnick", (req, res) => {
