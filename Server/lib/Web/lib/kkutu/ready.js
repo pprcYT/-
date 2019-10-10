@@ -18,7 +18,12 @@
 
 $(document).ready(function(){
 	var i;
-	
+	//if($data.opts.tm) {
+		$("#Background").attr('src', "").addClass("jt-image").css({
+			'background-image': "url(https://cdn.alphakkutu.me/img/kkutu/alphakkutu.png)",
+			'background-size': "200px 200px"
+		});
+	//}
 	$data.PUBLIC = $("#PUBLIC").html() == "true";
 	$data.URL = $("#URL").html();
 	$data.version = $("#version").html();
@@ -53,6 +58,7 @@ $(document).ready(function(){
 		chatBtn: $("#ChatBtn"),
 		menu: {
 			help: $("#HelpBtn"),
+			bulletin: $("#BulletinBtn"),
 			setting: $("#SettingBtn"),
 			community: $("#CommunityBtn"),
 			newRoom: $("#NewRoomBtn"),
@@ -69,7 +75,8 @@ $(document).ready(function(){
 			exit: $("#ExitBtn"),
 			notice: $("#NoticeBtn"),
 			replay: $("#ReplayBtn"),
-			leaderboard: $("#LeaderboardBtn")
+			leaderboard: $("#LeaderboardBtn"),
+			user: $("#UserBtn")
 		},
 		dialog: {
 			setting: $("#SettingDiag"),
@@ -101,9 +108,14 @@ $(document).ready(function(){
 				profileShut: $("#profile-shut"),
 				profileHandover: $("#profile-handover"),
 				profileKick: $("#profile-kick"),
+				profileReport: $("#profile-report"),
 				profileLevel: $("#profile-level"),
 				profileDress: $("#profile-dress"),
 				profileWhisper: $("#profile-whisper"),
+			report: $("#ReportDialog"),
+				reportOK: $("#report-ok"),
+			newnick: $("#NewNickDialog"),
+				newnickOK: $("#newnick-ok"),
 			kickVote: $("#KickVoteDiag"),
 				kickVoteY: $("#kick-vote-yes"),
 				kickVoteN: $("#kick-vote-no"),
@@ -129,7 +141,13 @@ $(document).ready(function(){
 			chatLog: $("#ChatLogDiag"),
 			obtain: $("#ObtainDiag"),
 				obtainOK: $("#obtain-ok"),
-			help: $("#HelpDiag")
+			help: $("#HelpDiag"),
+			bulletin: $("#BulletinDiag"),
+			user: $("#UserDiag"),
+			message: $("#MsgDiag"),
+			ask: $("#AskDiag"),
+			password: $("#PasswordDiag"),
+			whichhand: $("#WhichHandDiag")
 		},
 		box: {
 			chat: $(".ChatBox"),
@@ -143,6 +161,9 @@ $(document).ready(function(){
 		game: {
 			display: $(".jjo-display"),
 			hints: $(".GameBox .hints"),
+			tools: $('.GameBox .tools'),
+			drawingTitle: $('#drawing-title'),
+			themeisTitle: $('#themeis-title'),
 			cwcmd: $(".GameBox .cwcmd"),
 			bb: $(".GameBox .bb"),
 			items: $(".GameBox .items"),
@@ -159,36 +180,127 @@ $(document).ready(function(){
 	};
 	if(_WebSocket == undefined){
 		loading(L['websocketUnsupport']);
-		alert(L['websocketUnsupport']);
+		kkutu_alert(L['websocketUnsupport']);
 		return;
 	}
+	$data.opts = $.cookie('kks');
+	if($data.opts){
+		applyOptions(JSON.parse($data.opts));
+	} else {
+		applyOptions([]);
+	}
+	$data.selectedBGM = $data.opts.sb === undefined ? "kkutu" : $data.opts.sb;
 	$data._soundList = [
-		{ key: "k", value: "/media/kkutu/k.mp3" },
-		{ key: "lobby", value: "/media/kkutu/LobbyBGM.mp3" },
-		{ key: "jaqwi", value: "/media/kkutu/JaqwiBGM.mp3" },
-		{ key: "jaqwiF", value: "/media/kkutu/JaqwiFastBGM.mp3" },
-		{ key: "game_start", value: "/media/kkutu/game_start.mp3" },
-		{ key: "round_start", value: "/media/kkutu/round_start.mp3" },
-		{ key: "fail", value: "/media/kkutu/fail.mp3" },
-		{ key: "timeout", value: "/media/kkutu/timeout.mp3" },
-		{ key: "lvup", value: "/media/kkutu/lvup.mp3" },
-		{ key: "Al", value: "/media/kkutu/Al.mp3" },
-		{ key: "success", value: "/media/kkutu/success.mp3" },
-		{ key: "missing", value: "/media/kkutu/missing.mp3" },
-		{ key: "mission", value: "/media/kkutu/mission.mp3" },
-		{ key: "kung", value: "/media/kkutu/kung.mp3" },
-		{ key: "horr", value: "/media/kkutu/horr.mp3" },
+		{ key: "k", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/k.mp3" },
+		{ key: "lobby", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/LobbyBGM.mp3" },
+		{ key: "jaqwi", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/JaqwiBGM.mp3" },
+		{ key: "jaqwiF", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/JaqwiFastBGM.mp3" },
+		{ key: "game_start", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/game_start.mp3" },
+		{ key: "round_start", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/round_start.mp3" },
+		{ key: "fail", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/fail.mp3" },
+		{ key: "timeout", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/timeout.mp3" },
+		{ key: "lvup", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/lvup.mp3" },
+		{ key: "Al", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/Al.mp3" },
+		{ key: "success", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/success.mp3" },
+		{ key: "missing", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/missing.mp3" },
+		{ key: "mission", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/mission.mp3" },
+		{ key: "kung", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/kung.mp3" },
+		{ key: "horr", value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/horr.mp3" },
 	];
 	for(i=0; i<=10; i++) $data._soundList.push(
-		{ key: "T"+i, value: "/media/kkutu/T"+i+".mp3" },
-		{ key: "K"+i, value: "/media/kkutu/K"+i+".mp3" },
-		{ key: "As"+i, value: "/media/kkutu/As"+i+".mp3" }
+		{ key: "T"+i, value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/T"+i+".mp3" },
+		{ key: "K"+i, value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/K"+i+".mp3" },
+		{ key: "As"+i, value: "https://cdn.alphakkutu.me/media/"+$data.selectedBGM+"/As"+i+".mp3" }
 	);
 	loadSounds($data._soundList, function(){
 		processShop(connect);
 	});
 	delete $data._soundList;
-	
+	kkutu_alert = function(msg2) {
+		var o = $stage.dialog.message;
+		if (o.data('callback')) {
+			o.data('callback')(false);
+			o.data({});
+		}
+		o.find('#msg-ok').off('click').click(function(e) { o.hide(); });
+		o.find('#msg-no').off('click').click(function(e) { o.hide(); });
+		o.find('#msg-no').hide();
+		o.find('#msg-content').html(msg2);
+		showDialog(o);
+	};
+	kkutu_confirm = function(msg2, call) {
+		var o = $stage.dialog.message;
+		if (o.data('callback')) {
+			o.data('callback')(false);
+			o.data({});
+		}
+		o.data({callback:call});
+		o.find('#msg-ok').off('click').click(function(e) { o.hide(); if (o.data('callback')){ o.data('callback')(true); o.data({}); }});
+		o.find('#msg-no').off('click').click(function(e) { o.hide(); if (o.data('callback')){ o.data('callback')(false); o.data({}); }});
+		o.find('#msg-no').show();
+		o.find('#msg-content').html(msg2);
+		showDialog(o);
+	};
+	kkutu_prompt = function(msg2, call) {
+		var o = $stage.dialog.ask;
+		if (o.data('callback')) {
+			o.data('callback')(false);
+			o.data({});
+		}
+		o.data({callback:call});
+		o.find('#ask-ok').off('click').click(function(e) {
+			o.hide();
+			var text = $("#ask-input").val();
+			$('#ask-input').val('');
+			text = text !== undefined ? text.trim() : "";
+			if (o.data('callback')) { o.data('callback')(text); o.data({}); }
+		});
+		o.find('#ask-no').off('click').click(function(e) {
+			o.hide();
+			$('#ask-input').val('');
+			if (o.data('callback')) { o.data('callback')(false); o.data({}); }
+		});
+		o.find('#ask-no').show();
+		o.find('#ask-content').html(msg2);
+		showDialog(o);
+	};
+	kkutu_hand = function(msg2, call) {
+		var o = $stage.dialog.whichhand;
+		if (o.data('callback')) {
+			o.data('callback')(false);
+			o.data({});
+		}
+		o.data({callback:call});
+		o.find('#hand-left').off('click').click(function(e) { o.hide(); if (o.data('callback')){ o.data('callback')('left'); o.data({}); }});
+		o.find('#hand-right').off('click').click(function(e) { o.hide(); if (o.data('callback')){ o.data('callback')('right'); o.data({}); }});
+		o.find('#hand-no').off('click').click(function(e) { o.hide(); if (o.data('callback')){ o.data('callback')(false); o.data({}); }});
+		o.find('#hand-no').show();
+		o.find('#hand-content').html(msg2);
+		showDialog(o);
+	};
+	kkutu_password = function(msg2, call) {
+		var o = $stage.dialog.password;
+		if (o.data('callback')) {
+			o.data('callback')(false);
+			o.data({});
+		}
+		o.data({callback:call});
+		o.find('#password-ok').off('click').click(function(e) {
+			o.hide();
+			var text = $("#password-input").val();
+			$('#password-input').val('');
+			text = text !== undefined ? text.trim() : "";
+			if (o.data('callback')) { o.data('callback')(text); o.data({}); }
+		});
+		o.find('#password-no').off('click').click(function(e) {
+			o.hide();
+			$('#password-input').val('');
+			if (o.data('callback')) { o.data('callback')(false); o.data({}); }
+		});
+		o.find('#password-no').show();
+		o.find('#password-content').html(msg2);
+		showDialog(o);
+	};
 	MOREMI_PART = $("#MOREMI_PART").html().split(',');
 	AVAIL_EQUIP = $("#AVAIL_EQUIP").html().split(',');
 	RULE = JSON.parse($("#RULE").html());
@@ -243,12 +355,16 @@ $(document).ready(function(){
 			}
 		}
 	};
-
 // 객체 설정
 	/*addTimeout(function(){
 		$("#intro-start").hide();
 		$("#intro").show();
 	}, 1400);*/
+	$("#Talk").emojionePicker({
+		pickerTop : 12,
+		pickerRight : -21,
+		type: "unicode",
+	});
 	$(document).on('paste', function(e){
 		if($data.room) if($data.room.gaming){
 			e.preventDefault();
@@ -324,6 +440,16 @@ $(document).ready(function(){
 			$target.css('color', "");
 		}
 	});
+	$("#room-time").on('change', function(e){
+		var $target = $(e.currentTarget);
+		var value = $target.val();
+		
+		if(value < 1 || value > 300){
+			$target.css('color', "#FF4444");
+		}else{
+			$target.css('color', "");
+		}
+	});
 	$("#room-round").on('change', function(e){
 		var $target = $(e.currentTarget);
 		var value = $target.val();
@@ -371,6 +497,14 @@ $(document).ready(function(){
 		$("#help-board").attr('src', "/help");
 		showDialog($stage.dialog.help);
 	});
+	$stage.menu.user.on('click', function(e){
+		$("#user-board").attr('src', "/user");
+		showDialog($stage.dialog.user);
+	});
+	$stage.menu.bulletin.on('click', function(e){
+		$("#bulletin-board").attr('src', "/bulletin");
+		showDialog($stage.dialog.bulletin);
+	});
 	$stage.menu.setting.on('click', function(e){
 		showDialog($stage.dialog.setting);
 	});
@@ -379,12 +513,11 @@ $(document).ready(function(){
 		showDialog($stage.dialog.community);
 	});
 	$stage.dialog.commFriendAdd.on('click', function(e){
-		var id = prompt(L['friendAddNotice']);
-		
-		if(!id) return;
-		if(!$data.users[id]) return fail(450);
-		
-		send('friendAdd', { target: id }, true);
+		kkutu_prompt(L['friendAddNotice'], function(c) {
+			if(!c) return;
+			if(!$data.users[c]) return fail(450);
+			send('friendAdd', { target: c }, true);
+		});
 	});
 	$stage.menu.newRoom.on('click', function(e){
 		var $d;
@@ -574,10 +707,27 @@ $(document).ready(function(){
 	});
 	$stage.menu.exit.on('click', function(e){
 		if($data.room.gaming){
-			if(!confirm(L['sureExit'])) return;
-			clearGame();
+			if($data._spectate || $data.practicing || !$data.room.opts.noleave){
+				kkutu_confirm(L['sureExit'], function(resp){
+					if(!resp) return;
+					else {
+						clearGame();
+						send('leave');
+					}
+				});
+			} else {
+				if(!$data.pexit){
+					kkutu_alert("중도 퇴장이 불가능한 방입니다. 게임이 끝나면 나가지도록 예약되었습니다.");
+					$("#ExitBtn").addClass("toggled");
+					$data.pexit = true;
+				} else {
+					$data.pexit = false;
+					$("#ExitBtn").removeClass("toggled");
+				}
+			}
+		} else {
+			send('leave');
 		}
-		send('leave');
 	});
 	$stage.menu.replay.on('click', function(e){
 		if($data._replay){
@@ -621,13 +771,17 @@ $(document).ready(function(){
 	});
 	$stage.dialog.settingOK.on('click', function(e){
 		applyOptions({
-			mb: $("#mute-bgm").is(":checked"),
-			me: $("#mute-effect").is(":checked"),
+			vb: $("#volume-bgm").val(),
+			ve: $("#volume-effect").val(),
+			bd: $("#badwords").is(":checked"),
+			ba: $("#strict-badwords").is(":checked"),
+			tm: $("#alphakkutu-theme").is(":checked"),
 			di: $("#deny-invite").is(":checked"),
 			dw: $("#deny-whisper").is(":checked"),
 			df: $("#deny-friend").is(":checked"),
 			ar: $("#auto-ready").is(":checked"),
 			su: $("#sort-user").is(":checked"),
+			sb: $("#select-bgm").val(),
 			ow: $("#only-waiting").is(":checked"),
 			ou: $("#only-unlock").is(":checked")
 		});
@@ -678,6 +832,11 @@ $(document).ready(function(){
 			$data.room.gaming = true;
 			send('leave');
 		}
+		if($data.pexit){
+			clearGame();
+			$data.pexit = false;
+			send('leave');
+		}
 		$data.resulting = false;
 		$stage.dialog.result.hide();
 		delete $data._replay;
@@ -691,10 +850,10 @@ $(document).ready(function(){
 		var date = new Date($rec.time);
 		var blob = new Blob([ JSON.stringify($rec) ], { type: "text/plain" });
 		var url = URL.createObjectURL(blob);
-		var fileName = "KKuTu" + (
+		var fileName = "AlphaKKuTu" + (
 			date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " "
 			+ date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds()
-		) + ".kkt";
+		) + ".kkutu";
 		var $a = $("<a>").attr({
 			'download': fileName,
 			'href': url
@@ -757,25 +916,50 @@ $(document).ready(function(){
 		tryJoin($data._roominfo);
 	});
 	$stage.dialog.profileHandover.on('click', function(e){
-		if(!confirm(L['sureHandover'])) return;
-		send('handover', { target: $data._profiled });
+		kkutu_confirm(L['sureHandover'], function(resp){
+			if(!resp) return;
+			send('handover', { target: $data._profiled });
+		});
 	});
 	$stage.dialog.profileKick.on('click', function(e){
 		send('kick', { robot: $data.robots.hasOwnProperty($data._profiled), target: $data._profiled });
 	});
+	$stage.dialog.profileReport.on('click', function(e){
+		var user = $data.users[$data._profiled];
+		var jsonObj = {id:user.id, reason:""};
+		if(showDialog($stage.dialog.report)){
+	 		$data._report = jsonObj;
+		}
+ 	});
+	$stage.dialog.reportOK.on('click', function(e){
+		var list = $(".reasonlist input:checkbox:checked");
+		var reasonlist = [];
+		for(var i=0;i<list.length;i++)
+			reasonlist.push($(list[i]).attr("id").split("-")[2]);
+		reasonlist.push($("#reasontext").val());
+		$data._report.reason = reasonlist.join();
+		$data._report.pid = $data.id;
+		if(reasonlist.length>0) {
+			send('report', $data._report);
+			$.post("/report", $data._report);
+			kkutu_alert("신고가 접수되었습니다. 신고해 주셔서 감사합니다.");
+		}
+		delete $data._report;
+		$stage.dialog.report.hide();
+ 	});
 	$stage.dialog.profileShut.on('click', function(e){
 		var o = $data.users[$data._profiled];
 		
 		if(!o) return;
-		toggleShutBlock(o.profile.title || o.profile.name);
+		toggleShutBlock(o.nick);
 	});
 	$stage.dialog.profileWhisper.on('click', function(e){
 		var o = $data.users[$data._profiled];
 		
-		$stage.talk.val("/e " + (o.profile.title || o.profile.name).replace(/\s/g, "") + " ").focus();
+		$stage.talk.val("/e " + o.nick.replace(/\s/g, "") + " ").focus();
 	});
 	$stage.dialog.profileDress.on('click', function(e){
-		// alert(L['error_555']);
+		// kkutu_alert(L['error_555']);
 		if($data.guest) return fail(421);
 		if($data._gaming) return fail(438);
 		if(showDialog($stage.dialog.dress)) $.get("/box", function(res){
@@ -787,12 +971,53 @@ $(document).ready(function(){
 	});
 	$stage.dialog.dressOK.on('click', function(e){
 		$(e.currentTarget).attr('disabled', true);
-		$.post("/exordial", { data: $("#dress-exordial").val() }, function(res){
-			$stage.dialog.dressOK.attr('disabled', false);
-			if(res.error) return fail(res.error);
-			
-			$stage.dialog.dress.hide();
-		});
+		var curnick = $data.users[$data.id].nick;
+		var newnick = $("#dress-nick").val();
+        newnick = newnick !== undefined ? newnick.trim() : "";
+        if (newnick.length<2) {
+            kkutu_alert("닉네임은 두 글자 이상으로 해 주세요!");
+            $(e.currentTarget).attr('disabled', false);
+            return;
+        } else if (newnick.length>15) {
+            kkutu_alert("닉네임은 15 글자 이하로 해 주세요!");
+            $(e.currentTarget).attr('disabled', false);
+            return;
+        } else if (newnick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(newnick)) {
+            kkutu_alert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!");
+            $(e.currentTarget).attr('disabled', false);
+            return;
+        }
+		var obj = { data: $("#dress-exordial").val(), nick: newnick };
+		if (!obj.nick || obj.nick.length == 0) delete obj.nick;
+		if (curnick != newnick) {
+			kkutu_confirm('닉네임이 변경되었습니다. 정말로 바꾸시겠습니까?', function(resp) {
+				$stage.dialog.dressOK.attr('disabled', false);
+				
+				if(!resp) return;
+				$.post("/exordial", obj, function(res){
+					if(res.error) return fail(res.error);
+					
+					var b = $data.users[$data.id];
+					b.nick = newnick;
+					b.exordial = badWords($("#dress-exordial").val() || "");
+					updateMe();
+					requestProfile($data.id);
+					$("#account-info").text(newnick);
+					$("#users-item-"+$data.id+" .users-name").text(newnick);
+					send('nickChange', { id: $data.id, nick: newnick }, true);
+					kkutu_alert("변경이 완료되었습니다.");
+					$stage.dialog.dress.hide();
+				});
+			});
+		} else {
+			$(e.currentTarget).attr('disabled', true);
+			$.post("/exordial", obj, function(res){
+				$stage.dialog.dressOK.attr('disabled', false);
+				if(res.error) return fail(res.error);
+				updateMe();
+				$stage.dialog.dress.hide();
+			});
+		}
 	});
 	$("#DressDiag .dress-type").on('click', function(e){
 		var $target = $(e.currentTarget);
@@ -809,21 +1034,22 @@ $(document).ready(function(){
 	});
 	$stage.dialog.cfCompose.on('click', function(e){
 		if(!$stage.dialog.cfCompose.hasClass("cf-composable")) return fail(436);
-		if(!confirm(L['cfSureCompose'])) return;
-		
-		$.post("/cf", { tray: $data._tray.join('|') }, function(res){
-			var i;
-			
-			if(res.error) return fail(res.error);
-			send('refresh');
-			alert(L['cfComposed']);
-			$data.users[$data.id].money = res.money;
-			$data.box = res.box;
-			for(i in res.gain) queueObtain(res.gain[i]);
-			
-			drawMyDress($data._avGroup);
-			updateMe();
-			drawCharFactory();
+		kkutu_confirm(L['cfSureCompose'], function(resp) {
+			if(!resp) return;
+			$.post("/cf", { tray: $data._tray.join('|') }, function(res){
+				var i;
+				
+				if(res.error) return fail(res.error);
+				send('refresh');
+				//kkutu_alert(L['cfComposed']);
+				$data.users[$data.id].money = res.money;
+				$data.box = res.box;
+				for(i in res.gain) queueObtain(res.gain[i]);
+				
+				drawMyDress($data._avGroup);
+				updateMe();
+				drawCharFactory();
+			});
 		});
 	});
 	$("#room-injeong-pick").on('click', function(e){
@@ -878,7 +1104,7 @@ $(document).ready(function(){
 			var my = $data.users[$data.id];
 			
 			if(res.error) return fail(res.error);
-			alert(L['purchased']);
+			kkutu_alert(L['purchased']);
 			my.money = res.money;
 			my.box = res.box;
 			updateMe();
@@ -937,7 +1163,7 @@ $(document).ready(function(){
 				$stage.dialog.replayView.attr('disabled', false);
 			}catch(ex){
 				console.warn(ex);
-				return alert(L['replayError']);
+				return kkutu_alert(L['replayError']);
 			}
 		};
 	});
@@ -981,10 +1207,10 @@ $(document).ready(function(){
 			
 			if(rws) rws.close();
 			stopAllSounds();
-			alert(ct);
-			$.get("/kkutu_notice.html", function(res){
+			kkutu_alert(ct);
+			/* $.get("/kkutu_notice.html", function(res){
 				loading(res);
-			});
+			}); */
 		};
 		ws.onerror = function(e){
 			console.warn(L['error'], e);

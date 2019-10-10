@@ -24,20 +24,20 @@ var Lizard	 = require("../../sub/lizard.js");
 
 exports.run = function(Server, page){
 
-Server.get("/gwalli", function(req, res){
+Server.get("/manageconsole", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	req.session.admin = true;
-	page(req, res, "gwalli");
+	page(req, res, "manageconsole");
 });
-Server.get("/gwalli/injeong", function(req, res){
+Server.get("/manageconsole/injeong", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	MainDB.kkutu_injeong.find([ 'theme', { $not: "~" } ]).limit(100).on(function($list){
 		res.send({ list: $list });
 	});
 });
-Server.get("/gwalli/gamsi", function(req, res){
+Server.get("/manageconsole/gamsi", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	MainDB.users.findOne([ '_id', req.query.id ]).limit([ 'server', true ]).on(function($u){
@@ -50,7 +50,7 @@ Server.get("/gwalli/gamsi", function(req, res){
 		});
 	});
 });
-Server.get("/gwalli/users", function(req, res){
+Server.get("/manageconsole/users", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	if(req.query.name){
@@ -89,7 +89,46 @@ Server.get("/gwalli/users", function(req, res){
 		return R;
 	}
 });
-Server.get("/gwalli/kkutudb/:word", function(req, res){
+Server.get("/checkuser", function(req, res){
+	// if(!checkAdmin(req, res)) return;
+	
+	if(req.query.name){
+		MainDB.session.find([ 'profile.title', req.query.name ]).on(function($u){
+			if($u) return onSession($u);
+			MainDB.session.find([ 'profile.name', req.query.name ]).on(function($u){
+				if($u) return onSession($u);
+				res.sendStatus(404);
+			});
+		});
+	}else{
+		MainDB.users.findOne([ '_id', req.query.id ]).on(function($u){
+			if($u) return res.send({ list: [ $u ] });
+			res.sendStatus(404);
+		});
+	}
+	function onSession(list){
+		var board = {};
+		
+		Lizard.all(list.map(function(v){
+			if(board[v.profile.id]) return null;
+			else{
+				board[v.profile.id] = true;
+				return getProfile(v.profile.id);
+			}
+		})).then(function(data){
+			res.send({ list: data });
+		});
+	}
+	function getProfile(id){
+		var R = new Lizard.Tail();
+		
+		if(id) MainDB.users.findOne([ '_id', id ]).on(function($u){
+			R.go($u);
+		}); else R.go(null);
+		return R;
+	}
+});
+Server.get("/manageconsole/kkutudb/:word", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	var TABLE = MainDB.kkutu[req.query.lang];
@@ -100,7 +139,7 @@ Server.get("/gwalli/kkutudb/:word", function(req, res){
 		res.send($doc);
 	});
 });
-Server.get("/gwalli/kkututheme", function(req, res){
+Server.get("/manageconsole/kkututheme", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	var TABLE = MainDB.kkutu[req.query.lang];
@@ -111,7 +150,7 @@ Server.get("/gwalli/kkututheme", function(req, res){
 		res.send({ list: $docs.map(v => v._id) });
 	});
 });
-Server.get("/gwalli/kkutuhot", function(req, res){
+Server.get("/manageconsole/kkutuhot", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	File.readFile(GLOBAL.KKUTUHOT_PATH, function(err, file){
@@ -122,7 +161,7 @@ Server.get("/gwalli/kkutuhot", function(req, res){
 		});
 	});
 });
-Server.get("/gwalli/shop/:key", function(req, res){
+Server.get("/manageconsole/shop/:key", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	var q = (req.params.key == "~ALL") ? undefined : [ '_id', req.params.key ];
@@ -133,7 +172,7 @@ Server.get("/gwalli/shop/:key", function(req, res){
 		});
 	});
 });
-Server.post("/gwalli/injeong", function(req, res){
+Server.post("/manageconsole/injeong", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
 	
@@ -158,7 +197,7 @@ Server.post("/gwalli/injeong", function(req, res){
 	});
 	res.sendStatus(200);
 });
-Server.post("/gwalli/kkutudb", onKKuTuDB);
+Server.post("/manageconsole/kkutudb", onKKuTuDB);
 function onKKuTuDB(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
@@ -194,7 +233,7 @@ function onKKuTuDB(req, res){
 	});
 	if(!req.body.nof) res.sendStatus(200);
 }
-Server.post("/gwalli/kkutudb/:word", function(req, res){
+Server.post("/manageconsole/kkutudb/:word", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
 	var TABLE = MainDB.kkutu[req.body.lang];
@@ -214,7 +253,7 @@ Server.post("/gwalli/kkutudb/:word", function(req, res){
 		});
 	}
 });
-Server.post("/gwalli/kkutuhot", function(req, res){
+Server.post("/manageconsole/kkutuhot", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
 	
@@ -232,7 +271,7 @@ Server.post("/gwalli/kkutuhot", function(req, res){
 		});
 	});
 });
-Server.post("/gwalli/users", function(req, res){
+Server.post("/manageconsole/users", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
 	
@@ -243,7 +282,7 @@ Server.post("/gwalli/users", function(req, res){
 	});
 	res.sendStatus(200);
 });
-Server.post("/gwalli/shop", function(req, res){
+Server.post("/manageconsole/shop", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
 	

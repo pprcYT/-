@@ -22,7 +22,7 @@ module.exports.strategy = (process, MainDB, Ajae) => {
         const $p = {};
 
         $p.authType = "naver";
-        $p.id = profile.id;
+        $p.id = $p.authType+"-"+profile.id;
         $p.name = profile.displayName;
         $p.title = profile.displayName;
         $p.image = profile._json.profile_image;

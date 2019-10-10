@@ -22,6 +22,13 @@
  */
 
 (function(){
+	$(document).keydown(function (event) {
+		if (event.keyCode == 123 || (event.ctrlKey && event.shiftKey && event.keyCode == 73) || (event.ctrlKey && event.keyCode == 86)) return false;
+	});
+	document.oncontextmenu = function (e) {
+		// alert("우클릭은 허용되지 않습니다.");
+		return false;
+	}
 	$(document).ready(function(){
 		//볕뉘 수정 구문삭제(21~105)
 	});

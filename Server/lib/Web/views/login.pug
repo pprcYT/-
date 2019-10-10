@@ -17,21 +17,17 @@
 //-
 	볕뉘 수정사항:
 	* Login 을 Passport 로 수행하기 위한 수정
+extends layout
 
-include module
+block Subject
+	title= "알파끄투에 로그인하기"
 
-doctype html
-html
-	head
-		title= L('title')
-		+PageHead()
-	body
-		span#locale= JSON.stringify(LANG)
-		//볕뉘 수정 구문삭제(30)
-		div.login-with= locals.text ? L(locals.text) : L('loginWith')
-		//볕뉘 수정
-		each val in loginList
-			a(href="/login/" + val.vendor)
-				button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
-		//볕뉘 수정 끝
-		div.login-legal!= L('loginLegal')
+block Middle
+	div.login-with
+		img(src="https://cdn.alphakkutu.me/img/kkutu/short_logo.png", margin=0 auto, alt="알파끄투")
+	
+	each val in loginList
+		a(href="/login/" + val.vendor)
+			button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
+	
+	div.login-legal!= L('loginLegal')

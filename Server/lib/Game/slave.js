@@ -145,7 +145,7 @@ Server.on('connection', function(socket, info){
 		$c.refresh().then(function(ref){
 			if(ref.result == 200){
 				DIC[$c.id] = $c;
-				DNAME[($c.profile.title || $c.profile.name).replace(/\s/g, "")] = $c.id;
+				DNAME[($c.nick).replace(/\s/g, "")] = $c.id;
 				
 				$c.enter(room, reserve.spec, reserve.pass);
 				if($c.place == room.id){
@@ -175,6 +175,8 @@ KKuTu.onClientMessage = function($c, msg){
 	if(!msg) return;
 	
 	switch(msg.type){
+		case 'drawingCanvas':
+			$c.drawingCanvas(msg)
 		case 'yell':
 			if(!msg.value) return;
 			if(!$c.admin) return;
@@ -390,7 +392,7 @@ KKuTu.onClientMessage = function($c, msg){
 };
 KKuTu.onClientClosed = function($c, code){
 	delete DIC[$c.id];
-	if($c.profile) delete DNAME[$c.profile.title || $c.profile.name];
+	if($c.profile) delete DNAME[$c.nick];
 	if($c.socket) $c.socket.removeAllListeners();
 	KKuTu.publish('disconnRoom', { id: $c.id });
 

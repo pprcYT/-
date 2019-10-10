@@ -27,11 +27,11 @@
 			
 			if(forView){
 				$("#db-list").val("");
-				$.get("/gwalli/kkututheme?theme=" + $("#db-theme").val().slice(1) + "&lang=" + $("#db-lang").val(), function(res){
+				$.get("/manageconsole/kkututheme?theme=" + $("#db-theme").val().slice(1) + "&lang=" + $("#db-lang").val(), function(res){
 					$("#db-list").val(res.list.join('\n'));
 				});
 			}else{
-				$.post("/gwalli/kkutudb", {
+				$.post("/manageconsole/kkutudb", {
 					pw: $("#db-password").val(),
 					lang: $("#db-lang").val(),
 					theme: $("#db-theme").val(),
@@ -44,7 +44,7 @@
 	
 	// 어인정 신청
 		$("#injeong-go").on('click', function(e){
-			$.get("/gwalli/injeong", function(res){
+			$.get("/manageconsole/injeong", function(res){
 				var $table = $("#injeong-data").empty();
 				var $r;
 				
@@ -79,14 +79,14 @@
 					ok: $($data.get(0)).is(':checked')
 				});
 			});
-			$.post("/gwalli/injeong", { list: JSON.stringify({ list: list }), pw: $("#db-password").val() }, function(res){
+			$.post("/manageconsole/injeong", { list: JSON.stringify({ list: list }), pw: $("#db-password").val() }, function(res){
 				alert(res);
 			});
 		});
 	
 	// 상점 DB 다루기
 		$("#shop-go").on('click', function(e){
-			$.get("/gwalli/shop/" + $("#shop-word").val(), function(res){
+			$.get("/manageconsole/shop/" + $("#shop-word").val(), function(res){
 				var $table = $("#shop-data").empty();
 				var i, $r;
 				
@@ -161,7 +161,7 @@
 					}
 				});
 			});
-			$.post("/gwalli/shop", {
+			$.post("/manageconsole/shop", {
 				list: JSON.stringify({ list: list }),
 				pw: $("#db-password").val()
 			}, function(res){
@@ -170,7 +170,7 @@
 		});
 	// 유저 DB 다루기
 		$("#user-go").on('click', function(e){
-			$.get("/gwalli/users?id=" + $("#user-id").val() + "&name=" + $("#user-nick").val(), function(res){
+			$.get("/manageconsole/users?id=" + $("#user-id").val() + "&name=" + $("#user-nick").val(), function(res){
 				var $table = $("#user-data").empty();
 				var $r;
 				
@@ -182,10 +182,12 @@
 						.append($("<td>").append(putter("ud-" + item._id + "-kkutu", 'l', JSON.stringify(item.kkutu || {}))))
 						.append($("<td>").append(putter("ud-" + item._id + "-box", 'l', JSON.stringify(item.box || {}))))
 						.append($("<td>").append(putter("ud-" + item._id + "-equip", 'l', JSON.stringify(item.equip || {}))))
+						.append($("<td>").append(putter("ud-" + item._id + "-nick", 'g', item.nick)))
 						.append($("<td>").append(putter("ud-" + item._id + "-exordial", 'g', item.exordial)))
 						.append($("<td>").append(putter("ud-" + item._id + "-server", 't', item.server)))
 						.append($("<td>").append(putter("ud-" + item._id + "-lastLogin", 't', item.lastLogin)))
 						.append($("<td>").append(putter("ud-" + item._id + "-black", 'g', item.black)))
+						.append($("<td>").append(putter("ud-" + item._id + "-time", 'g', item.time)))
 						.append($("<td>").append(putter("ud-" + item._id + "-friends", 'g', JSON.stringify(item.friends || {}))));
 				});
 			});
@@ -202,14 +204,16 @@
 					kkutu: $data.get(2).value,
 					box: $data.get(3).value,
 					equip: $data.get(4).value,
-					exordial: $data.get(5).value,
-					server: $data.get(6).value,
-					lastLogin: $data.get(7).value,
-					black: $data.get(8).value,
-					friends: $data.get(9).value
+					nick: $data.get(5).value,
+					exordial: $data.get(6).value,
+					server: $data.get(7).value,
+					lastLogin: $data.get(8).value,
+					black: $data.get(9).value,
+					time: $data.get(10).value,
+					friends: $data.get(11).value
 				});
 			});
-			$.post("/gwalli/users", {
+			$.post("/manageconsole/users", {
 				list: JSON.stringify({ list: list }),
 				pw: $("#db-password").val()
 			}, function(res){
@@ -236,7 +240,7 @@
 				var cid = list[i];
 				var $obj = $("#gamsi-" + cid);
 				
-				$.get("/gwalli/gamsi?id=" + cid, function(res){
+				$.get("/manageconsole/gamsi?id=" + cid, function(res){
 					if(!res) return $obj.html("(없는 사용자)" + cid);
 					$obj.html([ res._id, res.title || "-", "<a target='_blank' href='/?server=" + res.server + "'>" + res.server + "</a>" ].map(function(v){ return "<td>" + v + "</td>"; }));
 				});
@@ -246,7 +250,7 @@
 	
 	// 끄투 DB 다루기
 		$("#db-go").on('click', function(e){
-			$.get("/gwalli/kkutudb/" + $("#db-word").val() + "?lang=" + $("#db-lang").val(), function(res){
+			$.get("/manageconsole/kkutudb/" + $("#db-word").val() + "?lang=" + $("#db-lang").val(), function(res){
 				var $table = $("#wd-data").empty();
 				var types = res.type ? res.type.split(',') : [];
 				var themes = res.theme ? res.theme.split(',') : [];
@@ -326,7 +330,7 @@
 				else return "＂" + (x1 + 1) + "＂" + m1;
 			}).join('');
 			
-			$.post("/gwalli/kkutudb/" + $("#db-word").val(), {
+			$.post("/manageconsole/kkutudb/" + $("#db-word").val(), {
 				pw: $("#db-password").val(),
 				lang: $("#db-lang").val(),
 				data: JSON.stringify(obj)
@@ -339,7 +343,7 @@
 		$("#kpw-query").on('click', function(e){
 			var FIELD = [ "한국어 종합", "한국어 최근", "한국어 3글자", "한국어 어인정", "영어 종합" ];
 			
-			$.get("/gwalli/kkutuhot", function(res){
+			$.get("/manageconsole/kkutuhot", function(res){
 				var $table = $("#kpw-table").empty();
 				
 				res.data.splice(1, 0, getDeltaRank(res.prev, res.data[0]));
@@ -380,7 +384,7 @@
 			}
 		});
 		$("#kpw-flush").on('click', function(e){
-			$.post("/gwalli/kkutuhot", { pw: $("#db-password").val() }, function(res){
+			$.post("/manageconsole/kkutuhot", { pw: $("#db-password").val() }, function(res){
 				alert(res);
 			});
 		});

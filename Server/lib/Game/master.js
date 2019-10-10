@@ -56,7 +56,11 @@ const GUEST_PERMISSION = exports.GUEST_PERMISSION = {
 	'kickVote': true,
 	'wp': true
 };
-const ENABLE_ROUND_TIME = exports.ENABLE_ROUND_TIME = [ 10, 30, 60, 90, 120, 150 ];
+
+const ENABLE_ROUND_TIME = [];
+for(var r=1; r<=300; r++) { ENABLE_ROUND_TIME.push(r) }
+exports.ENABLE_ROUND_TIME = ENABLE_ROUND_TIME;
+
 const ENABLE_FORM = exports.ENABLE_FORM = [ "S", "J" ];
 const MODE_LENGTH = exports.MODE_LENGTH = Const.GAME_TYPE.length;
 const PORT = process.env['KKUTU_PORT'];
@@ -104,6 +108,16 @@ function processAdmin(id, value){
 				temp.send('test');
 				if(DIC[id]) DIC[id].send('tail', { a: i ? "tuX" : "tu", rid: temp.id, id: id, msg: temp.getData() });
 			}
+			return null;
+		case "chkip":
+			try{
+				if(DIC[value]) {
+					if (DIC[id]) DIC[id].send('tail', { a: "CHK", rid: value, id: "", msg: DIC[value].socket.upgradeReq.connection.remoteAddress });
+					else JLog.log("ERROR.");
+				} else
+					JLog.log("ERROR.");
+			}
+			catch(e){console.log(e);}
 			return null;
 		case "dump":
 			if(DIC[id]) DIC[id].send('yell', { value: "This feature is not supported..." });
@@ -323,7 +337,7 @@ exports.init = function(_SID, CHAN){
 					return;
 				}
 				if($c.guest){
-					if(SID != "0"){
+					if(SID != "0"&&SID != "1"&&SID != "2"&&SID != "3"){
 						$c.sendError(402);
 						$c.socket.close();
 						return;
@@ -341,10 +355,15 @@ exports.init = function(_SID, CHAN){
 				}
 				$c.refresh().then(function(ref){
 					if(ref.result == 200){
-						DIC[$c.id] = $c;
-						DNAME[($c.profile.title || $c.profile.name).replace(/\s/g, "")] = $c.id;
-						MainDB.users.update([ '_id', $c.id ]).set([ 'server', SID ]).on();
-
+						if(!$c.nick) $c.nick = "nonick";
+						if($c.nick != "nonick") {
+							MainDB.users.update([ '_id', $c.id ]).set([ 'server', SID ]).on();
+							DIC[$c.id] = $c;
+							DNAME[$c.nick.replace(/\s/g, "")] = $c.id;
+						}
+						// if($c.guest) {
+							// $c.profile.title = "손님" + Math.floor(1000 + Math.random() * 9000);
+						// }
 						if (($c.guest && GLOBAL.GOOGLE_RECAPTCHA_TO_GUEST) || GLOBAL.GOOGLE_RECAPTCHA_TO_USER) {
 							$c.socket.send(JSON.stringify({
 								type: 'recaptcha',
@@ -376,9 +395,11 @@ exports.init = function(_SID, CHAN){
 function joinNewUser($c) {
 	$c.send('welcome', {
 		id: $c.id,
+		nick: $c.nick,
 		guest: $c.guest,
 		box: $c.box,
 		playTime: $c.data.playTime,
+		rankPoint: $c.data.rankPoint,
 		okg: $c.okgCount,
 		users: KKuTu.getUserList(),
 		rooms: KKuTu.getRoomList(),
@@ -395,6 +416,7 @@ function joinNewUser($c) {
 
 KKuTu.onClientMessage = function ($c, msg) {
 	if (!msg) return;
+	if($c.nick =="nonick"&&msg.type!="newNick") return;
 	
 	if ($c.passRecaptcha) {
 		processClientRequest($c, msg);
@@ -449,7 +471,7 @@ function processClientRequest($c, msg) {
 				msg.whisper.split(',').forEach(v => {
 					if (temp = DIC[DNAME[v]]) {
 						temp.send('chat', {
-							from: $c.profile.title || $c.profile.name,
+							from: $c.profile.nick,
 							profile: $c.profile,
 							value: msg.value
 						});
@@ -497,6 +519,37 @@ function processClientRequest($c, msg) {
 			if (!$c.friends) return;
 			if (!$c.friends[msg.id]) return;
 			$c.removeFriend(msg.id);
+			break;
+		case 'newNick':
+			if (!msg.id || !msg.nick) return;
+			MainDB.users.findOne([ '_id', msg.id ]).on(function($body){
+				if ($body.nick != msg.nick) {
+					return;
+				}
+				$c.refresh().then(function(ref){
+					if(ref.result == 200){
+						MainDB.users.update([ '_id', $c.id ]).set([ 'server', SID ]).on();
+						DIC[$c.id] = $c;
+						DNAME[$c.nick.replace(/\s/g, "")] = $c.id;
+						KKuTu.publish('conn', { user: $c.getData() });
+						narrateFriends($c.id, $c.friends, "on");
+					}
+				});
+			});
+			break;
+		case 'nickChange':
+			if (!msg.id || !msg.nick) return;
+			MainDB.users.findOne([ '_id', msg.id ]).on(function($body){
+				if ($body.nick != msg.nick) {
+					return;
+				}
+				$c.refresh().then(function(ref){
+					if(ref.result == 409){
+						JLog.info("Nickchange "+msg.id+" "+msg.nick);
+						$c.publish('nickChange', $c.getData());
+					}
+				});
+			});
 			break;
 		case 'enter':
 		case 'setRoom':
@@ -572,7 +625,7 @@ function processClientRequest($c, msg) {
 KKuTu.onClientClosed = function($c, code){
 	delete DIC[$c.id];
 	if($c._error != 409) MainDB.users.update([ '_id', $c.id ]).set([ 'server', "" ]).on();
-	if($c.profile) delete DNAME[$c.profile.title || $c.profile.name];
+	if($c.profile) delete DNAME[$c.profile.nick];
 	if($c.socket) $c.socket.removeAllListeners();
 	if($c.friends) narrateFriends($c.id, $c.friends, "off");
 	KKuTu.publish('disconn', { id: $c.id });

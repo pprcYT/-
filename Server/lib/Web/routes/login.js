@@ -33,16 +33,22 @@ function process(req, accessToken, MainDB, $p, done) {
     $p.sid = req.session.id;
     req.session.admin = GLOBAL.ADMIN.includes($p.id);
     req.session.authType = $p.authType;
-    MainDB.session.upsert([ '_id', req.session.id ]).set({
-        'profile': $p,
-        'createdAt': now
-    }).on();
-    MainDB.users.findOne([ '_id', $p.id ]).on(($body) => {
-        req.session.profile = $p;
-        MainDB.users.update([ '_id', $p.id ]).set([ 'lastLogin', now ]).on();
-    });
 
-    done(null, $p);
+    MainDB.users.findOne(['_id', $p.id]).on(function ($body) {
+        if ($body !== undefined && $body.hasOwnProperty('nick')) {
+            $p.title = $body.nick;
+        }
+
+        MainDB.session.upsert(['_id', req.session.id]).set({
+            'profile': $p,
+            'createdAt': now
+        }).on();
+        req.session.profile = $p;
+
+        MainDB.users.update(['_id', $p.id]).set(['lastLogin', now]).on();
+
+        done(null, $p);
+    });
 }
 
 exports.run = (Server, page) => {

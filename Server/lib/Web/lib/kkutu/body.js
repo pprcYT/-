@@ -1,21 +1,3 @@
-/**
- * Rule the words! KKuTu Online
- * Copyright (C) 2017 JJoriping(op@jjo.kr)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 var spamWarning = 0;
 var spamCount = 0;
 // var smile = 94, tag = 35;
@@ -64,11 +46,18 @@ function showDialog($d, noToggle){
 function applyOptions(opt){
 	$data.opts = opt;
 	
-	$data.muteBGM = $data.opts.mb;
-	$data.muteEff = $data.opts.me;
+	$data.muteBGM = $data.opts.vb == 0;
+	$data.muteEff = $data.opts.ve == 0;
+	$data.opts.isbad = $data.opts.bd === undefined ? true : $data.opts.bd;
+	$data.opts.isadvbad = $data.opts.ba === undefined ? false : $data.opts.ba;
+	$data.opts.istheme = $data.opts.tm === undefined ? true : $data.opts.tm;
+	$data.selectedBGM = $data.opts.sb === undefined ? "kkutu" : $data.opts.sb;
 	
-	$("#mute-bgm").attr('checked', $data.muteBGM);
-	$("#mute-effect").attr('checked', $data.muteEff);
+	$("#volume-bgm").val($data.opts.vb);
+	$("#volume-effect").val($data.opts.ve);
+	$("#badwords").attr('checked', $data.opts.isbad);
+	$("#strict-badwords").attr('checked', $data.opts.isadvbad);
+	$("#alphakkutu-theme").attr('checked', $data.opts.istheme);
 	$("#deny-invite").attr('checked', $data.opts.di);
 	$("#deny-whisper").attr('checked', $data.opts.dw);
 	$("#deny-friend").attr('checked', $data.opts.df);
@@ -76,13 +65,12 @@ function applyOptions(opt){
 	$("#sort-user").attr('checked', $data.opts.su);
 	$("#only-waiting").attr('checked', $data.opts.ow);
 	$("#only-unlock").attr('checked', $data.opts.ou);
-	
+	$("#select-bgm").val($data.selectedBGM);
+
 	if($data.bgm){
 		if($data.muteBGM){
-			$data.bgm.volume = 0;
 			$data.bgm.stop();
 		}else{
-			$data.bgm.volume = 1;
 			$data.bgm = playBGM($data.bgm.key, true);
 		}
 	}
@@ -182,15 +170,15 @@ function checkAge(){
 				if(--lv < 1) break; else continue;
 			}
 			if(lv == 1 && (str < 1000 || str > 2999)){
-				alert(str + "\n" + L['checkAgeNo']);
+				kkutu_alert(str + "\n" + L['checkAgeNo']);
 				continue;
 			}
 			if(lv == 2 && (str < 1 || str > 12)){
-				alert(str + "\n" + L['checkAgeNo']);
+				kkutu_alert(str + "\n" + L['checkAgeNo']);
 				continue;
 			}
 			if(lv == 3 && (str < 1 || str > 31)){
-				alert(str + "\n" + L['checkAgeNo']);
+				kkutu_alert(str + "\n" + L['checkAgeNo']);
 				continue;
 			}
 			input[lv++ - 1] = str;
@@ -225,6 +213,7 @@ function onMessage(data){
             break;
 		case 'welcome':
 			$data.id = data.id;
+			$data.nick = data.nick;
 			$data.guest = data.guest;
 			$data.admin = data.admin;
 			$data.users = data.users;
@@ -237,12 +226,48 @@ function onMessage(data){
 			$data._okg = data.okg;
 			$data._gaming = false;
 			$data.box = data.box;
-			if(data.test) alert(L['welcomeTestServer']);
+			if(data.test) kkutu_alert(L['welcomeTestServer']);
 			if(location.hash[1]) tryJoin(location.hash.slice(1));
 			updateUI(undefined, true);
 			welcome();
 			if(data.caj) checkAge();
 			updateCommunity();
+			if(data.guest) kkutu_alert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 ID로 로그인 시 더욱 즐거운 플레이가 가능합니다.");
+			if($data.nick=="nonick") {
+				var o = $stage.dialog.newnick;
+				o.parent().append(ov = $('<div />', {id:'newnick-overlay',style:'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'}));
+				o.find('#newnick-ok').off('click').click(function(e) {
+					var newnick = $("#newnick-input").val();
+					newnick = newnick !== undefined ? newnick.trim() : "";
+					if (newnick.length<2) {
+						kkutu_alert("닉네임은 두 글자 이상으로 해 주세요!");
+						$(e.currentTarget).attr('disabled', false);
+						return;
+					} else if (newnick.length>15) {
+						kkutu_alert("닉네임은 15 글자 이하로 해 주세요!");
+						$(e.currentTarget).attr('disabled', false);
+						return;
+					} else if (newnick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(newnick)) {
+						kkutu_alert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!");
+						$(e.currentTarget).attr('disabled', false);
+						return;
+					}
+					var obj = { nick: newnick };
+					if (!obj.nick || obj.nick.length == 0) delete obj.nick;
+					$.post("/newnick", obj, function(res){
+						if(res.error) return fail(res.error);
+						$data.nick = newnick;
+						$("#account-info").text(newnick);
+						$("#users-item-"+$data.id+" .users-name").text(newnick);
+						send('newNick', { id: $data.id, nick: newnick }, true);
+						kkutu_alert("닉네임 설정이 완료되었습니다! 궁금하신 점이 있으시다면 좌측 상단 ℹ️ 아이콘을 클릭하여 도움말을 열어보세요.");
+						o.hide();
+						ov.hide();
+					});
+				});
+				showDialog($stage.dialog.newnick, false);
+				ov.show();
+			}
 			break;
 		case 'conn':
 			$data.setUser(data.user.id, data.user);
@@ -293,6 +318,11 @@ function onMessage(data){
 				chat(data.profile || { title: L['robot'] }, data.value, data.from, data.timestamp);
 			}
 			break;
+		case 'drawCanvas':
+			if ($stage.game.canvas) {
+				drawCanvas(data);
+			}
+			break;
 		case 'roomStuck':
 			rws.close();
 			break;
@@ -334,10 +364,16 @@ function onMessage(data){
 		case 'friendAdd':
 			$target = $data.users[data.from].profile;
 			i = ($target.title || $target.name) + "(#" + data.from.substr(0, 5) + ")";
-			send('friendAddRes', {
-				from: data.from,
-				res: $data.opts.df ? false : confirm(i + L['attemptFriendAdd'])
-			}, true);
+			if ($data.opts.df) send('friendAddRes', {
+					from: data.from,
+					res: false
+				}, true);
+			else kkutu_confirm(i + L['attemptFriendAdd'], function(resp) {
+				send('friendAddRes', {
+					from: data.from,
+					res: resp
+				}, true);
+			});
 			break;
 		case 'friendAddRes':
 			$target = $data.users[data.target].profile;
@@ -352,6 +388,11 @@ function onMessage(data){
 		case 'friendEdit':
 			$data.friends = data.friends;
 			updateCommunity();
+			break;
+		case 'nickChange':
+			$data.setUser(data.id, data);
+			$data.nick = data.nick;
+			updateUserList();
 			break;
 		case 'starting':
 			loading(L['gameLoading']);
@@ -388,7 +429,7 @@ function onMessage(data){
 			}
 			/*if($data.guest){
 				$stage.menu.exit.trigger('click');
-				alert(L['guestExit']);
+				kkutu_alert(L['guestExit']);
 			}*/
 			$data._resultRank = data.ranks;
 			roundEnd(data.result, data.data);
@@ -404,11 +445,16 @@ function onMessage(data){
 			notice(getKickText($data._kickTarget.profile, data));
 			break;
 		case 'invited':
-			send('inviteRes', {
-				from: data.from,
-				res: $data.opts.di ? false : confirm(data.from + L['invited'])
+			if ($data.opts.di) send('inviteRes', {
+					from: data.from,
+					res: false
+				});
+			else kkutu_confirm(data.from + L['invited'], function(resp) {
+				send('inviteRes', {
+					from: data.from,
+					res: resp
+				});
 			});
-			break;
 		case 'inviteNo':
 			$target = $data.users[data.target];
 			notice(($target.profile.title || $target.profile.name) + L['inviteDenied']);
@@ -465,16 +511,22 @@ function onMessage(data){
 					$data._preQuick = false;
 					break;
 				}
+			}else if(data.code == (408 || 443)){
+				alert("[#" + data.code + "] " + L['error_'+data.code] + i);
+				break;
 			}else if(data.code == 409){
 				i = L['server_' + i];
+				alert("[#" + data.code + "] " + L['error_'+data.code] + i);
+				break;
 			}else if(data.code == 416){
 				// 게임 중
-				if(confirm(L['error_'+data.code])){
+				kkutu_confirm(L['error_'+data.code], function(resp) {
+					if (!resp) return;
 					stopBGM();
 					$data._spectate = true;
 					$data._gaming = true;
 					send('enter', { id: data.target, password: $data._pw, spectate: true }, true);
-				}
+				});
 				return;
 			}else if(data.code == 413){
 				$stage.dialog.room.hide();
@@ -492,14 +544,20 @@ function onMessage(data){
 			}else if(data.code == 444){
 				i = data.message;
 				if(i.indexOf("생년월일") != -1){
-					alert("생년월일이 올바르게 입력되지 않아 게임 이용이 제한되었습니다. 잠시 후 다시 시도해 주세요.");
+					kkutu_alert("생년월일이 올바르게 입력되지 않아 게임 이용이 제한되었습니다. 잠시 후 다시 시도해 주세요.");
 					break;
 				}
+				alert("[#" + data.code + "] " + L['error_'+data.code] + i);
+				break;
 			} else if (data.code === 447) {
-				alert("자동화 봇 방지를 위한 캡챠 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.");
+				kkutu_alert("자동화 봇 방지를 위한 캡챠 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.");
+				break;
+			} else if (data.code == 2010) {
+				kkutu_alert("레벨 50 이상의 계정은 초보 방에 입장하실 수 없습니다.");
+				loading();
 				break;
 			}
-			alert("[#" + data.code + "] " + L['error_'+data.code] + i);
+			kkutu_alert("[#" + data.code + "] " + L['error_'+data.code] + i);
 			break;
 		default:
 			break;
@@ -639,7 +697,7 @@ function processRoom(data){
 		$target = $data.users[data.target];
 		if(data.kickVote){
 			notice(getKickText($target.profile, data.kickVote));
-			if($target.id == data.id) alert(L['hasKicked']);
+			if($target.id == data.id) kkutu_alert(L['hasKicked']);
 		}
 		if(data.room.players.indexOf($data.id) == -1){
 			if($data.room) if($data.room.gaming){
@@ -776,7 +834,7 @@ function updateUI(myRoom, refresh){
 		}
 		updateUserList(refresh || only != $data._only);
 		updateRoomList(refresh || only != $data._only);
-		updateMe();
+		if($data.nick!="nonick") updateMe();
 		if($data._jamsu){
 			clearTimeout($data._jamsu);
 			delete $data._jamsu;
@@ -800,7 +858,7 @@ function updateUI(myRoom, refresh){
 		$stage.box.room.show().height(360);
 		if(only == "for-master") if($stage.dialog.inviteList.is(':visible')) updateUserList();
 		updateRoom(false);
-		updateMe();
+		if($data.nick!="nonick") updateMe();
 	}else if(only == "for-gaming"){
 		if($data._gAnim){
 			$stage.box.room.show();
@@ -874,6 +932,24 @@ function updateMe(){
 	var lv = getLevel(my.data.score);
 	var prev = EXP[lv-2] || 0;
 	var goal = EXP[lv-1];
+	var rank;
+	if(my.data.rankPoint < 100){
+		rank = 'UNRANKED';
+	} else if(my.data.rankPoint >= 100 && my.data.rankPoint < 1000){
+		rank = 'BRONZE';
+	} else if(my.data.rankPoint >= 1000 && my.data.rankPoint < 5000){
+		rank = 'SILVER';
+	} else if(my.data.rankPoint >= 5000 && my.data.rankPoint < 10000){
+		rank = 'GOLD';
+	} else if(my.data.rankPoint >= 10000 && my.data.rankPoint < 20000){
+		rank = 'RUBY';
+	} else if(my.data.rankPoint >= 20000 && my.data.rankPoint < 30000){
+		rank = 'PLATINUM';
+	} else if(my.data.rankPoint >= 30000 && my.data.rankPoint < 50000){
+		rank = 'DIAMOND';
+	} else if(my.data.rankPoint >= 50000){
+		rank = 'MASTER';
+	}
 	
 	for(i in my.data.record) gw += my.data.record[i][1];
 	renderMoremi(".my-image", my.equip);
@@ -882,6 +958,8 @@ function updateMe(){
 	$(".my-stat-name").html(my.profile.title || my.profile.name);
 	$(".my-stat-record").html(L['globalWin'] + " " + gw + L['W']);
 	$(".my-stat-ping").html(commify(my.money) + L['ping']);
+	$(".my-rank").html(L[rank]);
+	$(".my-rankPoint").html(my.data.rankPoint + L['LP']);
 	$(".my-okg .graph-bar").width(($data._playTime % 600000) / 6000 + "%");
 	$(".my-okg-text").html(prettyTime($data._playTime));
 	$(".my-level").html(L['LEVEL'] + " " + lv);
@@ -964,6 +1042,13 @@ function userListBar(o, forInvite){
 function addonNickname($R, o){
 	if(o.equip['NIK']) $R.addClass("x-" + o.equip['NIK']);
 	if(o.equip['BDG'] == "b1_gm") $R.addClass("x-gm");
+	if(o.equip['BDG'] == "b1_plan") $R.addClass("x-plan");
+	if(o.equip['BDG'] == "b1_ad") $R.addClass("x-ad");
+	if(o.equip['BDG'] == "b1_user") $R.addClass("x-user");
+	if(o.equip['BDG'] == "b1_word") $R.addClass("x-word");
+	if(o.equip['BDG'] == "b1_dev") $R.addClass("x-dev");
+	if(o.equip['BDG'] == "b1_music") $R.addClass("x-music");
+	if(o.equip['BDG'] == "b1_design") $R.addClass("x-design");
 }
 function updateRoomList(refresh){
 	var i;
@@ -1005,7 +1090,7 @@ function roomListBar(o){
 		.append($("<div>").addClass("rooms-round").html(L['rounds'] + " " + o.round))
 		.append($("<div>").addClass("rooms-time").html(o.time + L['SECOND']))
 	)
-	.append($("<div>").addClass("rooms-lock").html(o.password ? "<i class='fa fa-lock'></i>" : "<i class='fa fa-unlock'></i>"))
+	.append($("<div>").addClass("rooms-lock").html(o.password ? "<i class='fas fa-lock'></i>" : "<i class='fas fa-unlock-alt'></i>"))
 	.on('click', function(e){
 		if(e.target == $ch.get(0)) return;
 		tryJoin($(e.currentTarget).attr('id').slice(5));
@@ -1049,7 +1134,7 @@ function miniGameUserBar(o){
 function getAIProfile(level){
 	return {
 		title: L['aiLevel' + level] + ' ' + L['robot'],
-		image: "/img/kkutu/robot.png"
+		image: "https://cdn.alphakkutu.me/img/kkutu/robot.png"
 	};
 }
 function updateRoom(gaming){
@@ -1143,7 +1228,7 @@ function onMasterSubJamsu(){
 	notice(L['subJamsu']);
 	$data._jamsu = addTimeout(function(){
 		send('leave');
-		alert(L['masterJamsu']);
+		kkutu_alert(L['masterJamsu']);
 	}, 30000);
 }
 function updateScore(id, score){
@@ -1230,6 +1315,7 @@ function drawMyDress(avGroup){
 	$(".dress-type.selected").removeClass("selected");
 	$("#dress-type-all").addClass("selected");
 	$("#dress-exordial").val(my.exordial);
+	$("#dress-nick").val(my.nick);
 	drawMyGoods(avGroup || true);
 }
 function renderGoods($target, preId, filter, equip, onClick){
@@ -1286,45 +1372,51 @@ function drawMyGoods(avGroup){
 		
 		if(e.ctrlKey){
 			if($target.hasClass("dress-equipped")) return fail(426);
-			if(!confirm(L['surePayback'] + commify(Math.round((item.cost || 0) * 0.2)) + L['ping'])) return;
-			$.post("/payback/" + id, function(res){
-				if(res.error) return fail(res.error);
-				alert(L['painback']);
-				$data.box = res.box;
-				$data.users[$data.id].money = res.money;
-				
-				drawMyDress($data._avGroup);
-				updateUI(false);
+			kkutu_confirm(L['surePayback'] + commify(Math.round((item.cost || 0) * 0.2)) + L['ping'], function(resp){
+				if(!resp) return;
+				$.post("/payback/" + id, function(res){
+					if(res.error) return fail(res.error);
+					kkutu_alert(L['painback']);
+					$data.box = res.box;
+					$data.users[$data.id].money = res.money;
+					
+					drawMyDress($data._avGroup);
+					updateUI(false);
+				});
 			});
 		}else if(AVAIL_EQUIP.indexOf(item.group) != -1){
 			if(item.group == "Mhand"){
-				isLeft = confirm(L['dressWhichHand']);
-			}
-			requestEquip(id, isLeft);
+				kkutu_hand(L['dressWhichHand'], function(resp){
+					if(!resp) return;
+					if(resp == 'left') requestEquip(id, true);
+					if(resp == 'right') requestEquip(id, false);
+				});
+			} else requestEquip(id, isLeft);
 		}else if(item.group == "CNS"){
-			if(!confirm(L['sureConsume'])) return;
-			$.post("/consume/" + id, function(res){
-				if(res.exp) notice(L['obtainExp'] + ": " + commify(res.exp));
-				if(res.money) notice(L['obtainMoney'] + ": " + commify(res.money));
-				res.gain.forEach(function(item){ queueObtain(item); });
-				$data.box = res.box;
-				$data.users[$data.id].data = res.data;
-				send('refresh');
-				
-				drawMyDress($data._avGroup);
-				updateMe();
+			kkutu_confirm(L['sureConsume'], function(resp){
+				if(!resp) return;
+				$.post("/consume/" + id, function(res){
+					if(res.exp) notice(L['obtainExp'] + ": " + commify(res.exp));
+					if(res.money) notice(L['obtainMoney'] + ": " + commify(res.money));
+					res.gain.forEach(function(item){ queueObtain(item); });
+					$data.box = res.box;
+					$data.users[$data.id].data = res.data;
+					send('refresh');
+					
+					drawMyDress($data._avGroup);
+					updateMe();
+				});
 			});
 		}
 	});
 }
-function requestEquip(id, isLeft){
+function requestEquip(id, isLeft, verify){
 	var my = $data.users[$data.id];
 	var part = $data.shop[id].group;
 	if(part == "Mhand") part = isLeft ? "Mlhand" : "Mrhand";
 	if(part.substr(0, 3) == "BDG") part = "BDG";
 	var already = my.equip[part] == id;
-	
-	if(confirm(L[already ? 'sureUnequip' : 'sureEquip'] + ": " + L[id][0])){
+	if(verify) {
 		$.post("/equip/" + id, { isLeft: isLeft }, function(res){
 			if(res.error) return fail(res.error);
 			$data.box = res.box;
@@ -1333,6 +1425,20 @@ function requestEquip(id, isLeft){
 			drawMyDress($data._avGroup);
 			send('refresh');
 			updateUI(false);
+		});
+	} else {
+		kkutu_confirm(L[already ? 'sureUnequip' : 'sureEquip'] + ": " + L["item_" + id], function(resp) {
+			if(resp) {
+				$.post("/equip/" + id, { isLeft: isLeft }, function(res){
+					if(res.error) return fail(res.error);
+					$data.box = res.box;
+					my.equip = res.equip;
+					
+					drawMyDress($data._avGroup);
+					send('refresh');
+					updateUI(false);
+				});
+			}
 		});
 	}
 }
@@ -1484,26 +1590,28 @@ function updateCommunity(){
 			.append($("<div>").addClass("cfi-name ellipse").html(p ? (p.title || p.name) : L['hidden']))
 			.append($("<div>").addClass("cfi-memo ellipse").text(memo))
 			.append($("<div>").addClass("cfi-menu")
-				.append($("<i>").addClass("fa fa-pencil").on('click', requestEditMemo))
-				.append($("<i>").addClass("fa fa-remove").on('click', requestRemoveFriend))
+				.append($("<i>").addClass("fas fa-edit").on('click', requestEditMemo))
+				.append($("<i>").addClass("fas fa-user-times").on('click', requestRemoveFriend))
 			)
 		);
 	}
 	function requestEditMemo(e){
 		var id = $(e.currentTarget).parent().parent().attr('id').slice(4);
 		var _memo = $data.friends[id];
-		var memo = prompt(L['friendEditMemo'], _memo);
-		
-		if(!memo) return;
-		send('friendEdit', { id: id, memo: memo }, true);
+		kkutu_prompt(L['friendEditMemo'], function(c) {
+			if(!c) return;
+			send('friendEdit', { id: id, memo: c }, true);
+		});
 	}
 	function requestRemoveFriend(e){
 		var id = $(e.currentTarget).parent().parent().attr('id').slice(4);
 		var memo = $data.friends[id];
 		
 		if($data._friends[id].server) return fail(455);
-		if(!confirm(memo + "(#" + id.substr(0, 5) + ")\n" + L['friendSureRemove'])) return;
-		send('friendRemove', { id: id }, true);
+		kkutu_confirm(memo + "(#" + id.substr(0, 5) + ")\n" + L['friendSureRemove'], function(resp) {
+			if(!resp) return;
+			send('friendRemove', { id: id }, true);
+		});
 	}
 	$("#CommunityDiag .dialog-title").html(L['communityText'] + " (" + len + " / 100)");
 }
@@ -1513,7 +1621,7 @@ function requestRoomInfo(id){
 	
 	$data._roominfo = id;
 	$("#RoomInfoDiag .dialog-title").html(id + L['sRoomInfo']);
-	$("#ri-title").html((o.password ? "<i class='fa fa-lock'></i>&nbsp;" : "") + o.title);
+	$("#ri-title").html((o.password ? "<i class='fas fa-lock'></i>&nbsp;" : "") + o.title);
 	$("#ri-mode").html(L['mode' + MODE[o.mode]]);
 	$("#ri-round").html(o.round + ", " + o.time + L['SECOND']);
 	$("#ri-limit").html(o.players.length + " / " + o.limit);
@@ -1546,6 +1654,9 @@ function requestProfile(id){
 	var $rec = $("#profile-record").empty();
 	var $pi, $ex;
 	var i;
+	var p = $data.users[id];
+	var rank;
+	
 	
 	if(!o){
 		notice(L['error_405']);
@@ -1570,10 +1681,31 @@ function requestProfile(id){
 	if(o.robot){
 		$stage.dialog.profileLevel.show();
 		$stage.dialog.profileLevel.prop('disabled', $data.id != $data.room.master);
+		$("#rank").html(L['UNRANKED']);
+		$("#rankpoint").html(L['0LP']);
 		$("#profile-place").html($data.room.id + L['roomNumber']);
 	}else{
 		$stage.dialog.profileLevel.hide();
 		$("#profile-place").html(o.place ? (o.place + L['roomNumber']) : L['lobby']);
+		$("#rank").html(L[rank]);
+		if(p.data.rankPoint < 100){
+			rank = 'UNRANKED';
+		} else if(p.data.rankPoint >= 100 && p.data.rankPoint < 1000){
+			rank = 'BRONZE';
+		} else if(p.data.rankPoint >= 1000 && p.data.rankPoint < 5000){
+			rank = 'SILVER';
+		} else if(p.data.rankPoint >= 5000 && p.data.rankPoint < 10000){
+			rank = 'GOLD';
+		} else if(p.data.rankPoint >= 10000 && p.data.rankPoint < 20000){
+			rank = 'RUBY';
+		} else if(p.data.rankPoint >= 20000 && p.data.rankPoint < 30000){
+			rank = 'PLATINUM';
+		} else if(p.data.rankPoint >= 30000 && p.data.rankPoint < 50000){
+			rank = 'DIAMOND';
+		} else if(p.data.rankPoint >= 50000){
+			rank = 'MASTER';
+		}
+		$("#rankpoint").html(p.data.rankPoint + L['LP']);
 		for(i in o.data.record){
 			var r = o.data.record[i];
 			
@@ -1591,11 +1723,13 @@ function requestProfile(id){
 	$stage.dialog.profileDress.hide();
 	$stage.dialog.profileWhisper.hide();
 	$stage.dialog.profileHandover.hide();
+	$stage.dialog.profileReport.hide();
 	
 	if($data.id == id) $stage.dialog.profileDress.show();
 	else if(!o.robot){
 		$stage.dialog.profileShut.show();
 		$stage.dialog.profileWhisper.show();
+		$stage.dialog.profileReport.show();
 	}
 	if($data.room){
 		if($data.id != id && $data.id == $data.room.master){
@@ -1612,9 +1746,11 @@ function requestInvite(id){
 	
 	if(id != "AI"){
 		nick = $data.users[id].profile.title || $data.users[id].profile.name;
-		if(!confirm(nick + L['sureInvite'])) return;
-	}
-	send('invite', { target: id });
+		kkutu_confirm(nick + L['sureInvite'], function(resp) {
+			if(!resp) return;
+			send('invite', { target: id });
+		});
+	} else send('invite', { target: id });
 }
 function checkFailCombo(id){
 	if(!$data._replay && $data.lastFail == $data.id && $data.id == id){
@@ -1902,9 +2038,12 @@ function clearBoard(){
 	$stage.dialog.dress.hide();
 	$stage.dialog.charFactory.hide();
 	$(".jjoriping,.rounds,.game-body").removeClass("cw");
+	$('.jjoriping,.rounds').removeClass('dg')
+	$('.rounds').removeClass('painter')
 	$stage.game.display.empty();
 	$stage.game.chain.hide();
 	$stage.game.hints.empty().hide();
+	$stage.game.tools.hide();
 	$stage.game.cwcmd.hide();
 	$stage.game.bb.hide();
 	$stage.game.round.empty();
@@ -1968,6 +2107,7 @@ function roundEnd(result, data){
 	$stage.game.display.html(L['roundEnd']);
 	$data._resultPage = 1;
 	$data._result = null;
+	$data._relay = false
 	for(i in result){
 		r = result[i];
 		if($data._replay){
@@ -2246,7 +2386,7 @@ function onGoods(e){
 	showDialog($stage.dialog.purchase, true);
 	$("#purchase-ping-before").html(commify(ping) + L['ping']);
 	$("#purchase-ping-cost").html(commify($obj.cost) + L['ping']);
-	$("#purchase-item-name").html(L[id][0]);
+	$("#purchase-item-name").html(L["item" + id]);
 	$oj = $("#purchase-ping-after").html(commify(after) + L['ping']);
 	$("#purchase-item-desc").html((after < 0) ? L['notEnoughMoney'] : spt);
 	for(i in my.equip) ceq[i] = my.equip[i];
@@ -2496,7 +2636,7 @@ function getLevelImage(score){
 	// return getImage("/img/kkutu/lv/lv" + zeroPadding(lv+1, 4) + ".png");
 	return $("<div>").css({
 		'float': "left",
-		'background-image': "url('/img/kkutu/lv/newlv.png')",
+		'background-image': "url('https://cdn.alphakkutu.me/img/kkutu/lv/newlv.png')",
 		'background-position': lX + "% " + lY + "%",
 		'background-size': "2560%"
 	});
@@ -2589,37 +2729,44 @@ function stopBGM(){
 		delete $data.bgm;
 	}
 }
-function playSound(key, loop){
-	var src, sound;
-	var mute = (loop && $data.muteBGM) || (!loop && $data.muteEff);
-	
-	sound = $sound[key] || $sound.missing;
-	if(window.hasOwnProperty("AudioBuffer") && sound instanceof AudioBuffer){
-		src = audioContext.createBufferSource();
-		src.startedAt = audioContext.currentTime;
-		src.loop = loop;
-		if(mute){
-			src.buffer = audioContext.createBuffer(2, sound.length, audioContext.sampleRate);
-		}else{
-			src.buffer = sound;
-		}
-		src.connect(audioContext.destination);
-	}else{
-		if(sound.readyState) sound.audio.currentTime = 0;
-		sound.audio.loop = loop || false;
-		sound.audio.volume = mute ? 0 : 1;
-		src = sound;
-	}
-	if($_sound[key]) $_sound[key].stop();
-	$_sound[key] = src;
-	src.key = key;
-	src.start();
-	/*if(sound.readyState) sound.currentTime = 0;
+function playSound(key, loop) {
+    var src, sound;
+    var mute = (loop && $data.muteBGM) || (!loop && $data.muteEff);
+    var volume = loop ? ($data.opts.vb ? $data.opts.vb : 1) : ($data.opts.ve ? $data.opts.ve : 1);
+
+    sound = $sound[key] || $sound.missing;
+    if (window.hasOwnProperty("AudioBuffer") && sound instanceof AudioBuffer) {
+        src = audioContext.createBufferSource();
+        src.startedAt = audioContext.currentTime;
+        src.loop = loop;
+        if (mute) {
+            src.buffer = audioContext.createBuffer(2, sound.length, audioContext.sampleRate);
+        } else {
+            src.buffer = sound;
+            var gainNode = typeof (audioContext.createGain) == "function" ? audioContext.createGain() : null;
+            if (gainNode) {
+                gainNode.gain.value = Number(volume) - 1;
+                gainNode.connect(audioContext.destination);
+                src.connect(gainNode);
+            }
+        }
+        src.connect(audioContext.destination);
+    } else {
+        if (sound.readyState) sound.audio.currentTime = 0;
+        sound.audio.loop = loop || false;
+        sound.audio.volume = volume;
+        src = sound;
+    }
+    if ($_sound[key]) $_sound[key].stop();
+    $_sound[key] = src;
+    src.key = key;
+    src.start();
+    /*if(sound.readyState) sound.currentTime = 0;
 	sound.loop = loop || false;
 	sound.volume = ((loop && $data.muteBGM) || (!loop && $data.muteEff)) ? 0 : 1;
 	sound.play();*/
-	
-	return src;
+
+    return src;
 }
 function stopAllSounds(){
 	var i;
@@ -2631,11 +2778,16 @@ function tryJoin(id){
 	
 	if(!$data.rooms[id]) return;
 	if($data.rooms[id].password){
-		pw = prompt(L['putPassword']);
-		if(!pw) return;
+		kkutu_password(L['putPassword'], function(pass) {
+			if(!pass) return;
+			$data._pw = pass;
+			send('enter', { id: id, password: pass });
+			return;
+		});
+	} else {
+		$data._pw = pw;
+		send('enter', { id: id, password: pw });
 	}
-	$data._pw = pw;
-	send('enter', { id: id, password: pw });
 }
 function clearChat(){
 	$("#Chat").empty();
@@ -2649,7 +2801,13 @@ function forkChat(){
 	$stage.chat.scrollTop(999999999);
 }
 function badWords(text){
-	return text.replace(BAD, "♥♥");
+	if(!$data.opts.isbad) {
+		if(!$data.opts.isadvbad) return text; // 모든 필터 끔, 00
+		if($data.opts.isadvbad) return text.replace(ADVBAD, "[욕설]"); // 고급 필터 켜기, 01
+	} else if($data.opts.isbad) {
+		if(!$data.opts.isadvbad) return text.replace(BAD, "[욕설]"); // 일반 필터 켜기, 10
+		if($data.opts.isadvbad) return text.replace(ADVBAD, "[욕설]"); // 고급 필터 켜기, 11
+	}
 }
 function chatBalloon(text, id, flag){
 	$("#cb-" + id).remove();
@@ -2705,6 +2863,7 @@ function chat(profile, msg, from, timestamp){
 	if(link = msg.match(/https?:\/\/[\w\.\?\/&#%=-_\+]+/g)){
 		msg = $msg.html();
 		link.forEach(function(item){
+			msg = msg.replace(item, "<font color='#2222FF'>[링크 삭제됨]</font>");
 			msg = msg.replace(item, "<a href='#' style='color: #2222FF;' onclick='if(confirm(\"" + L['linkWarning'] + "\")) window.open(\"" + item + "\");'>" + item + "</a>");
 		});
 		$msg.html(msg);
@@ -2715,6 +2874,9 @@ function chat(profile, msg, from, timestamp){
 	}
 	addonNickname($bar, { equip: equip });
 	$stage.chat.scrollTop(999999999);
+}
+function drawCanvas (data) {
+	route('drawCanvas', data);
 }
 function notice(msg, head){
 	var time = new Date();
@@ -2760,12 +2922,12 @@ function iGoods(key){
 	};
 }
 function iName(key){
-	if(key.charAt() == "$") return L[key.slice(0, 4)][0] + ' - ' + key.slice(4);
-	else return L[key][0];
+	if(key.charAt() == "$") return L["item_" + key.slice(0, 4)] + ' - ' + key.slice(4);
+	else return L["item_" + key];
 }
 function iDesc(key){
-	if(key.charAt() == "$") return L[key.slice(0, 4)][1];
-	else return L[key][1];
+	if(key.charAt() == "$") return L["expl_" + key.slice(0, 4)];
+	else return L["expl_" + key];
 }
 function iImage(key, sObj){
 	var obj;
@@ -2778,10 +2940,10 @@ function iImage(key, sObj){
 	}else if(typeof sObj == "string") sObj = { _id: "def", group: sObj, options: {} };
 	obj = $data.shop[key] || sObj;
 	gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
-	if(obj.group.slice(0, 3) == "BDG") return "/img/kkutu/moremi/badge/" + obj._id + gif;
+	if(obj.group.slice(0, 3) == "BDG") return "https://cdn.alphakkutu.me/img/kkutu/moremi/badge/" + obj._id + gif;
 	return (obj.group.charAt(0) == 'M')
-		? "/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
-		: "/img/kkutu/shop/" + obj._id + ".png";
+		? "https://cdn.alphakkutu.me/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
+		: "https://cdn.alphakkutu.me/img/kkutu/shop/" + obj._id + ".png";
 }
 function iDynImage(group, data){
 	var canvas = document.createElement("canvas");
@@ -2844,7 +3006,7 @@ function renderMoremi(target, equip){
 		);
 	}
 	$obj.children(".moremi-back").after($("<img>").addClass("moremies moremi-body")
-		.attr('src', equip.robot ? "/img/kkutu/moremi/robot.png" : "/img/kkutu/moremi/body.png")
+		.attr('src', equip.robot ? "https://cdn.alphakkutu.me/img/kkutu/moremi/robot.png" : "https://cdn.alphakkutu.me/img/kkutu/moremi/body.png")
 		.css({ 'width': "100%", 'height': "100%" })
 	);
 	$obj.children(".moremi-rhand").css('transform', "scaleX(-1)");
@@ -2864,7 +3026,7 @@ function setLocation(place){
 	else location.hash = "";
 }
 function fail(code){
-	return alert(L['error_' + code]);
+	return kkutu_alert(L['error_' + code]);
 }
 function yell(msg){
 	$stage.yell.show().css('opacity', 1).html(msg);

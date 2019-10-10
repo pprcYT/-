@@ -69,6 +69,16 @@ Server.get("/help", function(req, res){
 		'KO_INJEONG': Const.KO_INJEONG
 	});
 });
+Server.get("/bulletin", function(req, res){
+	page(req, res, "bulletin", {
+		'KO_INJEONG': Const.KO_INJEONG
+	});
+});
+Server.get("/user", function(req, res){
+	page(req, res, "user", {
+		'KO_INJEONG': Const.KO_INJEONG
+	});
+});
 Server.get("/ranking", function(req, res){
 	var pg = Number(req.query.p);
 	var id = req.query.id;
@@ -82,6 +92,41 @@ Server.get("/ranking", function(req, res){
 		MainDB.redis.getPage(pg, 15).then(function($body){
 			res.send($body);
 		});
+	}
+});
+Server.get("/moremi", function(req, res){
+	var data;
+	var id = req.query.id;
+	if(id){
+		MainDB.users.findOne([ '_id', req.query.id ]).on(function($u){
+			if($u) {
+				data = $u.equip
+				return res.send(data);
+			}
+			else res.send({});
+		});
+	}
+
+	function onSession(list){
+		var board = {};
+
+		Lizard.all(list.map(function(v){
+			if(board[v.profile.id]) return null;
+			else{
+				board[v.profile.id] = true;
+				return getProfile(v.profile.id);
+			}
+		})).then(function(data){
+			res.send({ list: data });
+		});
+	}
+	function getProfile(id){
+		var R = new Lizard.Tail();
+
+		if(id) MainDB.users.findOne([ '_id', id ]).on(function($u){
+			R.go($u);
+		}); else R.go(null);
+		return R;
 	}
 });
 Server.get("/injeong/:word", function(req, res){
@@ -101,8 +146,8 @@ Server.get("/injeong/:word", function(req, res){
 				else return res.send({ error: 403 });
 			}
 			Web.get("https://namu.moe/w/" + encodeURI(word), function(err, _res){
-				if(err) return res.send({ error: 400 });
-				else if(_res.statusCode != 200) return res.send({ error: 405 });
+				// if(err) return res.send({ error: 400 });
+				// else if(_res.statusCode != 200) return res.send({ error: 405 });
 				MainDB.kkutu_injeong.insert([ '_id', word ], [ 'theme', theme ], [ 'createdAt', now ], [ 'writer', req.session.profile.id ]).on(function($res){
 					res.send({ message: "OK" });
 				});
@@ -121,13 +166,54 @@ Server.get("/shop", function(req, res){
 });
 
 // POST
-Server.post("/exordial", function(req, res){
-	var text = req.body.data || "";
-	
+// POST
+    Server.post("/exordial", function (req, res) {
+        var text = req.body.data || "";
+        var nick = req.body.nick || "";
+        var pattern = /^[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9-_\s]{1,15}$/;
+
+        if (req.session.profile && pattern.test(nick)) {
+            text = text.slice(0, 100).trim();
+            nick = nick.trim();
+            MainDB.users.update(['_id', req.session.profile.id]).set({
+                'exordial': text,
+                'nick': nick
+            }).on(function ($res) {
+                MainDB.session.findOne(['_id', req.session.id]).limit(['profile', true]).on(function ($ses) {
+                    $ses.profile.title = nick;
+                    MainDB.session.update(['_id', req.session.id]).set(['profile', $ses.profile]).on(function ($body) {
+                        res.send({text: text});
+                    });
+                });
+            });
+        } else res.send({error: 400});
+    });
+
+Server.post("/newnick", (req, res) => {
+	let nick = req.body.nick || "";
+
 	if(req.session.profile){
-		text = text.slice(0, 100);
-		MainDB.users.update([ '_id', req.session.profile.id ]).set([ 'exordial', text ]).on(function($res){
-			res.send({ text: text });
+		let now = +new Date();
+
+		if (nick.length < 2||nick.length > 15) {
+			res.send({error: 400});
+			return;
+		} else if (nick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(nick)) {
+			res.send({error: 400});
+			return;
+		} else if (nick.length == 0) {
+			res.send({error: 400});
+			return;
+		}
+		MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
+			if($body.nick!="nonick"&&$body.nick) {
+				res.send({error: 400});
+				return;
+			}
+			MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
+			$body.kkutu.nickchangetime = now;
+			req.session.nick = nick;
+			MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
 		});
 	}else res.send({ error: 400 });
 });

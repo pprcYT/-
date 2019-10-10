@@ -48,7 +48,7 @@ var Language = {
 };
 //볕뉘 수정
 var ROUTES = [
-	"major", "consume", "admin", "login"
+	"major", "consume", "admin", "login", "alphakkutu"
 ];
 //볕뉘 수정 끝
 var page = WebInit.page;
@@ -66,12 +66,10 @@ Server.set('view engine', "pug");
 Server.use(Express.static(__dirname + "/public"));
 Server.use(Parser.urlencoded({ extended: true }));
 Server.use(Exession({
-	/* use only for redis-installed
-
 	store: new Redission({
 		client: Redis.createClient(),
 		ttl: 3600 * 12
-	}),*/
+	}),
 	secret: 'kkutu',
 	resave: false,
 	saveUninitialized: true
@@ -145,10 +143,10 @@ DB.ready = function(){
 			}
 		}
 	});
-	Server.listen(80);
+	Server.listen(GLOBAL.WEB_PORT);
 	if(Const.IS_SECURED) {
 		const options = Secure();
-		https.createServer(options, Server).listen(443);
+		https.createServer(options, Server).listen(GLOBAL.SSL_PORT);
 	}
 };
 Const.MAIN_PORTS.forEach(function(v, i){
@@ -248,10 +246,10 @@ Server.get("/", function(req, res){
 			'KO_THEME': Const.KO_THEME,
 			'EN_THEME': Const.EN_THEME,
 			'IJP_EXCEPT': Const.IJP_EXCEPT,
-			'ogImage': "http://kkutu.kr/img/kkutu/logo.png",
-			'ogURL': "http://kkutu.kr/",
-			'ogTitle': "글자로 놀자! 끄투 온라인",
-			'ogDescription': "끝말잇기가 이렇게 박진감 넘치는 게임이었다니!"
+			'ogImage': "https://cdn.alphakkutu.me/img/kkutu/logo.png",
+			'ogURL': "https://alphakkutu.me/",
+			'ogTitle': "알파끄투",
+			'ogDescription': "내 작은 글자 놀이터, 알파끄투! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"
 		});
 	}
 });
@@ -265,8 +263,10 @@ Server.get("/servers", function(req, res){
 	res.send({ list: list, max: Const.KKUTU_MAX });
 });
 
-//볕뉘 수정 구문 삭제(274~353)
+Server.get("/policy/:page", function(req, res){
+	page(req, res, "policy/"+req.params.page);
+});
 
-Server.get("/legal/:page", function(req, res){
-	page(req, res, "legal/"+req.params.page);
+Server.get("/kkutu/:page", function(req, res){
+	page(req, res, "kkutu/"+req.params.page);
 });

@@ -37,20 +37,26 @@ mixin SettingOption(id, text, st)
 		input(id=id, type='checkbox', style='margin-top: 5px; width: auto;')
 		label(for=id)= text
 
+mixin SettingOptionVolume(id)
+	input(id=id, type='range', min='0', max='1', step='0.01', value='1', style='width:50%;')
+
 block Subject
-	title= L('title')
+	title 알파끄투 - 내 작은 글자 놀이터, 끄투 온라인
 
 block JS
-	script(type='text/javascript', src='/js/in_game_kkutu.min.js')
+	script(src='https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.1/mousetrap.min.js', integrity='sha256-z6XYkzzC5o+5PhoIPMpyq5FOZkWFGiWa0NFIDPJ57zU=', crossorigin='anonymous')
+	//script(src="/js/keyblock.js")
+	script(type='text/javascript', src='https://cdn.alphakkutu.me/js/in_game_kkutu.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.alphakkutu.me/js/fabric.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.alphakkutu.me/js/emojione.min.js?v='+L('version'))
 	script(src='https://www.google.com/recaptcha/api.js')
-
 block CSS
-	link(rel='stylesheet', href='/css/in_game_kkutu_shop.css')
-	
+	link(rel='stylesheet', href='https://cdn.alphakkutu.me/css/in_game_kkutu_shop.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.alphakkutu.me/css/emojione.css?v='+L('version'))
 block Jungle
 	span#PUBLIC= PUBLIC ? "true" : undefined
 	// span#PORT= locals.PORT
-	span#URL= `${locals.PROTOCOL}://${locals.HOST}:${locals.PORT}/${locals._id}`
+	span#URL= `wss://${locals.HOST}:${locals.PORT}/${locals._id}`
 	span#MOREMI_PART= locals.MOREMI_PART.join(',')
 	span#AVAIL_EQUIP= locals.AVAIL_EQUIP.join(',')
 	span#RULE= JSON.stringify(locals.RULE)
@@ -69,8 +75,8 @@ block Middle
 	- var VERSION = L('version');
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
 	div#Intro
-		img#intro(src='/img/kkutu/intro.png')
-		// img#intro-start(src='/img/kkutu/intro_start.gif')
+		img#intro(src='https://cdn.alphakkutu.me/img/kkutu/intro.png')
+		// img#intro-start(src=''https://cdn.alphakkutu.me/img/kkutu/intro_start.gif')
 		div#version= VERSION
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
@@ -91,12 +97,22 @@ block Middle
 		button#ExitBtn.for-master.for-normal.for-gaming(style='display: none; background-color: #FFADAD;')= L('exit')
 		button#ReplayBtn.for-lobby(style='display: none; background-color: #D9FF82;')= L('replay')
 		button#LeaderboardBtn.for-lobby(style='display: none; background-color: #FFADD3;')!= L('leaderboard')
-		div#facebook-menu.fb-like.for-lobby.for-master.for-normal.for-gaming(data-href='http://kkutu.kr', data-width='300', data-layout='button_count', data-action='like', data-show-faces='true', data-share='true')
-	+Dialog('SettingDiag', 300, 240, L('settingsText'))
+		button#BulletinBtn.for-lobby(style='display: none; background-color: #FFC67F;')= L('bulletin')
+		//span#facebook-menu.fb-like.for-lobby.for-master.for-normal.for-gaming(style="float: right", data-href='https://www.facebook.com/AlphaKKuTu', data-width='300', data-layout='button_count', data-action='like', data-show-faces='true', data-share='true')
+	+Dialog('SettingDiag', 300, 356, L('settingsText'))
 		div.dialog-bar
-			h4= L('mute')
-			+SettingOption('mute-bgm', L('bgm'))
-			+SettingOption('mute-effect', L('effect'))
+			h4= L('bgm')
+			+SettingOptionVolume('volume-bgm')
+		div.dialog-bar
+			h4= L('effect')
+			+SettingOptionVolume('volume-effect')
+		//div.diablog-bar
+			//h4 테마
+			//+SettingOption('alphakkutu-theme', "알파끄투 테마")
+		div.dialog-bar
+			h4 비속어 필터
+			+SettingOption('badwords', "일반")
+			+SettingOption('strict-badwords', "고급")
 		div.dialog-bar
 			h4= L('denyReq')
 			+SettingOption('deny-invite', L('denyInvite'))
@@ -113,6 +129,16 @@ block Middle
 			+SettingOption('only-waiting', L('onlyWaiting'), "width: 200px;")
 			h4
 			+SettingOption('only-unlock', L('onlyUnlock'), "width: 200px;")
+		div.dialog-bar
+			h4 BGM 선택<font color="red">*</font>
+			select#select-bgm
+				option(disabled) BGM을 선택하세요.
+				option(value='kkutu', selected) 오리지널 끄투
+				option(value='seol') 끄투 명절
+				option(value='alpha') 알파끄투 피아노곡
+				option(value='original') 알파끄투 오리지널곡
+				//- option(value='drug') 알파끄투 마약
+		h4(style='width: 100%; font-size: 11px; margin-top: -5px; text-align: right;') <font color="red">*</font> 표시된 항목은 재접속 시 설정이 적용됩니다.
 		div.dialog-bar.tail-button
 			button#setting-ok= L('save')
 			button#setting-server= L('changeServer')
@@ -134,14 +160,14 @@ block Middle
 			button#lb-next(style='margin-right: 6px;')= L('nextPage')
 			button#lb-me= L('myRank')
 			button#lb-prev= L('prevPage')
-	+Dialog('QuickDiag', 300, 230, L('quickRoom'))
+	+Dialog('QuickDiag', 300, 300, L('quickRoom'))
 		div.dialog-bar
 			h4= L('gameMode')
 			select#quick-mode
 				- for(var i in locals.MODE)
 					option(value=Number(i))= L('mode' + locals.MODE[i])
-		div.dialog-bar(style='height: 59px;')
-			h4(style='height: 45px;')= L('misc')
+		div.dialog-bar(style='height: 129px;')
+			h4(style='height: 129px;')= L('misc')
 			- for(var i in locals.OPTIONS)
 				+GameOption(i, 'quick')
 		div.dialog-bar
@@ -150,7 +176,7 @@ block Middle
 			h4(style='width: 100%; height: 20px;')#quick-queue
 		div.dialog-bar.tail-button
 			button#quick-ok= L('OK')
-	+Dialog('RoomDiag', 300, 375)
+	+Dialog('RoomDiag', 300, 472)
 		div.dialog-bar
 			h4= L('roomTitle')
 			input#room-title(placeholder=(nick || L('guest'))+L('roomDefault'), maxlength=20)
@@ -173,29 +199,27 @@ block Middle
 					option(value=12)= L('modeKSS')
 					option(value=4)= L('modeCSQ')
 					option(value=9)= L('modeHUN')
+					//option(value=14)= L('modeKDG')
 				optgroup(label=L('mcEnglish'))
 					option(value=1)= L('modeESH')
 					option(value=0)= L('modeEKT')
 					option(value=7)= L('modeETY')
 					option(value=11)= L('modeEDA')
 					option(value=13)= L('modeESS')
+					//option(value=15)= L('modeEDG')
 		div.dialog-bar(style='margin-top: -5px; height: 50px;')
 			h4
 			h4#game-mode-expl.dialog-bar-value(style='width: 100%; font-size: 11px;')
 		div.dialog-bar
 			h4= L('numRound')
 			input#room-round(type='number', min=1, max=10, step=1, value=5)
+			h4(style='width: 100%; font-size: 11px; margin-top: -5px; text-align: right;') 1라운드부터 10라운드까지 선택 가능
 		div.dialog-bar
 			h4= L('roundTime')
-			select#room-time
-				option(value=10, style='color: #FF4444')
-				option(value=30)
-				option(value=60, selected)
-				option(value=90)
-				option(value=120)
-				option(value=150)
-		div.dialog-bar(style='height: 59px;')
-			h4(style='height: 45px;')= L('misc')
+			input#room-time(type='number', min=1, max=300, step=1, value=90)
+			h4(style='width: 100%; font-size: 11px; margin-top: -5px; text-align: right;') 1초부터 300초까지 선택 가능
+		div.dialog-bar(style='height: 134px;')
+			h4(style='height: 134px;')= L('misc')
 			- for(var i in locals.OPTIONS)
 				+GameOption(i, 'room')
 			div.dialog-opt#room-injpick-panel
@@ -291,8 +315,12 @@ block Middle
 			div#ri-players(style='width: 100%;')
 		div.dialog-bar.tail-button
 			button#room-info-join= L('join')
-	+Dialog('ProfileDiag', 300, 365)
+	+Dialog('ProfileDiag', 300, 420)
 		div.dialog-bar.profile-head
+		div.dialog-bar
+			h4(style='width: 83px;')= L('PRANK')
+			h4#rank
+			h4#rankpoint
 		div.dialog-bar
 			h4(style='width: 83px;')= L('place')
 			h4.dialog-bar-value#profile-place
@@ -306,6 +334,7 @@ block Middle
 			button#profile-whisper= L('whisper')
 			button#profile-shut= L('shut')
 			button#profile-kick= L('kick')
+			button#profile-report= L('singo')
 			button#profile-level= L('aiSetting')
 			button#profile-dress= L('dress')
 			button#profile-handover= L('handover')
@@ -338,7 +367,7 @@ block Middle
 			button#purchase-no= L('NO')
 			button#purchase-ok= L('OK')
 	+Dialog('ReplayDiag', 300, 300, L('replay'))
-		input#replay-file(type='file', style='width: 288px;', accept=".kkt")
+		input#replay-file(type='file', style='width: 288px;', accept=".kkutu")
 		div.dialog-bar
 			h4= L('replayDate')
 			h4.dialog-bar-value#replay-date -
@@ -349,7 +378,10 @@ block Middle
 			h4.dialog-bar-value#replay-players -
 		div.dialog-bar.tail-button
 			button#replay-view= L('replayView')
-	+Dialog('DressDiag', 600, 280, L('dress'))
+	+Dialog('DressDiag', 600, 305, L('dress'))
+		div.dialog-bar
+			h4(style='width: 150px;')= L('myNickname')
+			input#dress-nick(type='textfield', placeholder=L('myNicknameX'), style='width: 435px;', maxlength=15)
 		div.dialog-bar
 			h4(style='width: 150px;')= L('myExordial')
 			input#dress-exordial(type='textfield', placeholder=L('myExordialX'), style='width: 435px;', maxlength=100)
@@ -365,7 +397,7 @@ block Middle
 		div.dialog-bar.tail-button
 			button#dress-ok= L('OK')
 			button#dress-cf= L('charFactory')
-			button(onclick=`alert("${L("paybackHelp")}");`)= L('payback')
+			button(onclick=`kkutu_alert("${L("paybackHelp")}");`)= L('payback')
 	+Dialog('CharFactoryDiag', 500, 410, L('charFactory'))
 		div.dialog-bar(style='width: 300px;')
 			div#cf-tray
@@ -390,10 +422,77 @@ block Middle
 			button#obtain-ok= L('OK')
 	+Dialog('HelpDiag', 550, 400, L('helpText'))
 		iframe#help-board(width=550, height=375)
+	+Dialog('BulletinDiag', 550, 400, L('bulletin'))
+		iframe#bulletin-board(width=550, height=375)
+	+Dialog('UserDiag', 750, 400, L('singo'))
+		iframe#user-board(width=750, height=375)
+	+Dialog('ReportDialog', 350, 410, "알파끄투 유저 신고하기")
+		.
+			<b>1. 가장 적합한 신고 사유를 선택하여 주십시오.</b>
+		.reasonlist(style="margin-top: 5px; margin-bottom: 5px;")
+			+CheckBox('r-901', "[#901] 비속어 사용 등 불건전한 채팅")
+			+CheckBox('r-902', "[#902] 게임 진행 방해 (고의 중도퇴장 등)")
+			+CheckBox('r-903', "[#903] 비인가 프로그램(핵 등) 사용 의심")
+			+CheckBox('r-904', "[#904] 홍보성 채팅")
+			+CheckBox('r-905', "[#905] 부적절한 별명 또는 프로필 설명")
+			+CheckBox('r-906', "[#906] 운영진 등 사칭")
+			+CheckBox('r-907', "[#907] 친목 행위")
+			+CheckBox('r-908', "[#908] 기타 운영정책 위반 행위")
+		.
+			<b>2. 신고 사유를 구체적으로 입력해 주십시오.</b>
+		textarea#reasontext(style="width:calc(100% - 12px);height:130px;margin-top:5px;",placeholder="신고 사유를 자세히 입력해주세요. 자세하게 입력하실수록 빠른 처리가 가능해집니다.",maxlength=500)
+		div.dialog-bar.tail-button
+			button#report-ok 신고 접수
+	+Dialog('NewNickDialog', 500, 400, "닉네임 설정하기", true)
+		div.dialog-bar
+			h3 알파끄투에 오신 것을 환영합니다. 우선 닉네임을 설정하겠습니다.
+			h3 계속하면 아래 약관에 동의하는 것으로 간주합니다.
+		+separator(5)
+		h4
+			b 운영정책
+			|  2019-09-11 업데이트
+		div(style='float: right; width: 100%; background-color: #FFFFFF;')
+			iframe#kkutu-bulletin(width='100%', height='90px', src='/operation.html')
+		+separator(10)
+		h4
+			b 개인정보취급방침
+			|  2019-09-11 업데이트
+		div(style='float: right; width: 100%; background-color: #FFFFFF;')
+			iframe#kkutu-bulletin(width='100%', height='90px', src='/privacy.html')
+		+separator(5)
+		div.dialog-bar
+			h3 2~15글자, 영문/한글/숫자/공백 사용 가능
+		div.dialog-bar
+			input(type='text', placeholder="닉네임 입력", style='width: 488px;', maxlength=15, id="newnick-input")
+		div.dialog-bar.tail-button
+			button#newnick-ok= L('OK')
+	+Dialog('MsgDiag', 300, 150, "알파끄투 메세지")
+		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		div.dialog-bar.tail-button
+			button#msg-no= L('NO')
+			button#msg-ok= L('OK')
+	+Dialog('AskDiag', 300, 150, "알파끄투 메세지")
+		div#ask-content(style='height:60px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		input#ask-input(type='text', placeholder="입력", style='width:288px;')
+		div.dialog-bar.tail-button
+			button#ask-no= L('NO')
+			button#ask-ok= L('OK')
+	+Dialog('PasswordDiag', 300, 120, "방 비밀번호 입력")
+		div#password-content(style='height:30px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		input#password-input(type='password', placeholder="비밀번호 입력", style='width:288px;', maxlength=20)
+		div.dialog-bar.tail-button
+			button#password-no= L('NO')
+			button#password-ok= L('OK')
+	+Dialog('WhichHandDiag', 300, 115, "장착할 손 선택")
+		div#hand-content(style='height:50px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		div.dialog-bar.tail-button
+			button#hand-no= L('NO')
+			button#hand-left 왼쪽
+			button#hand-right 오른쪽
 	+Product('UserList')
-		div 불러오는 중
+		div 불러오는 중...
 	+Product('RoomList')
-		div 불러오는 중
+		div 불러오는 중...
 	+Product('Shop')
 		div.shop-categories
 			- for(var i in locals.CATEGORIES)
@@ -412,15 +511,54 @@ block Middle
 		div.game-head
 			div.items
 			div.hints(style='display: none;')
+			div.tools(style='display: none;')
+				div(style="width: 100%")
+					div(style="float: left; width: 35%;")
+						span#themeis= L('themeis')
+					div(style="float: left; width: 65%;")
+						span#themeis-title
+				div(style="width: 100%")
+					div(style="float: left; width: 35%;")
+						span#drawing= L('wordis')
+					div(style="float: left; width: 65%;")
+						span#drawing-title
+				div(style="width: 100%")
+					label(for="drawing-line-width")= L('drawingLineWidth')
+					input#drawing-line-width(type="range", value="1", min="1", max="40")
+				.palette
+					div
+						button.button-color#color-red
+					div
+						button.button-color#color-orange
+					div
+						button.button-color#color-yellow
+					div
+						button.button-color#color-green
+					div
+						button.button-color#color-blue
+					div
+						button.button-color#color-indigo
+					div
+						button.button-color#color-violet
+					div
+						button.button-color#color-black
+					div
+						button.button-color#color-white
+				div(style="width: 100%")
+					div(style="float: left; width: 60%;")
+						label(for="drawing-color")= L('drawingColor')
+						input#drawing-color(type="color", value="#000000")
+					div(style="float: left; width: 40%;")
+						button#drawing-clear= L('drawingClear')
 			div.b-left.cwcmd(style='display: none;')
 				div.cw-q-head
 				input#cw-q-input(placeholder=L('inputHere'), style='width: 313px; height: 20px; font-size: 15px;')
 				div.cw-q-body
 			div.b-left.bb(style='display: none;')
 			div.jjoriping
-				img.jjoObj.jjoEyeL(src='/img/jjoeyeL.png')
-				img.jjoObj.jjoNose(src='/img/jjonose.png')
-				img.jjoObj.jjoEyeR(src='/img/jjoeyeR.png')
+				img.jjoObj.jjoEyeL(src='https://cdn.alphakkutu.me/img/jjoeyeL.png')
+				img.jjoObj.jjoNose(src='https://cdn.alphakkutu.me/img/jjonose.png')
+				img.jjoObj.jjoEyeR(src='https://cdn.alphakkutu.me/img/jjoeyeR.png')
 				div.jjoDisplayBar
 					div.jjo-display.ellipse
 					+GraphBar('jjo-turn-time')
@@ -439,6 +577,9 @@ block Middle
 			div.my-stat-name.ellipse
 			div.my-stat-record
 			div.my-stat-ping
+			//div
+			//	div.my-rank
+			//	div.my-rankPoint
 			div
 				+GraphBar('my-okg')
 				div.bar-text.my-okg-text
@@ -448,11 +589,21 @@ block Middle
 		+GraphBar('my-gauge')
 		div.bar-text.my-gauge-text
 	+Product('Chat')
-		div#Chat
-		input#Talk(maxlength=200)
+		div#Chat.inbox-scrollbar
+		input#Talk(maxlength=180)
 		button#ChatBtn= L('send')
 	+Product('AD')
+		//script(type='text/javascript').
+			//(function(cl,i,c,k,m,o,n){m=cl.location.protocol+c;o=cl.referrer;m+='&mon_rf='+encodeURIComponent(o);
+			//n='<'+i+' type="text/javascript" src="'+m+'"></'+i+'>';cl.writeln(n);
+			//})(document,'script','//tab2.clickmon.co.kr/pop/wp_ad_728_js.php?PopAd=CM_M_1003067%7C%5E%7CCM_A_1039945%7C%5E%7CAdver_M_1046207');
 
 block Bottom
-	div.bottom-legal!= L('dictionarySupport')
-	div.bottom-legal!= L('etcSupport')
+	<a href="https://cafe.naver.com/aube123"><img src="https://cdn.alphakkutu.me/ad/aube.png" title="광고"></a>
+	<a href="#"><img src="https://cdn.alphakkutu.me/ad/default.png" title="광고"></a>
+	<a href="#"><img src="https://cdn.alphakkutu.me/ad/default.png" title="광고"></a>
+	<a href="#"><img src="https://cdn.alphakkutu.me/ad/default.png" title="광고"></a>
+	<a href="#"><img src="https://cdn.alphakkutu.me/ad/default.png" title="광고"></a>
+	div.bottom-legal!= L('License')
+	div.bottom-legal!= L('Dictionary')
+	div.bottom-legal!= L('Copyright')

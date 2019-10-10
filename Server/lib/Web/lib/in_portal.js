@@ -20,7 +20,6 @@
 	var $stage;
 	var LIMIT = 400;
 	var LIST;
-
 	$(document).ready(function(){
 		$stage = {
 			list: $("#server-list"),
@@ -31,7 +30,7 @@
 		};
 
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(/img/kkutu/gamebg.png)",
+			'background-image': "url(https://cdn.alphakkutu.me/img/kkutu/gamebg.png)",
 			'background-size': "200px 200px"
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){
@@ -50,10 +49,10 @@
 			}
 		});
 		$stage.ref.on('click', function(e){
-			if($stage.refi.hasClass("fa-spin")){
+			if($stage.refi.hasClass("fa-sync-alt")){
 				return alert(L['serverWait']);
 			}
-			$stage.refi.addClass("fa-spin");
+			$stage.refi.addClass("fa-sync-alt");
 			setTimeout(seekServers, 1000);
 		});
 		setInterval(function(){
@@ -92,7 +91,7 @@
 				}); else $e.children(".server-enter").html("-");
 			});
 			$stage.total.html("&nbsp;" + L['TOTAL'] + " " + sum + L['MN']);
-			$stage.refi.removeClass("fa-spin");
+			$stage.refi.removeClass("fa-sync-alt");
 			$stage.start.prop('disabled', false);
 		});
 	}

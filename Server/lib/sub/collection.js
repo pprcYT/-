@@ -337,7 +337,7 @@ exports.Agent = function(type, origin){
 							sq = sqlSet(sq);
 						}
 						sql = Escape("UPDATE %I SET %s", col, sq);
-						if(q) sql += Escape(" WHERE %s", sqlWhere(q));
+						if(q) sql += Escape(" WHERE %s", sqlWhere(q).replace(/"([a-zA-Z]+)\(([a-zA-Z0-9_]+)\)"/g, '$1($2)'));
 						break;
 					case "upsert":
 						// 업데이트 대상을 항상 _id(q의 가장 앞 값)로 가리키는 것으로 가정한다.
@@ -347,7 +347,7 @@ exports.Agent = function(type, origin){
 						break;
 					case "remove":
 						sql = Escape("DELETE FROM %I", col);
-						if(q) sql += Escape(" WHERE %s", sqlWhere(q));
+						if(q) sql += Escape(" WHERE %s", sqlWhere(q).replace(/"([a-zA-Z]+)\(([a-zA-Z0-9_]+)\)"/g, '$1($2)'));
 						break;
 					case "createColumn":
 						sql = Escape("ALTER TABLE %I ADD COLUMN %K %I", col, q[0], q[1]);

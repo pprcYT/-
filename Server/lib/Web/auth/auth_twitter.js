@@ -5,7 +5,8 @@ module.exports.config = {
     color: '#55ACEE',
     fontColor: '#FFFFFF',
     vendor: 'twitter',
-    displayName: 'withTwitter'
+    displayName: 'withTwitter',
+    useOAuthButtons: false
 }
 
 module.exports.strategyConfig = {
@@ -20,7 +21,7 @@ module.exports.strategy = (process, MainDB, Ajae) => {
         const $p = {};
 
         $p.authType = "twitter";
-        $p.id = profile.id;
+        $p.id = $p.authType+"-"+profile.id;
         $p.name = profile.displayName;
         $p.title = profile.displayName;
         $p.image = profile.photos[0].value;

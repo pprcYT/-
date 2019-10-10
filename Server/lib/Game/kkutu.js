@@ -31,9 +31,10 @@ var Rule;
 var guestProfiles = [];
 var CHAN;
 var channel = process.env['CHANNEL'] || 0;
+var alphakkutu = require("../sub/alphakkutu");
 
 const NUM_SLAVES = 4;
-const GUEST_IMAGE = "/img/kkutu/guest.png";
+const GUEST_IMAGE = "https://cdn.alphakkutu.me/img/kkutu/guest.png";
 const MAX_OKG = 18;
 const PER_OKG = 600000;
 
@@ -172,6 +173,7 @@ exports.Data = function(data){
 	
 	this.score = data.score || 0;
 	this.playTime = data.playTime || 0;
+	this.rankPoint = data.rankPoint || 0;
 	this.connectDate = data.connectDate || 0;
 	this.record = {};
 	for(i in Const.GAME_TYPE){
@@ -213,6 +215,7 @@ exports.Client = function(socket, profile, sid){
 	
 	if(profile){
 		my.id = profile.id;
+		my._sid = sid;
 		my.profile = profile;
 		/* 망할 셧다운제
 		if(Cluster.isMaster){
@@ -227,8 +230,9 @@ exports.Client = function(socket, profile, sid){
 		*/
 		delete my.profile.token;
 		delete my.profile.sid;
-
-		if(my.profile.title) my.profile.name = "anonymous";
+		delete my.profile.title;
+		delete my.profile.name;	
+		// if(my.profile.title) my.profile.name = "anonymous";
 	}else{
 		gp = guestProfiles[Math.floor(Math.random() * guestProfiles.length)];
 		
@@ -237,9 +241,10 @@ exports.Client = function(socket, profile, sid){
 		my.isAjae = false;
 		my.profile = {
 			id: sid,
-			title: getGuestName(sid),
 			image: GUEST_IMAGE
 		};
+		my.nick = getGuestName(sid);
+		my.profile.title = my.nick;
 	}
 	my.socket = socket;
 	my.place = 0;
@@ -285,7 +290,7 @@ exports.Client = function(socket, profile, sid){
 	socket.on('message', function(msg){
 		var data, room = ROOM[my.place];
 		
-		JLog.log(`Chan @${channel} Msg #${my.id}: ${msg}`);
+		JLog.log(`Chan @${channel} Msg #${my.id}: ${(JSON.parse(msg).type === 'drawingCanvas' ? 'is drawing data' : msg)}`);
 		try{ data = JSON.parse(msg); }catch(e){ data = { error: 400 }; }
 		if(Cluster.isWorker) process.send({ type: "tail-report", id: my.id, chan: channel, place: my.place, msg: data.error ? msg : data });
 		
@@ -304,6 +309,13 @@ exports.Client = function(socket, profile, sid){
 		}
 	};
 	*/
+	my.drawingCanvas = function(msg) {
+		let $room = ROOM[my.place];
+		if(!$room) return;
+		if(!$room.gaming) return;
+		if($room.rule.rule != 'Drawing') return;
+		$room.drawingCanvas(msg);
+	};
 	my.getData = function(gaming){
 		var o = {
 			id: my.id,
@@ -324,6 +336,7 @@ exports.Client = function(socket, profile, sid){
 			o.money = my.money;
 			o.equip = my.equip;
 			o.exordial = my.exordial;
+			o.nick = my.nick;
 		}
 		return o;
 	};
@@ -409,11 +422,17 @@ exports.Client = function(socket, profile, sid){
 			my.data = new exports.Data();
 			my.money = 0;
 			my.friends = {};
-			
+			my.profile.title = my.nick;
 			R.go({ result: 200 });
 		}else DB.users.findOne([ '_id', my.id ]).on(function($user){
-			var first = !$user;
-			var black = first ? "" : $user.black;
+			let first = !$user;
+			let black = first ? "" : $user.black;
+			let time
+			if (!$user || !$user.time) {
+				time = null
+			} else {
+				time = $user.time
+			}
 			
 			if(first) $user = { money: 0 };
 			if(black == "null") black = false;
@@ -421,6 +440,7 @@ exports.Client = function(socket, profile, sid){
 				black = false;
 				my.noChat = true;
 			}
+			
 			/* 망할 셧다운제
 			if(Cluster.isMaster && !my.isAjae){ // null일 수는 없다.
 				my.isAjae = Ajae.checkAjae(($user.birthday || "").split('-'));
@@ -436,6 +456,8 @@ exports.Client = function(socket, profile, sid){
 					}
 				}
 			}*/
+			my.nick = $user.nick || "nonick";
+			if(my.nick != "nonick") my.profile.title = my.nick;
 			my.exordial = $user.exordial || "";
 			my.equip = $user.equip || {};
 			my.box = $user.box || {};
@@ -447,13 +469,14 @@ exports.Client = function(socket, profile, sid){
 				my.checkExpire();
 				my.okgCount = Math.floor((my.data.playTime || 0) / PER_OKG);
 			}
-			if(black) R.go({ result: 444, black: black });
+			if(black) R.go({ result: 444, black: black, time: time });
 			else if(Cluster.isMaster && $user.server) R.go({ result: 409, black: $user.server });
 			else if(exports.NIGHT && my.isAjae === false) R.go({ result: 440 });
 			else R.go({ result: 200 });
 		});
 		return R;
 	};
+	my.getLevel = () => { return alphakkutu.getLevel(my) };
 	my.flush = function(box, equip, friends){
 		var R = new Lizard.Tail();
 		
@@ -470,7 +493,7 @@ exports.Client = function(socket, profile, sid){
 		).on(function(__res){
 			DB.redis.getGlobal(my.id).then(function(_res){
 				DB.redis.putGlobal(my.id, my.data.score).then(function(res){
-					JLog.log(`FLUSHED [${my.id}] PTS=${my.data.score} MNY=${my.money}`);
+					JLog.log(`FLUSHED [${my.id}] PTS=${my.data.score} MNY=${my.money} RP=${my.data.rankPoint}`);
 					R.go({ id: my.id, prev: _res });
 				});
 			});
@@ -497,7 +520,6 @@ exports.Client = function(socket, profile, sid){
 		}else if(room.id){
 			// 이미 있는 방에 들어가기... 여기서 유효성을 검사한다.
 			$room = ROOM[room.id];
-			
 			if(!$room){
 				if(Cluster.isMaster){
 					for(i in CHAN) CHAN[i].send({ type: "room-invalid", room: room });
@@ -506,13 +528,16 @@ exports.Client = function(socket, profile, sid){
 				}
 				return my.sendError(430, room.id);
 			}
-			if(!spec){
-				if($room.gaming){
-					return my.send('error', { code: 416, target: $room.id });
-				}else if(my.guest) if(!GUEST_PERMISSION.enter){
-					return my.sendError(401);
-				}
+			if ($room.opts.onlybeginner && (my.getLevel() > 50 || my.guest) && !my.admin) {
+				if (my.guest) return my.sendError(2000);
+				else return my.sendError(2010);
 			}
+			if (!spec){
+				if ($room.gaming) return my.send('error', { code: 416, target: $room.id });
+				else if (!GUEST_PERMISSION.enter) return my.sendError(401);
+			}
+			if ($room.opts.noguest && my.guest) return my.sendError(2001);
+			
 			if($room.players.length >= $room.limit + (spec ? Const.MAX_OBSERVER : 0)){
 				return my.sendError(429);
 			}
@@ -566,7 +591,12 @@ exports.Client = function(socket, profile, sid){
 					my.sendError(409);
 				}
 				$room = new exports.Room(room, getFreeChannel());
-				
+				if ($room.opts.onlybeginner && (my.getLevel() > 50 || my.guest) && !my.admin) {
+					if (my.guest) return my.sendError(2000);
+					else return my.sendError(2010);
+				}
+				// console.log(my);
+				if ($room.opts.noguest && my.guest) return my.sendError(2001);
 				process.send({ type: "room-new", target: my.id, room: $room.getData() });
 				ROOM[$room.id] = $room;
 				spec = false;
@@ -822,6 +852,7 @@ exports.Room = function(room, channel){
 		}
 		return {
 			id: my.id,
+			nick: my.nick,
 			channel: my.channel,
 			title: my.title,
 			password: my.password ? true : false,
@@ -1041,6 +1072,9 @@ exports.Room = function(room, channel){
 		}
 		return false;
 	};
+	my.drawingCanvas = function(msg) {
+		my.byMaster('drawCanvas', { data: msg.data }, true);
+	};
 	my.ready = function(){
 		var i, all = true;
 		var len = 0;
@@ -1195,7 +1229,7 @@ exports.Room = function(room, channel){
 				res[i].rank = Number(i);
 			}
 			pv = res[i].score;
-			rw = getRewards(my.mode, o.game.score / res[i].dim, o.game.bonus, res[i].rank, rl, sumScore);
+			rw = getRewards(o.data.rankPoint, my.mode, o.game.score / res[i].dim, o.game.bonus, res[i].rank, rl, sumScore, my.opts);
 			rw.playTime = now - o.playAt;
 			o.applyEquipOptions(rw); // 착용 아이템 보너스 적용
 			if(rw.together){
@@ -1205,6 +1239,7 @@ exports.Room = function(room, channel){
 			res[i].reward = rw;
 			o.data.score += rw.score || 0;
 			o.money += rw.money || 0;
+			o.data.rankPoint += rw.rankPoint || 0;
 			o.data.record[Const.GAME_TYPE[my.mode]][2] += rw.score || 0;
 			o.data.record[Const.GAME_TYPE[my.mode]][3] += rw.playTime;
 			if(!my.practice && rw.together){
@@ -1291,8 +1326,11 @@ exports.Room = function(room, channel){
 	my.turnNext = function(force){
 		if(!my.gaming) return;
 		if(!my.game.seq) return;
-		
-		my.game.turn = (my.game.turn + 1) % my.game.seq.length;
+		if(my.opts && my.opts.randomturn){
+			my.game.turn = Math.floor(Math.random()*my.game.seq.length)
+		} else {
+			my.game.turn = (my.game.turn + 1) % my.game.seq.length;
+		};
 		my.turnStart(force);
 	};
 	my.turnEnd = function(){
@@ -1367,11 +1405,11 @@ function getFreeChannel(){
 }
 function getGuestName(sid){
 	var i, len = sid.length, res = 0;
-	
+
 	for(i=0; i<len; i++){
 		res += sid.charCodeAt(i) * (i+1);
 	}
-	return "GUEST" + (1000 + (res % 9000));
+	return "손님" + (1000 + (res % 9000));
 }
 function shuffle(arr){
 	var i, r = [];
@@ -1381,10 +1419,11 @@ function shuffle(arr){
 	
 	return r;
 }
-function getRewards(mode, score, bonus, rank, all, ss){
-	var rw = { score: 0, money: 0 };
+function getRewards(rankScore, mode, score, bonus, rank, all, ss, opts){
+	var rw = { score: 0, money: 0, rankPoint: 0 };
 	var sr = score / ss;
 	
+	if (opts.randomturn) rw.score = rw.score * 1.3; // 랜덤 턴
 	// all은 1~8
 	// rank는 0~7
 	switch(Const.GAME_TYPE[mode]){
@@ -1430,6 +1469,12 @@ function getRewards(mode, score, bonus, rank, all, ss){
 		case 'ESS':
 			rw.score += score * 0.22;
 			break;
+		case 'KDG':
+			rw.score += score * 0.57;
+			break;
+		case 'EDG':
+			rw.score += score * 0.57;
+			break;
 		default:
 			break;
 	}
@@ -1447,7 +1492,11 @@ function getRewards(mode, score, bonus, rank, all, ss){
 	rw.score += bonus;
 	rw.score = rw.score || 0;
 	rw.money = rw.money || 0;
-	
+	if (opts.rankgame){
+		rw.rankPoint = rw.score * 0.04
+		rw.rankPoint = Math.round(rw.rankPoint);
+		rw.score = 0;
+	}
 	// applyEquipOptions에서 반올림한다.
 	return rw;
 }
