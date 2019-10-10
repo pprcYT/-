@@ -145,13 +145,13 @@ Server.get("/injeong/:word", function(req, res){
 				if($ij.theme == '~') return res.send({ error: 406 });
 				else return res.send({ error: 403 });
 			}
-			Web.get("https://namu.moe/w/" + encodeURI(word), function(err, _res){
+			// Web.get("https://namu.moe/w/" + encodeURI(word), function(err, _res){
 				// if(err) return res.send({ error: 400 });
 				// else if(_res.statusCode != 200) return res.send({ error: 405 });
-				MainDB.kkutu_injeong.insert([ '_id', word ], [ 'theme', theme ], [ 'createdAt', now ], [ 'writer', req.session.profile.id ]).on(function($res){
-					res.send({ message: "OK" });
-				});
+			MainDB.kkutu_injeong.insert([ '_id', word ], [ 'theme', theme ], [ 'createdAt', now ], [ 'writer', req.session.profile.id ]).on(function($res){
+				res.send({ message: "OK" });
 			});
+			// });
 		});
 	});
 });
@@ -166,56 +166,52 @@ Server.get("/shop", function(req, res){
 });
 
 // POST
-// POST
-    Server.post("/exordial", function (req, res) {
-        var text = req.body.data || "";
-        var nick = req.body.nick || "";
-        var pattern = /^[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9-_\s]{1,15}$/;
-
-        if (req.session.profile && pattern.test(nick)) {
-            text = text.slice(0, 100).trim();
-            nick = nick.trim();
-            MainDB.users.update(['_id', req.session.profile.id]).set({
-                'exordial': text,
-                'nick': nick
-            }).on(function ($res) {
-                MainDB.session.findOne(['_id', req.session.id]).limit(['profile', true]).on(function ($ses) {
-                    $ses.profile.title = nick;
-                    MainDB.session.update(['_id', req.session.id]).set(['profile', $ses.profile]).on(function ($body) {
-                        res.send({text: text});
-                    });
-                });
-            });
-        } else res.send({error: 400});
-    });
-
+Server.post("/exordial", function (req, res) {
+	var text = req.body.data || "";
+	var nick = req.body.nick || "";
+	var pattern = /^[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9-_\s]{1,15}$/;
+	MainDB.users.findOne([ 'nick', nick ]).on(function($res){
+		if(!$res && req.session.profile && pattern.test(nick)) {
+			text = text.slice(0, 100).trim();
+			nick = nick.trim();
+			MainDB.users.update(['_id', req.session.profile.id]).set({
+				'exordial': text,
+				'nick': nick
+			}).on(function ($res) {
+				MainDB.session.findOne(['_id', req.session.id]).limit(['profile', true]).on(function ($ses) {
+					$ses.profile.title = nick;
+					MainDB.session.update(['_id', req.session.id]).set(['profile', $ses.profile]).on(function ($body) {
+						res.send({text: text});
+					});
+				});
+			});
+		}
+		else res.send({error: 601});
+	});
+});
 Server.post("/newnick", (req, res) => {
 	let nick = req.body.nick || "";
-
+	let pattern = /^[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9-_\s]{1,15}$/;
+	
 	if(req.session.profile){
-		let now = +new Date();
-
-		if (nick.length < 2||nick.length > 15) {
-			res.send({error: 400});
-			return;
-		} else if (nick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(nick)) {
-			res.send({error: 400});
-			return;
-		} else if (nick.length == 0) {
+		if (nick.length < 2 || nick.length > 15 || !pattern.test(nick) || nick.length == 0) {
 			res.send({error: 400});
 			return;
 		}
-		MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
-			if($body.nick!="nonick"&&$body.nick) {
-				res.send({error: 400});
-				return;
-			}
-			MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
-			$body.kkutu.nickchangetime = now;
-			req.session.nick = nick;
-			MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
+		MainDB.users.findOne([ 'nick', nick ]).on(function($res){
+			if(!$res) {
+				MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
+					if($body.nick!="nonick"&&$body.nick) {
+						res.send({error: 400});
+						return;
+					}
+					MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
+					req.session.nick = nick;
+					MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
+				});
+			} else res.send({ error: 601 });
 		});
-	}else res.send({ error: 400 });
+	} else res.send({ error: 400 });
 });
 Server.post("/buy/:id", function(req, res){
 	if(req.session.profile){
