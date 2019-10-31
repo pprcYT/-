@@ -48,6 +48,9 @@
 - 알파끄투 소스의 핵심 부분 수정을 원하신다면, 먼저 이슈(Issue)를 열어 대화를 나눠보세요.
 - 풀 리퀘스트(Pull Request)의 문제가 없는지 먼저 확인해주시고 열어주세요.
 
+## 오픈 소스 라이선스 고지
+[OPENSOURCE.md](https://github.com/AlphaKKuTu/KKuTu/blob/production/OPENSOURCE.md)를 참고해 주시기 바랍니다.
+
 ## 라이센스
 
 - 모든 소스 코드에 대해: [GNU 아페로 일반 공중 사용 허가서](https://github.com/AlphaKKuTu/KKuTu/blob/production/LICENSE)
