@@ -1,0 +1,65 @@
+//-
+	Rule the words! KKuTu Online
+	Copyright (C) 2017 JJoriping(op@jjo.kr)
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
+extends layout
+
+block Subject
+	title 알파끄투 매니지먼트 콘솔 (운영부)
+
+block JS
+	script(type="text/javascript", src='https://cdn.kkutu.xyz/js/kpanel/in_user.min.js?v='+L('version'))
+	
+block Middle
+	fieldset
+		legend 자격 증명
+		input#db-password(type='password', placeholder='암호')
+	fieldset
+		legend 유저 정보 다루기
+		p <b>[공지]</b> 경고 기능은 아직 경고 개수 저장만 가능합니다. 경고에 따른 처벌은 직접 해주셔야 합니다.  
+		div
+			input#user-id(placeholder='ID')
+			input#user-nick(placeholder='닉네임')
+			button#user-go 조회
+			div
+				table
+					thead: tr
+						td ID
+						td 핑
+						td 유저 데이터
+						td 보관함
+						td 장착 아이템
+						td 닉네임
+						td 설명
+						td 접속 서버
+						td 최근 로그인
+						td 차단 사유
+						td 차단 시간
+						td 친구
+						td 경고
+					tbody#user-data
+			button#user-apply 적용
+	fieldset
+		legend 유저 감시하기
+		div
+			input#gamsi-id(placeholder='ID (,로 구분)')
+			button#gamsi-go 감시
+			div
+				table
+					thead: tr
+						td #
+						td 닉네임
+						td 서버
+					tbody#gamsi-data

@@ -18,7 +18,7 @@
 
 var GLOBAL = require("./sub/global.json");
 
-exports.KKUTU_MAX = 400;
+exports.KKUTU_MAX = 100;
 exports.MAIN_PORTS = GLOBAL.MAIN_PORTS;
 exports.TEST_PORT = 4040;
 exports.SPAM_CLEAR_DELAY = 1600;
@@ -26,7 +26,7 @@ exports.SPAM_ADD_DELAY = 750;
 exports.SPAM_LIMIT = 7;
 exports.BLOCKED_LENGTH = 10000;
 exports.KICK_BY_SPAM = 9;
-exports.MAX_OBSERVER = 4;
+exports.MAX_OBSERVER = 12;
 exports.TESTER = GLOBAL.ADMIN.concat([
 	"Input tester id here"
 ]);

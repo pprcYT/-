@@ -26,7 +26,6 @@ var KKuTu = require('./kkutu');
 var GLOBAL = require("../sub/global.json");
 var Const = require("../const");
 var JLog = require('../sub/jjlog');
-var Secure = require('../sub/secure');
 var Recaptcha = require('../sub/recaptcha');
 
 var MainDB;
@@ -90,12 +89,75 @@ function processAdmin(id, value){
 				KKuTu.publish('room', { target: id, room:temp.getData(), modify: true }, temp.password);
 			}
 			return null;
-		case "yell":
-			var q = value.trim().split(" ");
-			if(q[0] != "!@#$%^&*!") return null;
-			var newValue=q.replace("!@#$%^&*!", "");
+		case "nick":
+			MainDB.users.update([ '_id', value ]).set([ 'nick', '바른닉네임' + value.replace(/[^0-9]/g, "").substring(0,4) ]).on();
+			if(temp = DIC[value]){
+				temp.socket.send('{"type":"error","code":410}');
+				temp.socket.close();
+			}
+			return null;
+		case "mute":
+			MainDB.users.update([ '_id', value ]).set([ 'black', 'chat' ]).on();
+			JLog.info(`[MUTE] #${value} muted`);
+			if(temp = DIC[target]){
+				temp.socket.send('{"type":"error","code":410}');
+				temp.socket.close();
+			}
+			return null;
+		case "tempmute":
+			var target = value.split(",")[0];
+			var date = Date.now() + parseInt(value.split(",")[1]) * 24 * 60 * 60 * 1000;
 
-			KKuTu.publish('yell', { value: newValue });
+			if(!target) return null;
+			else if(!date) return null;
+
+			MainDB.users.update([ '_id', target ]).set([ 'black', 'chat' ]).on();
+			MainDB.users.update([ '_id', target ]).set([ 'time', date ]).on();
+			JLog.info(`[TEMPMUTE] #${value} temp muted (Duration: ${value.split(","[1])} days)`);
+			if(temp = DIC[target]){
+				temp.socket.send('{"type":"error","code":410}');
+				temp.socket.close();
+			}
+			return null;
+		case "ban":
+			var target = value.split(",")[0];
+			var reason = value.split(",")[1];
+			
+			if(!target) return null;
+			else if(!reason) return null;
+
+			MainDB.users.update([ '_id', target ]).set([ 'black', reason ]).on();
+			MainDB.users.update([ '_id', target ]).set([ 'time', null ]).on();
+			JLog.info(`[BAN] #${value} banned`);
+			if(temp = DIC[target]){
+				temp.socket.send('{"type":"error","code":410}');
+				temp.socket.close();
+			}
+			return null;
+		case "tempban":
+			var target = value.split(",")[0];
+			var date = Date.now() + parseInt(value.split(",")[1]) * 24 * 60 * 60 * 1000;
+			var reason = value.split(",")[2];
+			
+			if(!target) return null;
+			else if(!reason) return null;
+			else if(!date) return null;
+
+			MainDB.users.update([ '_id', target ]).set([ 'black', reason ]).on();
+			MainDB.users.update([ '_id', target ]).set([ 'time', date ]).on();
+			JLog.info(`[TEMPBAN] #${value} temp banned (Duration: ${value.split(","[1])} days)`);
+			if(temp = DIC[target]){
+				temp.socket.send('{"type":"error","code":410}');
+				temp.socket.close();
+			}
+			return null;
+		case "unban":
+			MainDB.users.update([ '_id', value ]).set([ 'black', null ]).on();
+			MainDB.users.update([ '_id', value ]).set([ 'time', Number(null) ]).on();
+			JLog.info(`[UNBAN] #${value} unbanned`);
+			return null;
+		case "broadcast":
+			KKuTu.publish('yell', { value: value });
 			return null;
 		case "kill":
 			if(temp = DIC[value]){
@@ -301,22 +363,15 @@ Cluster.on('message', function(worker, msg){
 });
 exports.init = function(_SID, CHAN){
 	SID = _SID;
-	MainDB = require('../Web/db');
+	MainDB = require('../web/database');
 	MainDB.ready = function(){
 		JLog.success("Master DB is ready.");
 		
 		MainDB.users.update([ 'server', SID ]).set([ 'server', "" ]).on();
-		if(Const.IS_SECURED) {
-			const options = Secure();
-			HTTPS_Server = https.createServer(options)
-				.listen(global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'], '54.180.16.16');
-			Server = new WebSocket.Server({server: HTTPS_Server});
-		} else {
-			Server = new WebSocket.Server({
-				port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'], 
-				perMessageDeflate: false
-			});
-		}
+		Server = new WebSocket.Server({
+			port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'], 
+			perMessageDeflate: false
+		});
 		Server.on('connection', function(socket, info){
 			var key = info.url.slice(1);
 			var $c;
@@ -357,7 +412,7 @@ exports.init = function(_SID, CHAN){
 					return;
 				}
 				if($c.guest){
-					if(SID != "0"&&SID != "1"&&SID != "2"&&SID != "3"){
+					if(SID != "0"&&SID != "1"){
 						$c.sendError(402);
 						$c.socket.close();
 						return;
@@ -585,8 +640,9 @@ function processClientRequest($c, msg) {
 			break;
 		case 'enter':
 		case 'setRoom':
-			// if ($c.broadcaster) msg.opts.roombroadcaster = true;
-			
+			if($c.broadcaster) msg.roomType = 'broadcast';
+			if($c.admin) msg.roomType = 'admin';
+
 			if (!msg.title) stable = false;
 			if (!msg.limit) stable = false;
 			if (!msg.round) stable = false;

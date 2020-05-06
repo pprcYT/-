@@ -19,26 +19,14 @@
 var WebSocket = require('ws');
 var File = require('fs');
 var Const = require("../const");
-var https = require('https');
-var Secure = require('../sub/secure');
-var Server;
-var HTTPS_Server
-
-if(Const.IS_SECURED) {
-	const options = Secure();
-	HTTPS_Server = https.createServer(options)
-		.listen(global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT']);
-	Server = new WebSocket.Server({server: HTTPS_Server});
-} else {
-	Server = new WebSocket.Server({
-		port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'],
-		perMessageDeflate: false
-	});
-}
+var Server = new WebSocket.Server({
+	port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'],
+	perMessageDeflate: false
+});
 var Master = require('./master');
 var KKuTu = require('./kkutu');
 var Lizard = require('../sub/lizard');
-var MainDB = require('../Web/db');
+var MainDB = require('../web/database');
 var JLog = require('../sub/jjlog');
 var GLOBAL = require('../sub/global.json');
 
@@ -226,7 +214,8 @@ KKuTu.onClientMessage = function($c, msg){
 			break;
 		case 'enter':
 		case 'setRoom':
-			// if($c.broadcaster) msg.opts.roombroadcaster = true;
+			if($c.broadcaster) msg.roomType = 'broadcast';
+			if($c.admin) msg.roomType = 'admin';
 			
 			if(!msg.title) stable = false;
 			if(!msg.limit) stable = false;

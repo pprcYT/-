@@ -845,7 +845,8 @@ exports.Room = function(room, channel){
 	};
 	my.gaming = false;
 	my.game = {};
-	
+	my.roomType = null;
+
 	my.getData = function(){
 		var i, readies = {};
 		var pls = [];
@@ -1277,7 +1278,7 @@ exports.Room = function(room, channel){
 				res[i].rank = Number(i);
 			}
 			pv = res[i].score;
-			rw = getRewards(o.data.rankPoint, my.mode, o.game.score / res[i].dim, o.game.bonus, res[i].rank, rl, sumScore, my.opts, GLOBAL.ADMIN.indexOf(o.id) != -1);
+			rw = getRewards(o.data.rankPoint, my.mode, o.game.score / res[i].dim, o.game.bonus, res[i].rank, rl, sumScore, my.opts, GLOBAL.ADMIN.indexOf(o.id) != -1, my.roomType);
 			rw.playTime = now - o.playAt;
 			my.RoomSettingOK(rw);
 			o.applyEquipOptions(rw); // 착용 아이템 보너스 적용
@@ -1468,7 +1469,7 @@ function shuffle(arr){
 	
 	return r;
 }
-function getRewards(rankScore, mode, score, bonus, rank, all, ss, opts, admin){
+function getRewards(rankScore, mode, score, bonus, rank, all, ss, opts, admin, roomType){
 	var rw = { score: 0, money: 0, rankPoint: 0 };
 	var sr = score / ss;
 	
@@ -1546,18 +1547,19 @@ function getRewards(rankScore, mode, score, bonus, rank, all, ss, opts, admin){
 		rw.rankPoint = Math.round(rw.rankPoint);
 		rw.score = 0;
 	}
-	// if (opts.roomadmin){
-		// rw.score = rw.score * 2;
-		// rw.money = rw.money * 2;
-	// }
-	// if (opts.roombroadcaster){
-		// rw.score = rw.score * 1.5;
-		// rw.money = rw.money * 1.5;
-	// }
+	if (roomType == 'admin'){
+		rw.score = rw.score * 2;
+		rw.money = rw.money * 2;
+	} else if (roomType == 'broadcast'){
+		rw.score = rw.score * 1.5;
+		rw.money = rw.money * 1.5;
+	}
 	if (admin){
 		rw.score = rw.score * -0.5;
 		rw.money = rw.money * 0.5;
 	}
+	// 5.05 핫타임
+	// rw.score = rw.score * 1.5;
 	// applyEquipOptions에서 반올림한다.
 	return rw;
 }
