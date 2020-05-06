@@ -41,7 +41,7 @@ module.exports = function(grunt){
 	var KKUTU = "web/game/public/js/in_game_kkutu.min.js";
 	
 	for(i in LIST){
-		files["web/game/public/js/"+LIST[i]+".min.js"] = "web/gamelib/"+LIST[i]+".js";
+		files["web/game/public/js/"+LIST[i]+".min.js"] = "web/game/lib/"+LIST[i]+".js";
 	}
 	files[KKUTU] = KKUTU_LIST;
 	
