@@ -84,7 +84,7 @@ function applyOptions(opt, isFirstLoad) {
 	if ($data.bgm) {
 		if (!isFirstLoad && (($data.loadedBGM != $data.selectedBGM) || ($data.loadedLobbyBGM != $data.selectedLobbyBGM))) {
 			loadSounds($data._soundList(), false, true);
-			akAlert("배경 음악이 변경되었습니다. 배경 음악/효과음 음량을 조절하시거나 게임을 시작하시면 바로 적용됩니다.");
+			akAlert("배경 음악이 변경되었습니다. 배경 음악/효과음 음량을 조절하시거나 게임을 시작하시면 바로 적용됩니다.", true);
 
 			$data.loadedBGM = $data.selectedBGM;
 			$data.loadedLobbyBGM = $data.selectedLobbyBGM;
@@ -271,12 +271,12 @@ function onMessage(data) {
 			welcome();
 			if (data.caj) checkAge();
 			updateCommunity();
-			if (data.guest) akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 ID로 로그인 시 더욱 즐거운 플레이가 가능합니다.");
+			if (data.guest) akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 계정으로 로그인 시 더욱 즐거운 플레이가 가능합니다.", true);
 			if ($data.nick == "nonick") {
 				var o = $stage.dialog.newnick;
 				o.parent().append(ov = $('<div />', {
 					id: 'newnick-overlay',
-					style: 'position:absolute;top:0;left:0;width:100%;height:120%;opacity:0.8;background:black;'
+					style: 'position:absolute;top:0;left:0;width:100%;height:115%;opacity:0.8;background:black;'
 				}));
 				o.find('#newnick-ok').off('click').click(function(e) {
 					var newnick = $("#newnick-input").val();
@@ -319,13 +319,13 @@ function onMessage(data) {
 			}
 			var akDate = new Date();
 			if (!$.cookie('isChecked') || ($.cookie('isChecked') != akDate.getDate())) {
-				var o = $stage.dialog.notice;
+				var no = $stage.dialog.notice;
 				$("#notice-board").attr('src', "/kkutu/announcement");
-				o.find('#notice-ok').off('click').click(function(e) {
+				no.find('#notice-ok').off('click').click(function(e) {
 					$.cookie('isChecked', akDate.getDate());
-					o.hide();
+					no.hide();
 				});
-				o.show();
+				no.show();
 			}
 			break;
 		case 'conn':
@@ -580,19 +580,24 @@ function onMessage(data) {
 				/* 로그인
 				$.cookie('preprev', location.href);
 				location.href = "/login?desc=login_kkutu"; */
+			} else if (data.code == (402 || 'full')) {
+				alert(L['error_' + data.code]);
+				break;
 			} else if (data.code == 403) {
 				loading();
+				akAlert("[#403] 비밀번호가 틀렸습니다.", true);
+				break;
 			} else if (data.code == 406) {
 				if ($stage.dialog.quick.is(':visible')) {
 					$data._preQuick = false;
 					break;
 				}
 			} else if (data.code == (408 || 443)) {
-				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
+				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 				break;
 			} else if (data.code == 409) {
 				i = L['server_' + i];
-				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
+				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 				break;
 			} else if (data.code == 416) {
 				// 게임 중
@@ -663,14 +668,15 @@ function onMessage(data) {
 				}
 				break;
 			} else if (data.code === 447) {
-				akAlert("자동화 봇 방지를 위한 캡챠 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.");
+				akAlert("자동화 봇 방지를 위한 reCAPTCHA 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.", true);
 				break;
 			} else if (data.code == 2010) {
-				akAlert("레벨 50 이상의 계정은 초보 방에 입장하실 수 없습니다.");
+				akAlert("레벨 50 이상의 계정은 초보 방에 입장하실 수 없습니다.", true);
 				loading();
 				break;
 			}
-			akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
+			if(data.code == (411 || 413 || 414 || 415 || 417 || 419 || 429 || 430 || 437)) akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+			else akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
 			break;
 		default:
 			break;
@@ -3450,7 +3456,7 @@ function setLocation(place) {
 }
 
 function fail(code) {
-	return akAlert(L['error_' + code]);
+	return akAlert(L['error_' + code], true);
 }
 
 function yell(msg) {

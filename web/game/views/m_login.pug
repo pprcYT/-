@@ -14,18 +14,19 @@
 	
 	You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
-include module
+//-
+	볕뉘 수정사항:
+	* Login 을 Passport 로 수행하기 위한 수정
+extends m_layout
 
-doctype html
-html
-	head
-		title= "알파끄투에 로그인하기 - 내 작은 글자 놀이터, 알파끄투! 끄투 온라인"
-		link(rel='canonical' href='https://kkutu.xyz/login')
-		+PageHead()
-	body
-		span#locale= JSON.stringify(LANG)
-		div.login-with= locals.text ? L(locals.text) : L('loginWith')
-		each val in loginList
-			a(href="/login/" + val.vendor)
-				button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
-		div.login-legal!= L('loginLegal')
+block Subject
+	title= "알파끄투에 로그인하기 - 내 작은 글자 놀이터, 알파끄투! 끄투 온라인"
+	link(rel='canonical' href='https://kkutu.xyz/login')
+	link(rel='stylesheet' type='text/css' href='https://cdn.kkutu.xyz/css/in_login.css')
+block Middle
+	span#locale= JSON.stringify(LANG)
+	div.login-with= locals.text ? L(locals.text) : L('loginWith')
+	each val in loginList
+		a(href="/login/" + val.vendor)
+			button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
+	div.login-legal!= L('loginLegal')

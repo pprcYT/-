@@ -73,7 +73,7 @@ block Middle
 	div#Intro
 		img#intro(src='https://cdn.kkutu.xyz/img/kkutu/m_intro.png')
 		//- img#intro-start(src='/img/kkutu/intro_start.gif')
-		div#version= VERSION
+		div#version= "알파끄투 v" + VERSION
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
 		button#HelpBtn.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #BBBBBB;')!= L('help')
@@ -428,6 +428,11 @@ block Middle
 		div.dialog-bar.tail-button
 			button#msg-no= L('NO')
 			button#msg-ok= L('OK')
+	+Dialog('MsgDiagOv', 300, 150, "알파끄투 안내메세지")
+		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		div.dialog-bar.tail-button
+			button#msg-no= L('NO')
+			button#msg-ok= L('OK')
 	+Dialog('NoticeDiag', 400, 400, L('bulletin'))
 		iframe#notice-board(width=400, height=340)
 		+separator(5)
@@ -559,6 +564,7 @@ block Middle
 		+GraphBar('my-gauge')
 		div.bar-text.my-gauge-text
 block Bottom
+	div#msg-overlay(style='position:absolute;top:0;left:0;width:100%;height:135%;opacity:0.3;background:black;display:none;')
 	div.bottom-legal!= L('License')
 	div.bottom-legal!= L('Dictionary')
 	div.bottom-legal!= L('Copyright')

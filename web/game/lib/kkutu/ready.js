@@ -146,6 +146,7 @@ $(document).ready(function() {
 			noticeOK: $("notice-ok"),
 			user: $("#UserDiag"),
 			message: $("#MsgDiag"),
+			messageOv: $("#MsgDiagOv"),
 			ask: $("#AskDiag"),
 			blocked: $("#BlockedDiag"),
 			password: $("#PasswordDiag"),
@@ -288,27 +289,38 @@ $(document).ready(function() {
 	loadSounds($data._soundList(), function() {
 		processShop(connect);
 	});
-	akAlert = function(msg2, t) {
-		var o = $stage.dialog.message;
+	akAlert = function(msg, isOv, timeout) {
+		if(isOv) var o = $stage.dialog.messageOv;
+		else var o = $stage.dialog.message;
+
+		var ov = $('#msg-overlay');
+
 		if (o.data('callback')) {
 			o.data('callback')(false);
 			o.data({});
 		}
 		o.find('#msg-ok').off('click').click(function(e) {
 			o.hide();
+			ov.hide();
 		});
 		o.find('#msg-no').off('click').click(function(e) {
 			o.hide();
+			ov.hide();
 		});
+		if (isOv) ov.show();
 		o.find('#msg-no').hide();
-		o.find('#msg-content').html(msg2);
+		o.find('#msg-content').html(msg);
 		showDialog(o);
-		if (t) setTimeout(function() {
+		if (timeout) setTimeout(function() {
 			o.hide();
-		}, t);
+		}, timeout);
 	};
-	akConfirm = function(msg2, call) {
-		var o = $stage.dialog.message;
+	akConfirm = function(msg2, call, isOv) {
+		if(isOv) var o = $stage.dialog.messageOv;
+		else var o = $stage.dialog.message;
+		
+		var ov = $('#msg-overlay');
+
 		if (o.data('callback')) {
 			o.data('callback')(false);
 			o.data({});
@@ -318,6 +330,7 @@ $(document).ready(function() {
 		});
 		o.find('#msg-ok').off('click').click(function(e) {
 			o.hide();
+			ov.hide();
 			if (o.data('callback')) {
 				o.data('callback')(true);
 				o.data({});
@@ -325,11 +338,13 @@ $(document).ready(function() {
 		});
 		o.find('#msg-no').off('click').click(function(e) {
 			o.hide();
+			ov.hide();
 			if (o.data('callback')) {
 				o.data('callback')(false);
 				o.data({});
 			}
 		});
+		if (isOv) ov.show();
 		o.find('#msg-no').show();
 		o.find('#msg-content').html(msg2);
 		showDialog(o);
@@ -629,12 +644,12 @@ $(document).ready(function() {
 		if ($stage.dialog[i].children(".dialog-head").hasClass("no-close")) continue;
 
 		$stage.dialog[i].children(".dialog-head").append($("<div>").addClass("closeBtn").on('click', function(e) {
-			$(e.currentTarget).parent().parent().hide();
+			$(e.currentTarget).parent().parent().hide(); $("#msg-overlay").hide();
 		}).hotkey(false, 27));
 	}
 	$stage.menu.refresh.on('click', function(e) {
 		$stage.menu.refresh.addClass("toggled");
-		// akAlert("<i class='fas fa-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", 3000);
+		// akAlert("<i class='fas fa-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", true);
 		send('refresh');
 		updateUI(undefined, true);
 		$stage.menu.refresh.removeClass("toggled");
@@ -1368,7 +1383,7 @@ $(document).ready(function() {
 				$stage.dialog.replayView.attr('disabled', false);
 			} catch (ex) {
 				console.warn(ex);
-				return akAlert(L['replayError']);
+				return akAlert(L['replayError'], true);
 			}
 		};
 	});

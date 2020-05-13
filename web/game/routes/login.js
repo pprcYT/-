@@ -70,7 +70,7 @@ exports.run = (Server, page) => {
 			Server.get('/login/' + auth.config.vendor + '/callback', passport.authenticate(auth.config.vendor, {
 				successRedirect: '/',
 				failureRedirect: '/loginfail'
-			}))
+			}));
 			passport.use(new auth.config.strategy(auth.strategyConfig, auth.strategy(process, MainDB /*, Ajae */)));
 			strategyList[auth.config.vendor] = {
 				vendor: auth.config.vendor,
