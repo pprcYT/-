@@ -21,7 +21,6 @@ var gameServer = express();
 var Exession = require("express-session");
 var Redission = require("connect-redis")(Exession);
 var Redis = require("redis");
-var Parser = require("body-parser");
 var GLOBAL = require("../sub/global.json");
 var REDIS_SESSION = Exession({
 	store: new Redission({
@@ -37,4 +36,4 @@ var REDIS_SESSION = Exession({
 		maxAge: 1000 * 60 * 60 * 24
 	}
 });
-require("./game")(gameServer, REDIS_SESSION, Parser, GLOBAL);
+require("./game")(gameServer, REDIS_SESSION, GLOBAL);

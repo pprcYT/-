@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var Web		 = require("request");
 var MainDB	 = require("../../database");
 var JLog	 = require("../../../sub/jjlog");
 var Const	 = require("../../../const");
@@ -129,32 +128,6 @@ Server.get("/moremi", function(req, res){
 		return R;
 	}
 });
-/* Server.get("/injeong/:word", function(req, res){
-	if(!req.session.profile) return res.send({ error: 402 });
-	var word = req.params.word;
-	var theme = req.query.theme;
-	var now = Date.now();
-	
-	if(now - req.session.injBefore < 2000) return res.send({ error: 429 });
-	req.session.injBefore = now;
-	
-	MainDB.kkutu['ko'].findOne([ '_id', word.replace(/[^가-힣0-9]/g, "") ]).on(function($word){
-		if($word) return res.send({ error: 409 });
-		MainDB.kkutu_injeong.findOne([ '_id', word ]).on(function($ij){
-			if($ij){
-				if($ij.theme == '~') return res.send({ error: 406 });
-				else return res.send({ error: 403 });
-			}
-			// Web.get("https://namu.moe/w/" + encodeURI(word), function(err, _res){
-				// if(err) return res.send({ error: 400 });
-				// else if(_res.statusCode != 200) return res.send({ error: 405 });
-			MainDB.kkutu_injeong.insert([ '_id', word ], [ 'theme', theme ], [ 'createdAt', now ], [ 'writer', req.session.profile.id ]).on(function($res){
-				res.send({ message: "OK" });
-			});
-			// });
-		});
-	});
-}); */
 Server.get("/cf/:word", function(req, res){
 	res.send(getCFRewards(req.params.word, Number(req.query.l || 0), req.query.b == "1"));
 });

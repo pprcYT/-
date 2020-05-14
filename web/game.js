@@ -17,12 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = function(gameServer, REDIS_SESSION, Parser, GLOBAL) {
+module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 	var WS = require("ws");
 	var Express = require("express");
 	var expressStaticGzip = require("express-static-gzip");
 	var Exession = require("express-session");
-	var DDDoS = require("dddos");
 	var gameServer = Express();
 	var DB = require("./database");
 	var JLog = require("../sub/jjlog");
@@ -51,9 +50,7 @@ module.exports = function(gameServer, REDIS_SESSION, Parser, GLOBAL) {
 	gameServer.set('views', __dirname + "/game/views");
 	gameServer.set('view engine', "pug");
 	gameServer.use(Express.static(__dirname + "/game/public"));
-	gameServer.use(Parser.urlencoded({
-		extended: true
-	}));
+	gameServer.use(Express.urlencoded({ extended: true }));
 	gameServer.use(REDIS_SESSION);
 	gameServer.use(passport.initialize());
 	gameServer.use(passport.session());
@@ -64,24 +61,7 @@ module.exports = function(gameServer, REDIS_SESSION, Parser, GLOBAL) {
 		next();
 	});
 	gameServer.disable('x-powered-by');
-
-	/* DDDoS = new DDDoS({
-		maxWeight: 40,
-		checkInterval: 8000,
-		rules: [{
-			regexp: "^/(cf|dict|gwalli|ranking)",
-			maxWeight: 40,
-			errorData: "[#429] 과도한 요청으로 인하여 일정 시간동안 서버 접속이 제한됩니다. 약 30초 후 다시 접속하여 주십시오."
-		}, {
-			regexp: ".*",
-			errorData: "[#429] 과도한 요청으로 인하여 일정 시간동안 서버 접속이 제한됩니다. 약 30초 후 다시 접속하여 주십시오."
-		}]
-	});
-	DDDoS.rules[0].logFunction = DDDoS.rules[1].logFunction = function(ip, path){
-		JLog.warn(`DoS from IP ${ip} on ${path}`);
-	};
-	gameServer.use(DDDoS.express()); */
-
+	
 	WebInit.init(gameServer, true);
 	DB.ready = function() {
 		setInterval(function() {

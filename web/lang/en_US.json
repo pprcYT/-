@@ -1,6 +1,6 @@
 {
 	"GLOBAL": {
-		"version": "20.5.13",
+		"version": "20.5.14",
 		"GPL": "<div style='color: #666;'>글자로 놀자! 끄투 온라인 Copyright (C) 2017 알파끄투(admin@kkutu.xyz)<br>이 프로그램은 제품에 대한 어떠한 형태의 보증도 제공되지 않습니다.<br>이 프로그램은 자유 소프트웨어이며 배포 규정을 만족시키는 조건 아래 자유롭게 재배포할 수 있습니다.<br>이에 대한 자세한 사항은 본 프로그램의 구현을 담은 다음 레포지토리에서 확인하십시오: <a target='_blank' href='https://github.com/AlphaKKuTu/KKuTu/tree/production'>https://github.com/AlphaKKuTu/KKuTu/tree/production</a></div>",
 		"License": "<br><label style='color: #666;'>내 작은 글자 놀이터. 알파끄투는 JJoriping의 오픈소스 KKuTu를 기반으로 제작되었습니다.<br>본 소프트웨어는 어떠한 형태의 보증도 제공되지 않는 자유 소프트웨어이며 배포 규정을 만족시키는 조건 하에 자유롭게 재배포할 수 있습니다.<br>이에 대한 자세한 사항은 본 소프트웨어의 구현을 담은 다음 레포지토리에서 확인하십시오: <a target='_blank' href='https://github.com/AlphaKKuTu/KKuTu/tree/production'>https://github.com/AlphaKKuTu/KKuTu/tree/production</a></label>",
 		"Dictionary": "<label style='color: #666;'>Korean © 국립국어원 <a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a> 3.0 © Princeton University 어인정 © 알파끄투</label>",
