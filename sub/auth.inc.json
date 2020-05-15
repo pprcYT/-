@@ -1,32 +1,32 @@
 {
-    "naver": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/naver/callback"
-    },
-    "facebook": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/facebook/callback"
-    },
-    "google": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/google/callback"
-    },
-    "kakao": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/kakao/callback"
-    },
+	"naver": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/naver/callback"
+	},
+	"facebook": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/facebook/callback"
+	},
+	"google": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/google/callback"
+	},
+	"kakao": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/kakao/callback"
+	},
 	"discord": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/discord/callback"
-    },
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/discord/callback"
+	},
 	"github": {
-        "clientID": "",
-        "clientSecret": "",
-        "callbackURL": "https://kkutu.xyz/login/github/callback"
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "https://kkutu.xyz/login/github/callback"
 	}
 }
