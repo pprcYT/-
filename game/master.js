@@ -505,6 +505,7 @@ KKuTu.onClientMessage = function ($c, msg) {
 	} else {
 		if (msg.type === 'recaptcha') {
 			Recaptcha.verifyRecaptcha(msg.token, $c.remoteAddress, function (success) {
+				// console.log(success);
 				if (success) {
 					$c.passRecaptcha = true;
 

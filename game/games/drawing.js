@@ -16,12 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * 볕뉘 수정사항:
- * var 에서 let/const 로 변수 변경
- * kkutu-lib 모듈에 호환되도록 수정
- */
-
 const Const = require('../../const');
 const Lizard = require('../../sub/lizard');
 
