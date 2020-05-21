@@ -18,8 +18,9 @@
 
 (function(){
 	var $stage;
-	var LIMIT = 100;
+	var LIMIT = 400;
 	var LIST;
+	var mobile = $("#mobile").html() == "true";
 	$(document).ready(function(){
 		$stage = {
 			list: $("#server-list"),
@@ -30,7 +31,7 @@
 		};
 
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/gamebg.png)",
+			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/alphakkutu.png)",
 			'background-size': "200px 200px"
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){
@@ -67,30 +68,27 @@
 			$stage.list.empty();
 			LIST = data.list;
 			data.list.forEach(function(v, i){
-				var status = (v === null) ? "x" : "o";
-				var people = (status == "x") ? "-" : (v + " / " + LIMIT);
+				var status = (v === null) ? "x" : "g";
+				var people = (status == "x") ? "0 / 400" : (v + " / " + LIMIT);
 				var limp = v / LIMIT * 100;
 				var $e;
 
 				sum += v || 0;
-				if(status == "o"){
-					if(limp >= 99) status = "q";
-					else if(limp >= 90) status = "p";
+				if(status == "g"){
+					if(limp >= 80) status = "q";
+					else if(limp >= 60) status = "p";
+					else if(limp >= 40) status = "o";
 				}
 				$stage.list.append($e = $("<div>").addClass("server").attr('id', "server-" + i)
 					.append($("<div>").addClass("server-status ss-" + status))
-					.append($("<div>").addClass("server-name").html(L['server_' + i]))
-					.append($("<div>").addClass("server-people graph")
-						.append($("<div>").addClass("graph-bar").width(limp + "%"))
-						.append($("<label>").html(people))
-					)
-					.append($("<div>").addClass("server-enter").html(L['serverEnter']))
+					.append($("<div>").addClass("server-name").html('<b>' + L['server_' + i] + '</b> 서버입장'))
+					.append($("<div>").addClass("server-stats st-" + status).html('<b>' + people + '</b> ' + L['ss_' + status]))
 				);
 				if (status != "x") $e.on('click', function (e) {
 					location.href = "/?server=" + i;
 				}); else $e.children(".server-enter").html("-");
 			});
-			$stage.total.html("&nbsp;" + L['TOTAL'] + " " + sum + L['MN']);
+			$stage.total.html("&nbsp;▼ " + sum + "명 접속 중");
 			$stage.refi.removeClass("fa-sync-alt fa-spin");
 			$stage.start.prop('disabled', false);
 		});

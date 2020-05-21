@@ -74,7 +74,8 @@ $(document).ready(function() {
 			notice: $("#NoticeBtn"),
 			replay: $("#ReplayBtn"),
 			leaderboard: $("#LeaderboardBtn"),
-			user: $("#UserBtn")
+			user: $("#UserBtn"),
+			userList: $("#UserListBtn"),
 		},
 		dialog: {
 			setting: $("#SettingDiag"),
@@ -922,6 +923,15 @@ $(document).ready(function() {
 			showDialog($stage.dialog.leaderboard);
 		});
 	});
+	$stage.menu.userList.on('click', function(e) {
+		if($stage.box.userList.is(":visible")) {
+			$stage.menu.userList.removeClass("toggled");
+			$stage.box.userList.hide();
+		} else {
+			$stage.menu.userList.addClass("toggled");
+			$stage.box.userList.show();
+		}
+	});
 	$stage.dialog.lbPrev.on('click', function(e) {
 		$(e.currentTarget).attr('disabled', true);
 		$.get("/ranking?p=" + ($data._lbpage - 1), function(res) {
@@ -1402,13 +1412,10 @@ $(document).ready(function() {
 		ws = new _WebSocket($data.URL);
 		ws.onopen = function(e) {
 			loading();
-			/*if($data.PUBLIC && mobile) $("#ad").append($("<ins>").addClass("daum_ddn_area")
-				.css({ 'display': "none", 'margin-top': "10px", 'width': "100%" })
+			if($data.PUBLIC && mobile) $("#ad").append($("<ins>").addClass("kakao_ad_area")
+				.css({ 'display': "none", 'width': "100%" })
 				.attr({
-					'data-ad-unit': "DAN-1ib8r0w35a0qb",
-					'data-ad-media': "4I8",
-					'data-ad-pubuser': "3iI",
-					'data-ad-type': "A",
+					'data-ad-unit': "DAN-qy4y6lsg0jzm",
 					'data-ad-width': "320",
 					'data-ad-height': "100"
 				})
@@ -1417,7 +1424,7 @@ $(document).ready(function() {
 					'type': "text/javascript",
 					'src': "//t1.daumcdn.net/adfit/static/ad.min.js"
 				})
-			);*/
+			);
 		};
 		ws.onmessage = _onMessage = function(e) {
 			onMessage(JSON.parse(e.data));

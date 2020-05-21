@@ -17,7 +17,7 @@
 extends m_layout
 
 block Subject
-	title 알파끄투 - 내 작은 글자 놀이터, 알파끄투! 끄투 온라인
+	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	link(rel='canonical' href='https://kkutu.xyz')
 
 block CSS
@@ -29,31 +29,19 @@ block JS
 
 block Middle
 	+separator(5)
-	div(style='margin-left: calc(50% - 170px);')
-		div(style='float: left; padding-left: 70px;')
-			h3#holder= L('title').replace(/\[.+?\]/g, "")
-			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png')
-		div.jjoriping(style='margin-top: 10px;')
-			img.jjoObj.jjoEyeL(src='https://cdn.kkutu.xyz/img/jjoeyeL.png', style='top: 40px; left: -270px;')
-			img.jjoObj.jjoNose(src='https://cdn.kkutu.xyz/img/jjonose.png', style='top: 42px; left: -170px;')
-			img.jjoObj.jjoEyeR(src='https://cdn.kkutu.xyz/img/jjoeyeR.png', style='top: 40px; left: -70px;')
-			div.jjoDisplayBar(style='float: left; margin-top: -30px; width: 325px; height: 85px;')
-				button#game-start.jjo-display= L('gameStart')
-	+separator(10)
-	div(style='float: left; margin-left: calc(50% - 190px);')
+	div(style='display:table; width:200px; margin:0 auto;')
+		div(style='width:200px;height:140px;background-color:rgba(0, 0, 0, 0.5);display:inline-block;')
+			h3#holder(style='padding-top:30px;')= L('title').replace(/\[.+?\]/g, "")
+			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
+		button#game-start.jjo-display(style='float:none;') 게임 시작
+		div(style='width:200px;height:5px;background-color:transparent;')
 		div.server-list-box
-			h3.server-list-title
-				a#server-refresh
-					+FA('sync-alt')
-					+Expl(L('serverRefresh'))
-				label= L('serverList')
-				label#server-total(style='color: #AAA; font-size: 13px;')
-			div#server-list
-	div(style='float: left; width: calc(100% - 4px); border: 2px solid #CCC; margin-top: 10px; background-color: #EEE;')
-		iframe#kkutu-bulletin(width='100%', height='400px', src='https://kkutu.xyz/docs/bulletin.html?v='+L('version'))
+			h3.server-list-title(style='height:20px;')
+				label#server-total(style='color:#fff;font-size:14px;vertical-align:middle;') ▼ 0명 접속 중
+				a#server-refresh(style='background-color:cornflowerblue;padding:2px;font-size:14px;') <i class="fas fa-redo"></i> 새로고침
+			div#server-list(style='height:270px;')
 	+separator(10)
 	div#ad
+		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-qy4y6lsg0jzm', data-ad-width='320', data-ad-height='100')
+		script(type='text/javascript', src='//t1.daumcdn.net/kas/static/ba.min.js', async='')
 block Bottom
-	div.bottom-legal!= L('License')
-	div.bottom-legal!= L('Dictionary')
-	div.bottom-legal!= L('Copyright')

@@ -195,8 +195,8 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 				'IJP_EXCEPT': Const.IJP_EXCEPT,
 				'ogImage': "https://cdn.kkutu.xyz/img/kkutu/logo.png",
 				'ogURL': "https://kkutu.xyz/",
-				'ogTitle': "알파끄투",
-				'ogDescription': "내 작은 글자 놀이터, 알파끄투! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"
+				'ogTitle': "끄투닷넷",
+				'ogDescription': "내 작은 글자 놀이터, 끄투닷넷! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"
 			});
 		}
 	});
@@ -221,6 +221,10 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		page(req, res, "kkutu/" + req.params.page);
 	});
 
+	gameServer.get("/browserunsupport", function(req, res) {
+		page(req, res, "browserunsupport");
+	});
+	
 	gameServer.get("*", function(req, res) {
 		page(req, res, "404");
 	});

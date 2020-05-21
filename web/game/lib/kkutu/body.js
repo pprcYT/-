@@ -276,7 +276,7 @@ function onMessage(data) {
 				var o = $stage.dialog.newnick;
 				o.parent().append(ov = $('<div />', {
 					id: 'newnick-overlay',
-					style: 'position:absolute;top:0;left:0;width:100%;height:115%;opacity:0.8;background:black;'
+					style: 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'
 				}));
 				o.find('#newnick-ok').off('click').click(function(e) {
 					var newnick = $("#newnick-input").val();
@@ -649,7 +649,7 @@ function onMessage(data) {
 				var o = $stage.dialog.blocked;
 				o.parent().append(ov = $('<div />', {
 					id: 'block-overlay',
-					style: 'position:absolute;top:0;left:0;width:100%;height:120%;opacity:0.8;background:black;'
+					style: 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'
 				}));
 
 				if (isNaN(blackEnds)) {
@@ -973,7 +973,10 @@ function updateUI(myRoom, refresh) {
 
 	if (only == "for-lobby") {
 		$data._ar_first = true;
-		$stage.box.userList.show();
+		if (mobile) {
+			if ($stage.menu.userList.hasClass("toggled")) $stage.box.userList.show();
+			else $stage.box.userList.hide();
+		} else $stage.box.userList.show();
 		if ($data._shop) {
 			$stage.box.roomList.hide();
 			$stage.box.shop.show();

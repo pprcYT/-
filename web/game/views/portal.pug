@@ -17,51 +17,79 @@
 extends layout
 
 block Subject
-	title 알파끄투 - 내 작은 글자 놀이터, 알파끄투! 끄투 온라인
+	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	link(rel='canonical' href='https://kkutu.xyz')
 block CSS
 	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu.css?v='+L('version'))
-
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/notice.css?v='+L('version'))
 block JS
 	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_kkutu.min.js?v='+L('version'))
 block Middle
 	+separator(5)
-	div(style='float: left; width: 100%;')
-		div(style='float: left; padding-left: 70px;')
-			h3#holder= L('title').replace(/\[.+?\]/g, "")
-			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png', title='알파끄투 로고 - 끄투 온라인')
-		div#menu-bar(style='float: right; margin-top: 25px;')
-			a(target='_blank', href='https://cafe.naver.com/kkutuxyz', style='background-color: #78BE20;') 네이버 카페
-			a(target='_blank', href='https://discord.gg/rnCSBWj', style='background-color: #4078DC;') 디스코드
-			a(target='_blank', href='http://pf.kakao.com/_gxcsxeT', style='background-color: #CCAC00;') 카카오톡 
-			a(target='_blank', href='https://wiki.kkutu.xyz', style='background-color: #4B89DC;') 알끄위키
-		div.jjoriping(style='margin-top: 40px;')
-			img.jjoObj.jjoEyeL(src='https://cdn.kkutu.xyz/img/jjoeyeL.png', title='쪼리핑 왼쪽 눈', style='left: -270px;')
-			img.jjoObj.jjoNose(src='https://cdn.kkutu.xyz/img/jjonose.png', title='쪼리핑 코', style='left: -170px;')
-			img.jjoObj.jjoEyeR(src='https://cdn.kkutu.xyz/img/jjoeyeR.png', title='쪼리핑 오른쪽 눈', style='left: -70px;')
-			div.jjoDisplayBar(style='width: 325px; height: 85px;')
-				button#game-start.jjo-display 게임 시작!
-	
-	div(style='float: right; margin-top: -120px; width: 50%;')
-		div.server-list-box
-			h3.server-list-title
-				a#server-refresh
-					+FA('sync-alt')
-					+Expl(L('serverRefresh'))
-				label= L('serverList')
-				label#server-total(style='color: #AAA; font-size: 13px;')
-			div#server-list
+	div(style='display:inline-block; float: left; width: 200px;')
+		div(style='width:200px;height:140px;background-color:rgba(0, 0, 0, 0.5);float:left;display:inline-block;')
+			h3#holder(style='padding-top:30px;')= L('title').replace(/\[.+?\]/g, "")
+			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
+		button#game-start.jjo-display(style='float:left;') 게임 시작
+	div#container-slides(style='float: left; background-color: #ccc; display: inline-block; width: 60%; margin-left: 15px;')
+		img.slide.showing(src='https://cdn.kkutu.xyz/img/kkutu/intro.png', title='BANNER (1)')
+		img.slide(src='https://cdn.kkutu.xyz/img/kkutu/intro.png', title='BANNER (2)')
+	script.
+		var slides = document.querySelectorAll('#container-slides .slide');
+		var currentSlide = 0;
+		var slideInterval = setInterval(nextSlide, 5000);
+		function nextSlide() {
+			slides[currentSlide].className = 'slide';
+			currentSlide = (currentSlide+1)%slides.length;
+			slides[currentSlide].className = 'slide showing';
+		}
+	div#container-black(style='float: right; background-color: #ccc; display: inline-block; width: 795px; height: 226px;')
+		div#container-social(style='float: right; background-color: #004c5c; width: 189px; height: 226px;')
+			div#container-social-ribbon(style='float: left; margin-left: 10px; width: 4px; height: 100%; background-color: #fff;')
+			a#social(href='https://blog.naver.com/kkutudotnet' target='_blank') <i class="fab fa-blogger-b fa-fw"></i> 네이버 블로그
+			a#social(href='https://cafe.naver.com/kkutuxyz' target='_blank') <i class="fas fa-coffee fa-fw"></i> 네이버 카페
+			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="fab fa-discord fa-fw"></i> 디스코드
+			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="fab fa-facebook fa-fw"></i> 페이스북
+			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="fas fa-sms fa-fw"></i> 카카오톡
+			a#social(href='https://wiki.kkutu.xyz' target='_blank') <i class="fab fa-wikipedia-w fa-fw"></i> 위키닷넷
 	+separator(5)
-	//<table style="border-collapse:collapse;border-spacing:0;border-color:#bbb" class="tg"><tr><th style="font-family:Arial, sans-serif;font-size:14px;font-weight:bold;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;text-align:center;vertical-align:top">제      명</th><th style="font-family:Arial, sans-serif;font-size:14px;font-weight:bold;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;text-align:center;vertical-align:top">알파끄투</th><th style="font-family:Arial, sans-serif;font-size:14px;font-weight:bold;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;text-align:center;vertical-align:top">신청자</th><th style="font-family:Arial, sans-serif;font-size:14px;font-weight:bold;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;text-align:center;vertical-align:top">김도훈</th></tr><tr><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">이용등급</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">전체이용가</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">등급분류번호</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">제 GC-CC-NP-191023-001호</td></tr><tr><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">등급분류 일자</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">2019. 10. 23.</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top">제작·배급업신고번호</td><td style="font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:inherit;color:#ffffff;background-color:#44a342;font-weight:bold;text-align:center;vertical-align:top"></td></tr></table>
-	div(style='float: left; width: calc(100% - 4px); border: 2px solid #CCC; margin-top: 10px; background-color: #EEE;')
-		iframe#kkutu-bulletin(width='100%', height='400px', src='/docs/bulletin.html')
+	div(style='float: left;')
+		div.server-list-box
+			h3.server-list-title(style='height:20px;')
+				label#server-total(style='color:#fff;font-size:14px;vertical-align:middle;') ▼ 0명 접속 중
+				a#server-refresh(style='background-color:cornflowerblue;padding:2px;float:right;font-size:14px;') <i class="fas fa-redo"></i> 새로고침
+			div#server-list(style='height:270px;')
+	div(style='float: right; width: calc(40% - 11.5px); background-color: #EEE; margin-left: 10px;')
+		div#btl <i class="fas fa-list" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
+		iframe#kkutu-bulletin(width='100%', height='190px', src='/docs/bulletin.html')
+	div(style='float: right; width: calc(40% - 11.5px); background-color: #EEE;')
+		div#btl <i class="fas fa-info-circle" style="margin-left:5px;padding-top:2px;"></i> 공지사항
+		iframe#kkutu-bulletin(width='100%', height='190px', src='/docs/notice.html')
+	table.tg(style='border-collapse:collapse;border-spacing:0;border-color:#bbb;float:left;width:447px;height:65px;margin-left:15px;margin-top:5px;')
+		tbody
+			tr
+				th#info.bold 제명
+				th#info 알파끄투
+				th#info.bold 신청자
+				th#info 김도훈
+			tr
+				td#info.bold 이용등급
+				td#info 전체이용가
+				td#info.bold 등급분류번호
+				td#info GC-CC-NP-191023-001
+			tr
+				td#info.bold 등급분류 일자
+				td#info 2019. 10. 23.
+				td#info.bold 제작·배급업신고번호
+				td#info
+	img(style='float: right; width: calc(80% - 470px); height:65px; background:#ccc; margin-top:5px;' src='https://cdn.kkutu.xyz/ad/info.png')
 	+separator(10)
-	//+Product('AD')
+	div#ad(style='height:90px;width:1010px;background-color:#cccccc;text-align:center;display:inline-block;text-align: center;')
+		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-vb9lq0e1ie02', data-ad-width='728', data-ad-height='90')
+		script(type='text/javascript', src='//t1.daumcdn.net/kas/static/ba.min.js', async)
+	+separator(30)
 block Bottom
-	div.bottom-legal!= L('License')
-	div.bottom-legal!= L('Dictionary')
-	div.bottom-legal!= L('Copyright')
 	p(hidden).
 		글자로 놀자! 끄투 온라인은 쪼리핑(JJoriping)의 1인 개발 온라인 오픈 소스 끝말잇기 게임입니다. 한국어 끝말잇기, 쿵쿵따, 타자 대결, 단어 대결, 십자말풀이, 그림퀴즈, 영어 끝말잇기, 끄투, 솎솎 등 다양한 게임 모드 (미니 게임으로 생각하면 편합니다.)를 지원하는 것이 특징입니다.
 		기본적인 게임 방식은 차례를 이어 나가며 점수를 획득하고, 가장 많이 획득한 순서대로 순위가 매겨지는 간단한 방식입니다.
-		현재는 원작자가 개발을 중단하여 프리 서버 게임으로 변경된 상태입니다. 그리고 그 서버 중 대표적인 서버가 바로 알파끄투입니다.
+		현재는 원작자가 개발을 중단하여 프리 서버 게임으로 변경된 상태입니다. 그리고 그 서버 중 대표적인 서버가 바로 끄투닷넷입니다.

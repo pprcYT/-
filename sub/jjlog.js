@@ -16,10 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// 모듈 호출
-
-var colors = require('colors');
-
 function callLog(text){
 	var date = new Date();
 	var o = {
@@ -41,17 +37,17 @@ exports.log = function(text){
 	callLog(text);
 };
 exports.info = function(text){
-	callLog(text.cyan);
+	callLog("[INFO] "+text);
 };
 exports.success = function(text){
-	callLog(text.green);
+	callLog("[SUCCESS] "+text);
 };
 exports.alert = function(text){
-	callLog(text.yellow);
+	callLog("[ALERT] "+text);
 };
 exports.warn = function(text){
-	callLog(text.black.bgYellow);
+	callLog("[WARN] "+text);
 };
 exports.error = function(text){
-	callLog(text.bgRed);
+	callLog("[ERROR] "+text);
 };

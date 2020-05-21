@@ -41,7 +41,7 @@ mixin SettingOptionVolume(id)
 	input(id=id, type='range', min='0', max='1', step='0.01', value='1', style='width:50%;')
 
 block Subject
-	title 알파끄투 - 내 작은 글자 놀이터, 알파끄투! 끄투 온라인
+	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	
 block JS
 	script(type='text/javascript', src='/js/in_game_kkutu.min.js?v='+L('version'))
@@ -73,7 +73,7 @@ block Middle
 	div#Intro
 		img#intro(src='https://cdn.kkutu.xyz/img/kkutu/m_intro.png')
 		//- img#intro-start(src='/img/kkutu/intro_start.gif')
-		div#version= "알파끄투 v" + VERSION
+		div#version= "끄투닷넷 v" + VERSION
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
 		button#HelpBtn.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #BBBBBB;')!= L('help')
@@ -93,6 +93,7 @@ block Middle
 		button#ExitBtn.for-master.for-normal.for-gaming(style='display: none; background-color: #FFADAD;'): +FA('times')
 		button#ReplayBtn.for-lobby(style='display: none; background-color: #D9FF82;'): +FA('video')
 		button#LeaderboardBtn.for-lobby(style='display: none; background-color: #FFADD3;'): +FA('trophy')
+		button#UserListBtn.for-lobby(style='display: none; background-color: #FF9CB7;'): +FA('users')
 	+Dialog('SettingDiag', 300, 424, L('settingsText'))
 		div.dialog-bar
 			h4= L('bgm')
@@ -122,22 +123,23 @@ block Middle
 			+SettingOption('only-unlock', L('onlyUnlock'), "width: 200px;")
 		div.dialog-bar
 			h4 테마 선택<font color="red">*</font>
-			+SettingOption('alphakkutu-theme', "알파끄투")
+			+SettingOption('alphakkutu-theme', "끄투닷넷")
 		div.dialog-bar
 			h4 배경 음악 선택<font color="red">*</font>
 			select#select-lobby-bgm
 				option(disabled) 배경 음악을 선택하세요.
 				option(value='kkutu') 오리지널 끄투
-				//option(value='seol') 끄투 명절
-				option(value='alpha') 알파끄투 피아노
-				option(value='original') 알파끄투 오리지널
+				option(value='seol') 끄투 명절
+				option(value='alpha') 끄투닷넷 피아노
+				option(value='original') 끄투닷넷 오리지널
+				option(value='second') 끄투닷넷 세컨드
 				option(value='start', selected) 새로운 시작
 		div.dialog-bar
 			h4 효과음 선택<font color="red">*</font>
 			select#select-bgm
 				option(disabled) 효과음을 선택하세요.
 				option(value='kkutu') 오리지널 끄투
-				option(value='alpha') 알파끄투 피아노
+				option(value='alpha') 끄투닷넷 피아노
 				option(value='start', selected) 새로운 시작
 		+separator(5)
 		h5(style='font-size: 11px; text-align: right;') <font color="red">*</font> 표시된 항목은 재접속 시 설정이 적용됩니다.
@@ -356,9 +358,9 @@ block Middle
 		div.dialog-bar.tail-button
 			button#dress-ok= L('OK')
 			//button#dress-cf= L('charFactory')
-			button(onclick=`kkutu_alert("아직 모바일에서는 지원하지 않는 기능입니다.");`)= L('charFactory')
-			button(onclick=`kkutu_alert("아직 모바일에서는 지원하지 않는 기능입니다.");`)= L('payback')
-			//button(onclick=`kkutu_alert("${L("paybackHelp")}");`)= L('payback')
+			button(onclick=`akAlert("아직 모바일에서는 지원하지 않는 기능입니다.");`)= L('charFactory')
+			button(onclick=`akAlert("아직 모바일에서는 지원하지 않는 기능입니다.");`)= L('payback')
+			//button(onclick=`akAlert("${L("paybackHelp")}");`)= L('payback')
 	+Dialog('ReplayDiag', 300, 300, L('replay'))
 		input#replay-file(type='file', style='width: 288px;', accept=".kkutu")
 		div.dialog-bar
@@ -380,7 +382,7 @@ block Middle
 			button#obtain-ok= L('OK')
 	+Dialog('HelpDiag', 300, 400, L('helpText'))
 		iframe#help-board(width=300, height=375)
-	+Dialog('ReportDialog', 350, 265, "알파끄투 유저 신고하기")
+	+Dialog('ReportDialog', 350, 265, "끄투닷넷 유저 신고하기")
 		<b>1. 가장 적합한 신고 사유를 선택하여 주십시오.</b>
 		select#rsl(style='width:100%;margin-top:5px;margin-bottom:5px;')
 			option(disabled) 가장 적합한 신고 사유를 선택하여 주십시오.
@@ -423,21 +425,21 @@ block Middle
 		div#blocked-content(style='height:60px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:block;')
 		+separator(15)
 		h5(style='text-align:center;') 처벌과 관련된 문의는 <a href="https://cafe.naver.com/kkutuxyz">공식카페</a>를 이용해 주시기 바랍니다.
-	+Dialog('MsgDiag', 300, 150, "알파끄투 안내메세지")
+	+Dialog('MsgDiag', 300, 150, "끄투닷넷 안내메세지")
 		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
 		div.dialog-bar.tail-button
 			button#msg-no= L('NO')
 			button#msg-ok= L('OK')
-	+Dialog('MsgDiagOv', 300, 150, "알파끄투 안내메세지")
+	+Dialog('MsgDiagOv', 300, 150, "끄투닷넷 안내메세지")
 		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
 		div.dialog-bar.tail-button
 			button#msg-no= L('NO')
 			button#msg-ok= L('OK')
-	+Dialog('NoticeDiag', 400, 400, L('bulletin'))
-		iframe#notice-board(width=400, height=340)
+	+Dialog('NoticeDiag', 400, 310, L('bulletin'))
+		iframe#notice-board(width=400, height=250)
 		+separator(5)
 		button#notice-ok(style="margin: 0 auto;float:initial;height:15px;width:60px;") 확인
-	+Dialog('AskDiag', 300, 150, "알파끄투 안내메세지")
+	+Dialog('AskDiag', 300, 150, "끄투닷넷 안내메세지")
 		div#ask-content(style='height:60px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
 		input#ask-input(type='text', placeholder="입력", style='width:288px;')
 		div.dialog-bar.tail-button
@@ -563,8 +565,6 @@ block Middle
 		div.my-level
 		+GraphBar('my-gauge')
 		div.bar-text.my-gauge-text
+	div#ad
 block Bottom
 	div#msg-overlay(style='position:absolute;top:0;left:0;width:100%;height:135%;opacity:0.3;background:black;display:none;')
-	div.bottom-legal!= L('License')
-	div.bottom-legal!= L('Dictionary')
-	div.bottom-legal!= L('Copyright')

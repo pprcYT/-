@@ -32,7 +32,7 @@ if(Cluster.isMaster){
 	const fs = require('fs');
 	const webHook = require('discord-webhook-node');
 	
-	const hook = new webHook.Webhook(GLOBAL.WEBHOOK_URI);
+	const hook = new webHook.Webhook(GLOBAL['WEBHOOK_URI']);
 
 	const cron = require('node-cron');
 	cron.schedule('*/30 * * * *', () => {
