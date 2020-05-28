@@ -16,10 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * 볕뉘 수정사항:
- * getCookie 코드오류로 인한 코드 수정
- */
 var global = {};
 var L;
 
@@ -50,8 +46,8 @@ var L;
         var expire = new Date();
 		
         expire.setDate(expire.getDate() + cDay);
-        cookies = cName + '=' + escape(cValue) + '; path=/ ';
-        if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+        cookies = cName + '=' + escape(cValue) + ';path=/ ';
+        if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';sv=kkutudotnet; Secure';
 		
         document.cookie = cookies;
     }
@@ -279,8 +275,8 @@ var L;
                     obj = spart || part;
                     gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
                     img = (obj.group.charAt(0) == 'M')
-                        ? "/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
-                        : "/img/kkutu/shop/" + obj._id + ".png";
+                        ? "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
+                        : "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/shop/" + obj._id + ".png";
                     Icss = { 'width': "25px", 'height': "25px", 'z-index': 100+parseInt(i) }
                     if (key.slice(1) == "rhand") Icss.transform = "scaleX(-1)"
                     $obj.append($("<img>")
@@ -291,7 +287,7 @@ var L;
                 };
             });
             $obj.append($("<img>").addClass("moremies moremi-body")
-                .attr('src', "/img/kkutu/moremi/body.png")
+                .attr('src', "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/body.png")
                 .css({ 'width': "25px", 'height': "25px", 'z-index': 100 })
             );
         });

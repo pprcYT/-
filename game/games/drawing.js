@@ -58,7 +58,9 @@ exports.roundReady = function(){
 		my.game.theme = my.opts.injpick[Math.floor(Math.random() * ijl)];
 		getAnswer.call(my, my.game.theme).then(function($ans){
 			if(!my.game.done) return;
-			
+			if(!$ans) return;
+			if(!$ans._id) return;
+
 			// $ans가 null이면 골치아프다...
 			my.game.late = false;
 			my.game.answer = $ans || {};

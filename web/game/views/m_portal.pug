@@ -21,18 +21,18 @@ block Subject
 	link(rel='canonical' href='https://kkutu.xyz')
 
 block CSS
-	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu.css?v='+L('version'))
-	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_portal.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_game_kkutu.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_portal.css?v='+L('version'))
 
 block JS
-	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_portal.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_portal.min.js?v='+L('version'))
 
 block Middle
 	+separator(5)
 	div(style='display:table; width:200px; margin:0 auto;')
 		div(style='width:200px;height:140px;background-color:rgba(0, 0, 0, 0.5);display:inline-block;')
 			h3#holder(style='padding-top:30px;')= L('title').replace(/\[.+?\]/g, "")
-			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
+			img#logo(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
 		button#game-start.jjo-display(style='float:none;') 게임 시작
 		div(style='width:200px;height:5px;background-color:transparent;')
 		div.server-list-box
@@ -43,5 +43,5 @@ block Middle
 	+separator(10)
 	div#ad
 		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-qy4y6lsg0jzm', data-ad-width='320', data-ad-height='100')
-		script(type='text/javascript', src='//t1.daumcdn.net/kas/static/ba.min.js', async='')
+		script(type='text/javascript', src='https://t1.daumcdn.net/kas/static/ba.min.js', async='')
 block Bottom

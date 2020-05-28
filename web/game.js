@@ -61,7 +61,6 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		next();
 	});
 	gameServer.disable('x-powered-by');
-	
 	WebInit.init(gameServer, true);
 	DB.ready = function() {
 		setInterval(function() {
@@ -152,6 +151,14 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 	ROUTES.forEach(function(v) {
 		require(`./game/routes/${v}`).run(gameServer, WebInit.page);
 	});
+	gameServer.use(function(req, res, next) {
+		res.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' *.cloudflare.com *.kkutu.xyz cdn.jsdelivr.net t1.daumcdn.net *.ad.daum.net static.cloudflareinsights.com aem-collector.daumkakao.io www.google.com www.gstatic.com data: ws:");
+		res.header('X-Frame-Options', 'sameorigin');
+		res.header('X-XSS-Protection', '1; mode=block');
+		res.header('X-Download-Options', 'noopen');
+		res.header('X-Content-Type-Options', 'nosniff');
+		next();
+	});
 	gameServer.get("/", function(req, res) {
 		var server = req.query.server;
 		DB.session.findOne(['_id', req.session.id]).on(function($ses) {
@@ -193,7 +200,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 				'KO_THEME': Const.KO_THEME,
 				'EN_THEME': Const.EN_THEME,
 				'IJP_EXCEPT': Const.IJP_EXCEPT,
-				'ogImage': "https://cdn.kkutu.xyz/img/kkutu/logo.png",
+				'ogImage': "https://kkutu.xyz/img/kkutu/logo.png",
 				'ogURL': "https://kkutu.xyz/",
 				'ogTitle': "끄투닷넷",
 				'ogDescription': "내 작은 글자 놀이터, 끄투닷넷! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"
@@ -230,6 +237,5 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 	});
 	
 	gameServer.use("/", expressStaticGzip('./cache'));
-	
 	gameServer.listen(GLOBAL.WEB_PORT);
 }

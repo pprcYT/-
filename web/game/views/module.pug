@@ -15,9 +15,6 @@
 	You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 -
-	const MENU = [
-		{ key: 'HOME', href: "/" }
-	];
 	const PUBLIC = locals.published;
 	
 	var DATA = locals.data || {};
@@ -81,16 +78,16 @@ mixin separator(len)
 	
 mixin PageHead(min)
 	if !min
-		link(rel='stylesheet', href=(locals.mobile && !locals.as_pc) ? 'https://cdn.kkutu.xyz/css/m_style.css?v='+L('version') : 'https://cdn.kkutu.xyz/css/style.css?v='+L('version'))
-		link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css')
-		link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/expl.css?v='+L('version'))
-	script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js')
-	script(type='text/javascript', src='/language/'+locals.page.replace("/", "_")+'/'+locals.lang)
-	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/global.min.js?v='+L('version'))
+		link(rel='stylesheet', href=(locals.mobile && !locals.as_pc) ? 'https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/m_style.css?v='+L('version') : 'https://kkutu.xyz/css/style.css?v='+L('version'))
+		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css')
+		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/expl.css?v='+L('version'))
+	script(src='https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js')
+	script(type='text/javascript', src='https://kkutu.xyz/language/'+locals.page.replace("/", "_")+'/'+locals.lang+'.js')
+	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/global.min.js?v='+L('version'))
 	if block
 		block
-	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_'+locals.page.replace("/", "_")+'.css?v='+L('version'))
-	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_'+locals.page.replace("/", "_")+'.min.js?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_'+locals.page.replace("/", "_")+'.css?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_'+locals.page.replace("/", "_")+'.min.js?v='+L('version'))
 	
 mixin SearchBox(arg1, arg2)
 	meta(name='description', content=L('meta_desc', arg1, arg2))

@@ -20,20 +20,20 @@ block Subject
 	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	link(rel='canonical' href='https://kkutu.xyz')
 block CSS
-	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu.css?v='+L('version'))
-	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/notice.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_game_kkutu.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/notice.css?v='+L('version'))
 block JS
-	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_kkutu.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_kkutu.min.js?v='+L('version'))
 block Middle
 	+separator(5)
 	div(style='display:inline-block; float: left; width: 200px;')
 		div(style='width:200px;height:140px;background-color:rgba(0, 0, 0, 0.5);float:left;display:inline-block;')
 			h3#holder(style='padding-top:30px;')= L('title').replace(/\[.+?\]/g, "")
-			img#logo(src='https://cdn.kkutu.xyz/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
+			img#logo(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/short_logo.png', title='끄투닷넷 로고 - 끄투 온라인')
 		button#game-start.jjo-display(style='float:left;') 게임 시작
 	div#container-slides(style='float: left; background-color: #ccc; display: inline-block; width: 60%; margin-left: 15px;')
-		img.slide.showing(src='https://cdn.kkutu.xyz/img/kkutu/intro.png', title='BANNER (1)')
-		img.slide(src='https://cdn.kkutu.xyz/img/kkutu/intro.png', title='BANNER (2)')
+		img.slide.showing(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/intro.png', title='BANNER (1)')
+		// img.slide(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/intro.png', title='BANNER (2)')
 	script.
 		var slides = document.querySelectorAll('#container-slides .slide');
 		var currentSlide = 0;
@@ -51,7 +51,7 @@ block Middle
 			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="fab fa-discord fa-fw"></i> 디스코드
 			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="fab fa-facebook fa-fw"></i> 페이스북
 			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="fas fa-sms fa-fw"></i> 카카오톡
-			a#social(href='https://kkutu.wiki' target='_blank') <i class="fab fa-wikipedia-w fa-fw"></i> 위키닷넷
+			a#social(href='https://kkutu.wiki' target='_blank') <i class="fab fa-wikipedia-w fa-fw"></i> 끄투위키
 	+separator(5)
 	div(style='float: left;')
 		div.server-list-box
@@ -61,10 +61,10 @@ block Middle
 			div#server-list(style='height:270px;')
 	div(style='float: right; width: calc(40% - 11.5px); background-color: #EEE; margin-left: 10px;')
 		div#btl <i class="fas fa-list" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
-		iframe#kkutu-bulletin(width='100%', height='190px', src='/docs/bulletin.html')
+		iframe#kkutu-bulletin(width='100%', height='190px', src='https://kkutu.xyz/docs/bulletin.html')
 	div(style='float: right; width: calc(40% - 11.5px); background-color: #EEE;')
 		div#btl <i class="fas fa-info-circle" style="margin-left:5px;padding-top:2px;"></i> 공지사항
-		iframe#kkutu-bulletin(width='100%', height='190px', src='/docs/notice.html')
+		iframe#kkutu-bulletin(width='100%', height='190px', src='https://kkutu.xyz/docs/notice.html')
 	table.tg(style='border-collapse:collapse;border-spacing:0;border-color:#bbb;float:left;width:447px;height:65px;margin-left:15px;margin-top:5px;')
 		tbody
 			tr
@@ -82,11 +82,11 @@ block Middle
 				td#info 2019. 10. 23.
 				td#info.bold 제작·배급업신고번호
 				td#info
-	img(style='float: right; width: calc(80% - 470px); height:65px; background:#ccc; margin-top:5px;' src='https://cdn.kkutu.xyz/ad/info.png')
+	img(style='float: right; width: calc(80% - 470px); height:65px; background:#ccc; margin-top:5px;' src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/ad/info.png')
 	+separator(10)
 	div#ad(style='height:90px;width:1010px;background-color:#cccccc;text-align:center;display:inline-block;text-align: center;')
 		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-vb9lq0e1ie02', data-ad-width='728', data-ad-height='90')
-		script(type='text/javascript', src='//t1.daumcdn.net/kas/static/ba.min.js', async)
+		script(type='text/javascript', src='https://t1.daumcdn.net/kas/static/ba.min.js', async)
 	+separator(30)
 block Bottom
 	p(hidden).

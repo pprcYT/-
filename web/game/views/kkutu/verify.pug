@@ -1,0 +1,20 @@
+doctype html
+html(lang='ko')
+	head
+		title 계정 인증
+		meta(charset='utf-8')
+		link(rel='stylesheet', href='https://cdn.jsdelivr.net/gh/KKuTuDotNet/CDN@af2dbc5bec95e555f9111eb6d7e79984b7cc0120/css/verify.css')
+		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css')
+	body
+		.wrapper
+			p(style='font-size:0.8rem;') RAY ID: ::RAY_ID::  |  당신의 IP 주소: ::CLIENT_IP::
+			h1 사용자 인증
+			p 시스템이 당신의 IP로부터 비 정상적인 트래픽을 감지하였습니다. 정상적인 사용자시면, 아래 "로봇이 아닙니다"를 클릭하여 인증 절차를 진행하여 주시기 바랍니다.
+			.buttons
+				| ::CAPTCHA_BOX::
+				br
+				span © 2020 끄투닷넷. 모든 권리 보유.
+		.space
+			.blackhole
+			i(class='fas fa-rocket ship' style='font-size: 3.5rem;')
+		span K K U T U  D O T  N E T<br>K K U T U . X Y Z

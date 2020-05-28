@@ -294,7 +294,7 @@ $(document).ready(function() {
 	$data.opts.istheme = $data.opts.tm === undefined ? true : $data.opts.tm;
 	if ($data.opts.istheme) {
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/alphakkutu.png)",
+			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/alphakkutu.png)",
 			'background-size': "200px 200px"
 		});
 	}
@@ -308,74 +308,74 @@ $(document).ready(function() {
 	$data._soundList = function() {
 		var res = [{
 				key: "k",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/k.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/k.mp3?v=" + L['version']
 			},
 			{
 				key: "lobby",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "jaqwi",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/JaqwiBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "jaqwiF",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "game_start",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/game_start.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/game_start.mp3?v=" + L['version']
 			},
 			{
 				key: "round_start",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/round_start.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/round_start.mp3?v=" + L['version']
 			},
 			{
 				key: "fail",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/fail.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/fail.mp3?v=" + L['version']
 			},
 			{
 				key: "timeout",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/timeout.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/timeout.mp3?v=" + L['version']
 			},
 			{
 				key: "lvup",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/lvup.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/lvup.mp3?v=" + L['version']
 			},
 			{
 				key: "Al",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/Al.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/Al.mp3?v=" + L['version']
 			},
 			{
 				key: "success",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/success.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/success.mp3?v=" + L['version']
 			},
 			{
 				key: "missing",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/missing.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/missing.mp3?v=" + L['version']
 			},
 			{
 				key: "mission",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/mission.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/mission.mp3?v=" + L['version']
 			},
 			{
 				key: "kung",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/kung.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/kung.mp3?v=" + L['version']
 			},
 			{
 				key: "horr",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/horr.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/horr.mp3?v=" + L['version']
 			},
 		];
 		for (i = 0; i <= 10; i++) res.push({
 			key: "T" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/T" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/T" + i + ".mp3?v=" + L['version']
 		}, {
 			key: "K" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/K" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/K" + i + ".mp3?v=" + L['version']
 		}, {
 			key: "As" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/As" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/As" + i + ".mp3?v=" + L['version']
 		});
 		return res;
 	}
@@ -3914,7 +3914,7 @@ function miniGameUserBar(o) {
 function getAIProfile(level) {
 	return {
 		title: L['aiLevel' + level] + ' ' + L['robot'],
-		image: "https://cdn.kkutu.xyz/img/kkutu/robot.png"
+		image: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/robot.png"
 	};
 }
 
@@ -5573,10 +5573,30 @@ function getCharText(char, subChar, wordLength) {
 	return res;
 }
 
-function getRequiredScore(lv) {
-	return Math.round(
-		(!(lv % 5) * 0.3 + 1) * (!(lv % 15) * 0.4 + 1) * (!(lv % 45) * 0.5 + 1) * (
-			120 + Math.floor(lv / 5) * 60 + Math.floor(lv * lv / 225) * 120 + Math.floor(lv * lv / 2025) * 180
+function getRequiredScore(lv){
+	if(lv <= 240) return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*60 + Math.floor(lv*lv/225)*120 + Math.floor(lv*lv/2025)*180
+		)
+	); else if(lv <= 360) return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*100 + Math.floor(lv*lv/225)*200 + Math.floor(lv*lv/2025)*240
+		)
+	); else if(lv <= 480) return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*140 + Math.floor(lv*lv/225)*280 + Math.floor(lv*lv/2025)*300
+		)
+	); else if(lv <= 600) return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*180 + Math.floor(lv*lv/225)*360 + Math.floor(lv*lv/2025)*360
+		)
+	); else if(lv <= 720) return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*220 + Math.floor(lv*lv/225)*420 + Math.floor(lv*lv/2025)*420
+		)
+	); else return Math.round(
+		(!(lv%5)*0.3 + 1) * (!(lv%15)*0.4 + 1) * (!(lv%45)*0.5 + 1) * (
+			120 + Math.floor(lv/5)*260 + Math.floor(lv*lv/225)*500 + Math.floor(lv*lv/2025)*480
 		)
 	);
 }
@@ -5594,10 +5614,10 @@ function getLevelImage(score) {
 	var lX = (lv % 25) * -100;
 	var lY = Math.floor(lv * 0.04) * -100;
 
-	if (score < 0) return getImage(`https://cdn.kkutu.xyz/img/kkutu/lv/gm.png?v=${L['version']}`);
+	if (score < 0) return getImage(`https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/lv/gm.png?v=${L['version']}`);
 	return $("<div>").css({
 		'float': "left",
-		'background-image': `url('https://cdn.kkutu.xyz/img/kkutu/lv/newlv.png?v=${L['version']}')`,
+		'background-image': `url('https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/lv/newlv.png?v=${L['version']}')`,
 		'background-position': lX + "% " + lY + "%",
 		'background-size': "2560%"
 	});
@@ -5949,10 +5969,10 @@ function iImage(key, sObj) {
 	};
 	obj = $data.shop[key] || sObj;
 	gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
-	if (obj.group.slice(0, 3) == "BDG") return "https://cdn.kkutu.xyz/img/kkutu/moremi/badge/" + obj._id + gif;
+	if (obj.group.slice(0, 3) == "BDG") return "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/badge/" + obj._id + gif;
 	return (obj.group.charAt(0) == 'M') ?
-		"https://cdn.kkutu.xyz/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif :
-		"https://cdn.kkutu.xyz/img/kkutu/shop/" + obj._id + ".png";
+		"https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif :
+		"https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/shop/" + obj._id + ".png";
 }
 
 function iDynImage(group, data) {
@@ -6028,7 +6048,7 @@ function renderMoremi(target, equip) {
 		);
 	}
 	$obj.children(".moremi-back").after($("<img>").addClass("moremies moremi-body")
-		.attr('src', equip.robot ? "https://cdn.kkutu.xyz/img/kkutu/moremi/robot.png" : "https://cdn.kkutu.xyz/img/kkutu/moremi/body.png")
+		.attr('src', equip.robot ? "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/robot.png" : "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/body.png")
 		.css({
 			'width': "100%",
 			'height': "100%"

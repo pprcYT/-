@@ -202,7 +202,7 @@ $(document).ready(function() {
 	$data.opts.istheme = $data.opts.tm === undefined ? true : $data.opts.tm;
 	if ($data.opts.istheme) {
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/alphakkutu.png)",
+			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/alphakkutu.png)",
 			'background-size': "200px 200px"
 		});
 	}
@@ -216,74 +216,74 @@ $(document).ready(function() {
 	$data._soundList = function() {
 		var res = [{
 				key: "k",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/k.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/k.mp3?v=" + L['version']
 			},
 			{
 				key: "lobby",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "jaqwi",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/JaqwiBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "jaqwiF",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3?v=" + L['version']
 			},
 			{
 				key: "game_start",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/game_start.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/game_start.mp3?v=" + L['version']
 			},
 			{
 				key: "round_start",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/round_start.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/round_start.mp3?v=" + L['version']
 			},
 			{
 				key: "fail",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/fail.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/fail.mp3?v=" + L['version']
 			},
 			{
 				key: "timeout",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/timeout.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/timeout.mp3?v=" + L['version']
 			},
 			{
 				key: "lvup",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/lvup.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/lvup.mp3?v=" + L['version']
 			},
 			{
 				key: "Al",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/Al.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/Al.mp3?v=" + L['version']
 			},
 			{
 				key: "success",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/success.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/success.mp3?v=" + L['version']
 			},
 			{
 				key: "missing",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/missing.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/missing.mp3?v=" + L['version']
 			},
 			{
 				key: "mission",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/mission.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/mission.mp3?v=" + L['version']
 			},
 			{
 				key: "kung",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/kung.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/kung.mp3?v=" + L['version']
 			},
 			{
 				key: "horr",
-				value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/horr.mp3?v=" + L['version']
+				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/horr.mp3?v=" + L['version']
 			},
 		];
 		for (i = 0; i <= 10; i++) res.push({
 			key: "T" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/T" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/T" + i + ".mp3?v=" + L['version']
 		}, {
 			key: "K" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/K" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/K" + i + ".mp3?v=" + L['version']
 		}, {
 			key: "As" + i,
-			value: "https://cdn.kkutu.xyz/media/" + $data.selectedBGM + "/As" + i + ".mp3?v=" + L['version']
+			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/As" + i + ".mp3?v=" + L['version']
 		});
 		return res;
 	}

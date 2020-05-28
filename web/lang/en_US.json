@@ -1,13 +1,13 @@
 {
 	"GLOBAL": {
-		"version": "20.5.26",
+		"version": "20.5.28",
 		
 		"SETTING":	"설정",
 		"KAKAO": "카카오톡",
 		"CAFE": "네이버 카페",
 		"DISCORD": "디스코드",
 		"SERVICE": "서비스",
-		"OG_IMAGE": "https://cdn.kkutu.xyz/img/kkutu/intro.png",
+		"OG_IMAGE": "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/intro.png",
 		"OG_URL": "https://kkutu.xyz",
 		"OG_TITLE": "끄투닷넷",
 		"OG_DESC": "내 작은 글자 놀이터, 끄투닷넷! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈",
@@ -63,7 +63,7 @@
 		"QUICK_HOLDER": "빠른 소환사 검색",
 		"QUICK_BTN": "FA{search}",
 		"LOGIN": "로그인",
-		"ASK_LOGOUT": "로그아웃 합니까?",
+		"ASK_LOGOUT": "정말로 로그아웃 하시겠습니까?",
 		"AS_PC": "PC버전",
 		"AS_MOBILE": "모바일 버전",
 		"AGREEMENT": "이용약관",

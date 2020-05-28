@@ -31,7 +31,7 @@
 		};
 
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/alphakkutu.png)",
+			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/alphakkutu.png)",
 			'background-size': "200px 200px"
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){
