@@ -203,7 +203,7 @@ $(document).ready(function() {
 	$data.opts.istheme = $data.opts.tm === undefined ? true : $data.opts.tm;
 	if ($data.opts.istheme) {
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/alphakkutu.png)",
+			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/kkutudotnet.png)",
 			'background-size': "200px 200px"
 		});
 	}
@@ -907,8 +907,8 @@ $(document).ready(function() {
 			akPrompt.item('ready');
 		} else send('ready');
 	});
-	$stage.menu.start.on('click', function(e) {
-		if($data.room.opts.item) akPrompt.item('start');
+	$stage.menu.start.on('click', function(e) { // $data._spectate || $data.practicing
+		if(!$data._spectate && $data.room.opts.item) akPrompt.item('start');
 		else send('start');
 	});
 	$stage.menu.exit.on('click', function(e) {
@@ -993,7 +993,7 @@ $(document).ready(function() {
 			ve: $("#volume-effect").val(),
 			bd: $("#badwords").is(":checked"),
 			ba: $("#strict-badwords").is(":checked"),
-			tm: $("#alphakkutu-theme").is(":checked"),
+			tm: $("#kkutudotnet-theme").is(":checked"),
 			di: $("#deny-invite").is(":checked"),
 			dw: $("#deny-whisper").is(":checked"),
 			df: $("#deny-friend").is(":checked"),

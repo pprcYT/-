@@ -33,7 +33,7 @@ var Rule;
 var guestProfiles = [];
 var CHAN;
 var channel = process.env['CHANNEL'] || 0;
-var alphakkutu = require("../sub/alphakkutu");
+var kkutudotnet = require("../sub/kkutudotnet");
 
 const NUM_SLAVES = 4;
 const GUEST_IMAGE = "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/guest.png";
@@ -488,7 +488,7 @@ exports.Client = function(socket, profile, sid){
 		});
 		return R;
 	};
-	my.getLevel = () => { return alphakkutu.getLevel(my) };
+	my.getLevel = () => { return kkutudotnet.getLevel(my) };
 	my.flush = function(box, equip, friends){
 		var R = new Lizard.Tail();
 		
@@ -652,9 +652,6 @@ exports.Client = function(socket, profile, sid){
 			$room.removeAI(kickVote);
 			return;
 		}
-		for(i in $room.players){
-			if($room.players[i].robot) len--;
-		}
 		if(len < 4) kickVote = { target: target, Y: 1, N: 0 };
 		if(kickVote){
 			$room.kicked.push(target);
@@ -704,10 +701,17 @@ exports.Client = function(socket, profile, sid){
 	};
 	my.start = function(item){
 		var $room = ROOM[my.place];
-		
 		if(!$room) return;
 		if($room.master != my.id) return;
 		if($room.players.length < 2) return my.sendError(411);
+
+		var ni = 0;
+		for(i in $room.players) {
+			if($room.players[i].robot) ni++;
+			else if(DIC[$room.players[i]].form == 'S') ni++;
+		}
+		if(ni == $room.players.length) return my.sendError(439);
+		
 		if(item) my.publish('user', my.getData(undefined, item));
 		$room.ready();
 	};

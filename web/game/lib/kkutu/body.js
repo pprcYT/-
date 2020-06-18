@@ -70,7 +70,7 @@ function applyOptions(opt, isFirstLoad) {
 	$("#volume-effect").val($data.opts.ve);
 	$("#badwords").attr('checked', $data.opts.isbad);
 	$("#strict-badwords").attr('checked', $data.opts.isadvbad);
-	$("#alphakkutu-theme").attr('checked', $data.opts.istheme);
+	$("#kkutudotnet-theme").attr('checked', $data.opts.istheme);
 	$("#deny-invite").attr('checked', $data.opts.di);
 	$("#deny-whisper").attr('checked', $data.opts.dw);
 	$("#deny-friend").attr('checked', $data.opts.df);
@@ -675,7 +675,7 @@ function onMessage(data) {
 				loading();
 				break;
 			}
-			if(data.code == (411 || 413 || 414 || 415 || 417 || 419 || 429 || 430 || 437)) akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+			if(data.code == (411 || 413 || 414 || 415 || 417 || 419 || 429 || 430 || 437 || 439)) akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 			else akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
 			break;
 		default:
