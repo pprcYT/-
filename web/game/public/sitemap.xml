@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://kkutu.xyz/</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+   <url>
+      <loc>https://kkutu.xyz/policy/operation</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+   <url>
+      <loc>https://kkutu.xyz/policy/privacy</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+</urlset>

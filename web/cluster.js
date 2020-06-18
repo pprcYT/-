@@ -19,6 +19,8 @@ var GLOBAL = require("../sub/global.json");
 var Cluster = require("cluster");
 var CPU = Number(process.argv[2]); //require("os").cpus().length;
 
+process.env['KKT_SV_TYPE'] = 'web';
+
 if(isNaN(CPU)){
 	console.log(`Invalid CPU Number ${CPU}`);
 	return;

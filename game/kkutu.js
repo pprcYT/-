@@ -36,7 +36,7 @@ var channel = process.env['CHANNEL'] || 0;
 var alphakkutu = require("../sub/alphakkutu");
 
 const NUM_SLAVES = 4;
-const GUEST_IMAGE = "https://cdn.kkutu.xyz/img/kkutu/guest.png";
+const GUEST_IMAGE = "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/guest.png";
 const MAX_OKG = 18;
 const PER_OKG = 600000;
 
@@ -292,8 +292,10 @@ exports.Client = function(socket, profile, sid){
 	});
 	socket.on('message', function(msg){
 		var data, room = ROOM[my.place];
+		if(!my) return;
+		if(!msg) return;
 		
-		JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${(JSON.parse(msg).type === 'drawingCanvas' ? 'is drawing data' : msg)}`);
+		try{ JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${msg}`); }catch(e){ JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${msg}`); }
 		try{ data = JSON.parse(msg); }catch(e){ data = { error: 400 }; }
 		if(Cluster.isWorker) process.send({ type: "tail-report", id: my.id, chan: channel, place: my.place, msg: data.error ? msg : data });
 		
@@ -319,7 +321,7 @@ exports.Client = function(socket, profile, sid){
 		if($room.rule.rule != 'Drawing') return;
 		$room.drawingCanvas(msg);
 	};
-	my.getData = function(gaming){
+	my.getData = function(gaming, isItem){
 		var o = {
 			id: my.id,
 			guest: my.guest,
@@ -332,6 +334,7 @@ exports.Client = function(socket, profile, sid){
 				item: my.game.item
 			}
 		};
+		if(isItem) if(isItem == ('pass' || 'reverse' || 'random')) o.item = isItem;
 		if(!gaming){
 			o.profile = my.profile;
 			o.place = my.place;
@@ -689,23 +692,23 @@ exports.Client = function(socket, profile, sid){
 		}
 		clearTimeout(client.kickTimer);
 	};
-	my.toggle = function(){
+	my.toggle = function(item){
 		var $room = ROOM[my.place];
 		
 		if(!$room) return;
 		if($room.master == my.id) return;
 		if(my.form != "J") return;
-		
 		my.ready = !my.ready;
-		my.publish('user', my.getData());
+		if(item) my.publish('user', my.getData(undefined, item));
+		else my.publish('user', my.getData());
 	};
-	my.start = function(){
+	my.start = function(item){
 		var $room = ROOM[my.place];
 		
 		if(!$room) return;
 		if($room.master != my.id) return;
 		if($room.players.length < 2) return my.sendError(411);
-		
+		if(item) my.publish('user', my.getData(undefined, item));
 		$room.ready();
 	};
 	my.practice = function(level){

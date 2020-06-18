@@ -24,7 +24,7 @@ module.exports.strategy = (process, MainDB, Ajae) => {
         $p.id = $p.authType+"-"+profile.id;
         $p.name = profile.displayName;
         $p.title = profile.displayName;
-        $p.image = "https://graph.facebook.com/"+profile.id+"/picture";
+        // $p.image = "https://graph.facebook.com/"+profile.id+"/picture";
 
         /* 망할 셧다운제
         

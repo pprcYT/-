@@ -220,7 +220,10 @@ exports.submit = function(client, text){
 	if(!mgt.robot) if(mgt != client.id) return;
 	if(!my.game.char) return;
 	
-	if(!isChainable(text, my.mode, my.game.char, my.game.subChar)) return client.chat(text);
+	if(!isChainable(text, my.mode, my.game.char, my.game.subChar)) {
+		// if(text == ('ㅑ' || 'i' || 'I')) my.game.item.push(client.id); else
+		return client.chat(text);
+	}
 	if(my.game.chain.indexOf(text) != -1) return client.publish('turnError', { code: 409, value: text }, true);
 	
 	l = my.rule.lang;

@@ -25,10 +25,10 @@ block Subject
 
 block Middle
 	div.login-with
-		img(src="https://cdn.jsdelivr.net/gh/KKuTuDotNet/CDN@latest/img/kkutu/short_logo.png", margin=0 auto, alt="끄투닷넷")
+		img(src="https://cdn.jsdelivr.net/gh/KKuTuDotNet/CDN@latest/img/logo/wh_fullname_en.svg", margin=0 auto, alt="끄투닷넷", style='width: 20%; height: 20%;')
 	
 	each val in loginList
-		a(href="/login/" + val.vendor)
+		a(href="https://kkutu.xyz/login/" + val.vendor)
 			button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
 	
 	div.login-legal!= L('loginLegal')

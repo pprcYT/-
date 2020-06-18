@@ -235,9 +235,9 @@ KKuTu.onClientMessage = function($c, msg){
 			if(isNaN(msg.time)) stable = false;
 			
 			if(stable){
-				if(!$c.admin && msg.title.length > 20) stable = false;
+				if(msg.title.length > 20) stable = false;
 				if(msg.password.length > 20) stable = false;
-				if(!$c.admin && (msg.limit < 2 || msg.limit > 8)){
+				if (!($c.admin || $c.broadcaster) && (msg.limit < 2 || msg.limit > 8)) {
 					msg.code = 432;
 					stable = false;
 				}
@@ -264,16 +264,20 @@ KKuTu.onClientMessage = function($c, msg){
 		case 'ready':
 			if(!$c.place) return;
 			if(!GUEST_PERMISSION.ready) if($c.guest) return;
-			
-			$c.toggle();
+			if(msg.item) {
+				if(!ROOM[$c.place].opts.item) return;
+				$c.toggle(msg.item);
+			} else $c.toggle();
 			break;
 		case 'start':
 			if(!$c.place) return;
 			if(!ROOM[$c.place]) return;
 			if(ROOM[$c.place].gaming) return;
 			if(!GUEST_PERMISSION.start) if($c.guest) return;
-			
-			$c.start();
+			if(msg.item) {
+				if(!ROOM[$c.place].opts.item) return;
+				$c.start(msg.item);
+			} else $c.start();
 			break;
 		case 'practice':
 			if(!ROOM[$c.place]) return;

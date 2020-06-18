@@ -1183,7 +1183,7 @@ function userListBar(o, forInvite) {
 
 	if (forInvite) {
 		$R = $("<div>").attr('id', "invite-item-" + o.id).addClass("invite-item users-item")
-			.append($("<div>").addClass("jt-image users-image").css('background-image', "url('" + o.profile.image + "')"))
+			// .append($("<div>").addClass("jt-image users-image").css('background-image', "url('" + o.profile.image + "')"))
 			.append(getLevelImage(o.data.score).addClass("users-level"))
 			// .append($("<div>").addClass("jt-image users-from").css('background-image', "url('/img/kkutu/"+o.profile.type+".png')"))
 			.append($("<div>").addClass("users-name").html(o.profile.title || o.profile.name))
@@ -1192,7 +1192,7 @@ function userListBar(o, forInvite) {
 			});
 	} else {
 		$R = $("<div>").attr('id', "users-item-" + o.id).addClass("users-item")
-			.append($("<div>").addClass("jt-image users-image").css('background-image', "url('" + o.profile.image + "')"))
+			// .append($("<div>").addClass("jt-image users-image").css('background-image', "url('" + o.profile.image + "')"))
 			.append(getLevelImage(o.data.score).addClass("users-level"))
 			// .append($("<div>").addClass("jt-image users-from").css('background-image', "url('/img/kkutu/"+o.profile.type+".png')"))
 			.append($("<div>").addClass("users-name ellipse").html(o.profile.title || o.profile.name))
@@ -1700,7 +1700,7 @@ function drawCharFactory() {
 			gd = iGoods(item);
 			word += item.slice(4);
 			level += LEVEL[item.slice(1, 4)];
-			$tray.append($("<div>").addClass("jt-image")
+			if(gd.image) $tray.append($("<div>").addClass("jt-image")
 				.css('background-image', "url(" + gd.image + ")")
 				.attr('id', "cf-tray-" + item)
 				.on('click', onTrayClick)
@@ -1898,7 +1898,7 @@ function requestProfile(id) {
 	$("#ProfileDiag .dialog-title").html((o.profile.title || o.profile.name) + L['sProfile']);
 	$(".profile-head").empty().append($pi = $("<div>").addClass("moremi profile-moremi"))
 		.append($("<div>").addClass("profile-head-item")
-			.append(getImage(o.profile.image).addClass("profile-image"))
+			// .append(getImage(o.profile.image).addClass("profile-image"))
 			.append($("<div>").addClass("profile-title ellipse").html(o.profile.title || o.profile.name)
 				.append($("<label>").addClass("profile-tag").html(" #" + o.id.toString().substr(0, 5)))
 			)

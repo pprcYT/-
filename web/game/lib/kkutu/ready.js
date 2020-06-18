@@ -151,7 +151,8 @@ $(document).ready(function() {
 			ask: $("#AskDiag"),
 			blocked: $("#BlockedDiag"),
 			password: $("#PasswordDiag"),
-			whichhand: $("#WhichHandDiag")
+			whichhand: $("#WhichHandDiag"),
+			selectItem: $("#SelectItemDiag")
 		},
 		box: {
 			chat: $(".ChatBox"),
@@ -444,6 +445,27 @@ $(document).ready(function() {
 		});
 		o.find('#password-no').show();
 		o.find('#password-content').html(msg2);
+		showDialog(o);
+	};
+	akPrompt.item = function(type) {
+		var o = $stage.dialog.selectItem;
+		var ov = $('#msg-overlay');
+		o.find('#item-skip').off('click').click(function() {
+			o.hide();
+			ov.hide();
+			send(type, { item: "skip" });
+		});
+		o.find('#item-reverse').off('click').click(function() {
+			o.hide();
+			ov.hide();
+			send(type, { item: "reverse" });
+		});
+		o.find('#item-random').off('click').click(function() {
+			o.hide();
+			ov.hide();
+			send(type, { item: "random" });
+		});
+		ov.show();
 		showDialog(o);
 	};
 	$(window).bind("beforeunload", function(e) {
@@ -867,7 +889,13 @@ $(document).ready(function() {
 		if (RULE[MODE[$data.room.mode]].ai) {
 			$("#PracticeDiag .dialog-title").html(L['practice']);
 			$("#ai-team").val(0).prop('disabled', true);
-			showDialog($stage.dialog.practice);
+			if($data.room.opts.item) {
+				akConfirm("아이템전 특수 규칙이 활성화되어 사기 끄투 봇으로만 연습이 가능합니다. 계속 진행하시겠습니까?", function(resp) {
+					if(resp) send('practice', {
+						level: 4
+					});
+				}, true);
+			} else showDialog($stage.dialog.practice);
 		} else {
 			send('practice', {
 				level: -1
@@ -875,10 +903,13 @@ $(document).ready(function() {
 		}
 	});
 	$stage.menu.ready.on('click', function(e) {
-		send('ready');
+		if($data.room.opts.item && !$stage.menu.ready.hasClass("toggled")) {
+			akPrompt.item('ready');
+		} else send('ready');
 	});
 	$stage.menu.start.on('click', function(e) {
-		send('start');
+		if($data.room.opts.item) akPrompt.item('start');
+		else send('start');
 	});
 	$stage.menu.exit.on('click', function(e) {
 		if ($data.room.gaming) {
@@ -889,10 +920,10 @@ $(document).ready(function() {
 						clearGame();
 						send('leave');
 					}
-				});
+				}, true);
 			} else {
 				if (!$data.pexit) {
-					akAlert("중도 퇴장이 불가능한 방입니다. 게임이 끝나면 나가지도록 예약되었습니다.");
+					akAlert("중도 퇴장이 불가능한 방입니다. 게임이 끝나면 나가지도록 예약되었습니다.", true);
 					$("#ExitBtn").addClass("toggled");
 					$data.pexit = true;
 				} else {
@@ -931,6 +962,9 @@ $(document).ready(function() {
 			$stage.menu.userList.addClass("toggled");
 			$stage.box.userList.show();
 		}
+	});
+	$stage.dialog.selectItem.on('click', function(e) {
+
 	});
 	$stage.dialog.lbPrev.on('click', function(e) {
 		$(e.currentTarget).attr('disabled', true);
@@ -1045,10 +1079,10 @@ $(document).ready(function() {
 			type: "text/plain"
 		});
 		var url = URL.createObjectURL(blob);
-		var fileName = "AlphaKKuTu" + (
+		var fileName = "KKuTuDotNet-" + (
 			date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +
 			date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds()
-		) + ".kkutu";
+		) + ".net";
 		var $a = $("<a>").attr({
 			'download': fileName,
 			'href': url
@@ -1128,7 +1162,7 @@ $(document).ready(function() {
 	});
 	$stage.dialog.profileReport.on('click', function(e) {
 		if ($data.guest) {
-			akAlert("손님 계정은 인 게임 신고 기능을 이용하실 수 없습니다. 우측 상단 로그인 버튼을 클릭하여 로그인해 주세요.");
+			akAlert("손님 계정은 인 게임 신고 기능을 이용하실 수 없습니다. 우측 상단 로그인 버튼을 클릭하여 로그인해 주세요.", true);
 			return;
 		}
 		var user = $data.users[$data._profiled];
@@ -1154,7 +1188,7 @@ $(document).ready(function() {
 				id: $data._report.id,
 				reason: rsl.join()
 			});
-			akAlert("신고가 접수되었습니다. 신고해 주셔서 감사합니다.");
+			akAlert("신고가 접수되었습니다. 신고해 주셔서 감사합니다.", true);
 		}
 		delete $data._report;
 		$stage.dialog.report.hide();
@@ -1223,13 +1257,13 @@ $(document).ready(function() {
 						id: $data.id,
 						nick: newnick
 					}, true);
-					akAlert("변경이 완료되었습니다.");
+					akAlert("변경이 완료되었습니다.", true);
 					$stage.dialog.dress.hide();
 					$stage.box.me.hide();
 					updateUserList(true);
 					$stage.box.me.show();
 				});
-			});
+			}, true);
 		} else {
 			$(e.currentTarget).attr('disabled', true);
 			$.post("/exordial", obj, function(res) {
@@ -1422,7 +1456,7 @@ $(document).ready(function() {
 			).append($("<script>")
 				.attr({
 					'type': "text/javascript",
-					'src': "//t1.daumcdn.net/adfit/static/ad.min.js"
+					'src': "https://t1.daumcdn.net/adfit/static/ad.min.js"
 				})
 			);
 		};
@@ -1440,4 +1474,5 @@ $(document).ready(function() {
 			console.warn(L['error'], e);
 		};
 	}
+	var sendMsgItvl = window.setInterval(send('stayconnected'), 40000);
 });

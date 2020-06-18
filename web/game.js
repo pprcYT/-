@@ -22,13 +22,15 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 	var Express = require("express");
 	var expressStaticGzip = require("express-static-gzip");
 	var Exession = require("express-session");
-	var gameServer = Express();
+
 	var DB = require("./database");
 	var JLog = require("../sub/jjlog");
 	var WebInit = require("../sub/webinit");
 	var passport = require('passport');
 	var Const = require("../const");
+	var DDDoS = require("dddos");
 	var fs = require('fs');
+	const requestIp = require('request-ip');
 
 	var Language = {
 		'ko_KR': require("./lang/ko_KR.json"),
@@ -46,7 +48,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 
 	require("../sub/checkpub");
 
-	JLog.info("<< AlphaKKuTu Web >>");
+	JLog.info("<< KKuTuDotNet Web >>");
 	gameServer.set('views', __dirname + "/game/views");
 	gameServer.set('view engine', "pug");
 	gameServer.use(Express.static(__dirname + "/game/public"));
@@ -60,6 +62,24 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		}
 		next();
 	});
+	gameServer.use(requestIp.mw());
+	DDDoS = new DDDoS({
+		maxWeight: 12,
+		checkInterval: 10000,
+		rules: [{
+			regexp: "^/(cf|dict|gwalli|ranking)",
+			maxWeight: 30,
+			errorData: '429 Too Many Requests'
+		},
+			{
+				regexp: ".*",
+				errorData: '<meta charset="utf-8"><h2>[#429] 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.</h2>'
+			}]
+	});
+	DDDoS.rules[0].logFunction = DDDoS.rules[1].logFunction = function (ip, path) {
+		JLog.warn(`DoS from IP ${ip} on ${path}`);
+	};
+	gameServer.use(DDDoS.express('clientIp', 'path'));
 	gameServer.disable('x-powered-by');
 	WebInit.init(gameServer, true);
 	DB.ready = function() {
@@ -152,7 +172,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		require(`./game/routes/${v}`).run(gameServer, WebInit.page);
 	});
 	gameServer.use(function(req, res, next) {
-		res.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' *.cloudflare.com *.kkutu.xyz cdn.jsdelivr.net t1.daumcdn.net *.ad.daum.net static.cloudflareinsights.com aem-collector.daumkakao.io www.google.com www.gstatic.com data: ws:");
+		res.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' *.cloudflare.com *.kkutu.xyz cdn.jsdelivr.net t1.daumcdn.net *.ad.daum.net static.cloudflareinsights.com aem-collector.daumkakao.io www.google.com www.googletagmanager.com pagead2.googlesyndication.com googleads.g.doubleclick.net www.google-analytics.com *.gstatic.com connect.facebook.net *.facebook.com data: ws:; upgrade-insecure-requests");
 		res.header('X-Frame-Options', 'sameorigin');
 		res.header('X-XSS-Protection', '1; mode=block');
 		res.header('X-Download-Options', 'noopen');
@@ -186,7 +206,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 				'_id': id,
 				'PORT': Const.MAIN_PORTS[server],
 				'HOST': req.hostname,
-				'PROTOCOL': 'ws',
+				'PROTOCOL': 'wss',
 				'TEST': req.query.test,
 				'MOREMI_PART': Const.MOREMI_PART,
 				'AVAIL_EQUIP': Const.AVAIL_EQUIP,
@@ -200,7 +220,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 				'KO_THEME': Const.KO_THEME,
 				'EN_THEME': Const.EN_THEME,
 				'IJP_EXCEPT': Const.IJP_EXCEPT,
-				'ogImage': "https://kkutu.xyz/img/kkutu/logo.png",
+				'ogImage': "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/logo.png",
 				'ogURL': "https://kkutu.xyz/",
 				'ogTitle': "끄투닷넷",
 				'ogDescription': "내 작은 글자 놀이터, 끄투닷넷! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"
@@ -237,5 +257,4 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 	});
 	
 	gameServer.use("/", expressStaticGzip('./cache'));
-	gameServer.listen(GLOBAL.WEB_PORT);
 }

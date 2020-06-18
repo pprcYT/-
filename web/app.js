@@ -16,7 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 var express = require('express');
+var vHost = require('vhost');
 var gameServer = express();
+var gitServer = express();
+var redirectServer = express();
+var app = express();
 
 var Exession = require("express-session");
 var Redission = require("connect-redis")(Exession);
@@ -37,3 +41,15 @@ var REDIS_SESSION = Exession({
 	}
 });
 require("./game")(gameServer, REDIS_SESSION, GLOBAL);
+require("./git")(gitServer, REDIS_SESSION, GLOBAL);
+require("./redirect")(redirectServer, REDIS_SESSION, GLOBAL);
+
+app.use(vHost('kkutu.xyz', gameServer));
+app.use(vHost('git.kkutu.xyz', gitServer));
+app.use(vHost('www.kkutu.xyz', redirectServer));
+
+app.get('*', function(req, res) {
+	res.send('<h1>403 Forbidden</h1>');
+});
+
+app.listen(GLOBAL.WEB_PORT);

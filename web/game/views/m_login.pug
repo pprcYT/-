@@ -27,6 +27,6 @@ block Middle
 	span#locale= JSON.stringify(LANG)
 	div.login-with= locals.text ? L(locals.text) : L('loginWith')
 	each val in loginList
-		a(href="/login/" + val.vendor)
+		a(href="https://kkutu.xyz/login/" + val.vendor)
 			button(style="color: " + val.fontColor + "; background-color: " + val.color + ";")= L(val.displayName)
 	div.login-legal!= L('loginLegal')
