@@ -1,7 +1,7 @@
 const LICENSE = [
-	"Rule the Words!, AlphaKKuTu Online. ⓒ 2017-2019 AlphaKKuTu. All Rights Reserved.",
+	"ⓒ 2017-2019 KKuTuDotNet. All Rights Reserved.",
 	"This program is distributed by terms of GNU Affero General Public License.",
-	"For more information, please check: <https://www.gnu.org/licenses/agpl-3.0.html>."
+	"For more information, please check <https://www.gnu.org/licenses/agpl-3.0.html>."
 ].join('\n');
 
 var File = require('fs');
@@ -16,6 +16,7 @@ const LIST = [
 	"in_admin",
 	"in_portal",
 	"in_loginfail",
+	"ads",
 	
 	"kpanel/in_admin",
 	"kpanel/in_daneo",
