@@ -1,0 +1,180 @@
+/**
+ * Rule the words! KKuTu Online
+ * Copyright (C) 2017 JJoriping(op@jjo.kr)
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1EDDFF, pink 75%)
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1EDDFF, pink 75%)
+}
+.goods{
+	margin: 2px;
+	border-radius: 5px;
+	padding: 3px;
+	width: 240px;
+	height: 50px;
+	box-shadow: 0px 1px 1px #777777;
+	cursor: pointer;
+}
+	.goods:hover{ background-color: #F4F4F4; }
+	.goods-image{ margin: 2px; width: 50px; height: 50px; }
+	.goods-title{ margin: 2px 0px; width: 186px; font-size: 15px; font-weight: bold; }
+	.goods-cost{ margin: 2px 0px; width: 186px; color: #3333FF; }
+.shop-categories{ margin: -3px 0px 5px 0px; }
+	.shop-type{
+		padding: 5px 0px;
+		border: 1px solid #AAAAAA;
+		border-radius: 5px;
+		margin-right: 3px;
+		width: 50px;
+		font-size: 11px;
+		text-align: center;
+		cursor: pointer;
+		background-color: #DDDDDD;
+		transition: all 300ms ease;
+	}
+	
+/* KEYFRAMES */
+/* NIK */
+
+@keyframes rainbow_animation {
+    0%, 100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+}
+/*.x-gm .users-name::before{ content: "[운영자]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }
+.chat-item>.x-gm::before{ content: "[운영자]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }
+.room-user-title>.x-gm::before{ content: "[운영자]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }*/
+.x-gm .users-name::before{
+	content: "[운영자]";
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%; 
+	font-weight: 1000;
+}
+.chat-item>.x-gm::before{
+	content: "[운영자]";
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+	font-weight: 1000;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+.room-user-title>.x-gm::before{
+	content: "[운영자]";
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+	font-weight: 1000;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%; 
+}
+/* GM */
+.x-ds .users-name::before{ content: "[디자인]"; color: #0DE0E0; text-shadow: 0px 0px 1.7px #14C7C7; }
+.chat-item>.x-ds::before{ content: "[디자인]"; color: #0DE0E0; text-shadow: 0px 0px 1.7px #14C7C7; }
+.room-user-title>.x-ds::before{ content: "[디자인]"; color: #0DE0E0; text-shadow: 0px 0px 1.7px #14C7C7; }
+/* MS */
+.x-ms .users-name::before{ content: "[450]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.chat-item>.x-ms::before{ content: "[450]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.room-user-title>.x-ms::before{ content: "[450]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+/* 100 */
+.x-100 .users-name::before{ content: "[100]"; color: #FFA533; text-shadow: 0px 0px 1.7px #FF9C33; }
+.chat-item>.x-100::before{ content: "[100]"; color: #FFA533; text-shadow: 0px 0px 1.7px #FF9C33; }
+.room-user-title>.x-100::before{ content: "[100]"; color: #FFA533; text-shadow: 0px 0px 1.7px #FF9C33; }
+/* 200 */
+.x-200 .users-name::before{ content: "[200]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.chat-item>.x-200::before{ content: "[200]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.room-user-title>.x-200::before{ content: "[200]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+/* 360 */
+.x-360 .users-name::before{ content: "[360]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.chat-item>.x-360::before{ content: "[360]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.room-user-title>.x-360::before{ content: "[360]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+/* 500 */
+.x-500 .users-name::before{ content: "[500]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.chat-item>.x-500::before{ content: "[500]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.room-user-title>.x-500::before{ content: "[500]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+/* 600 */
+.x-600 .users-name::before{ content: "[600]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.chat-item>.x-600::before{ content: "[600]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.room-user-title>.x-600::before{ content: "[600]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+/* 500 */
+.x-750 .users-name::before{ content: "[750]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.chat-item>.x-750::before{ content: "[750]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+.room-user-title>.x-750::before{ content: "[750]"; color: #43C227; text-shadow: 0px 0px 1.7px #008800; }
+
+/* WD & UM */
+.x-um .users-name::before{ content: "[관리]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.chat-item>.x-um::before{ content: "[관리]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+.room-user-title>.x-um::before{ content: "[관리]"; color: #FF0000; text-shadow: 0px 0px 1.7px #E00000; }
+
+.x-wd .users-name::before{ content: "[단어]"; color: #AAF0D1; text-shadow: 0px 0px 2px #96F2C9; }
+.chat-item>.x-wd::before{ content: "[단어]"; color: #AAF0D1; text-shadow: 0px 0px 2px #96F2C9; }
+.room-user-title>.x-wd::before{ content: "[단어]"; color: #AAF0D1; text-shadow: 0px 0px 2px #96F2C9; }
+
+.x-mt .users-name::before{ content: "[MS]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }
+.chat-item>.x-mt::before{ content: "[MS]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }
+.room-user-title>.x-mt::before{ content: "[MS]"; color: #2F77D9; text-shadow: 0px 0px 2px #2AF; }
+
+.x-spectate{ color: #8F8F8F; }
+.x-red_name{ color: #FF3333; }
+.x-orange_name{ color: #FFA533; }
+.x-green_name{ color: #43C227; }
+.x-blue_name{ color: #2F77D9; }
+.x-indigo_name{ color: #1C18B9; }
+.x-purple_name{ color: #A939CC; }
+.x-pink_name{ color: #F15F9A; }
+/*.x-gm{
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}*/
+.x-rainbow_name{
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+/*.x-gm{ background: linear-gradient(45deg, #FFBC89, #FFE3EE 60%); }*/
