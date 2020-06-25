@@ -255,7 +255,7 @@ iframe{
 			.channel-2{ background-color: #FF7; }
 			.channel-3{ background-color: #7C7; }
 			.channel-4{ background-color: #99F; }
-		.rooms-gaming{ background-color: #FFBBBB; }
+			.rooms-gaming{ background-image: url('/img/kkutu/gaming.png'); }
 			.rooms-gaming .rooms-number{ border-color: #CC9999; }
 		.rooms-item:hover{ background-color: #F4F4F4; }
 			.rooms-gaming:hover{ background-color: #FFCCCC; }

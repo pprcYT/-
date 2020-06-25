@@ -18,15 +18,15 @@
 
 var GLOBAL = require("./sub/global.json");
 
-exports.KKUTU_MAX = 400;
+exports.KKUTU_MAX = 100;
 exports.MAIN_PORTS = GLOBAL.MAIN_PORTS;
 exports.TEST_PORT = 4040;
 exports.SPAM_CLEAR_DELAY = 1600;
 exports.SPAM_ADD_DELAY = 750;
 exports.SPAM_LIMIT = 7;
-exports.BLOCKED_LENGTH = 10000;
-exports.KICK_BY_SPAM = 9;
-exports.MAX_OBSERVER = 4;
+exports.BLOCKED_LENGTH = 5000;
+exports.KICK_BY_SPAM = 20;
+exports.MAX_OBSERVER = 10;
 exports.TESTER = GLOBAL.ADMIN.concat([
 	"Input tester id here"
 ]);
@@ -57,7 +57,8 @@ exports.GROUPS = {
 	'mouth': [ "Mmouth" ],
 	'clothes': [ "Mclothes" ],
 	'hs': [ "Mhand", "Mshoes" ],
-	'back': [ "Mback", "Mfront" ]
+	'back': [ "Mback", "Mfront" ],
+	'skin': [ "Mskin" ]
 };
 exports.RULE = {
 /*
@@ -206,7 +207,7 @@ exports.KO_INJEONG = [
 	"MOB", "HYK", "CYP", "HRH", "STA", "OIJ",
 	"KGR", "ESB", "ELW", "OIM", "OVW", "NEX", /*"WOW",*/
 	"YRY", "KPO", "JLN", "JAN", "ZEL", "POK", "HAI",
-	"HSS", "KMV", "HDC", "HOS"
+	"HSS", "KMV", "HDC", "HOS", "MCT", "BUS", "KAR", "PRK"
 ];
 exports.EN_INJEONG = [
 	"LOL"

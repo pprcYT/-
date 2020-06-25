@@ -159,7 +159,7 @@ Const.MAIN_PORTS.forEach(function(v, i){
 	} else {
 		protocol = 'ws';
 	}
-	gameServers[i] = new GameClient(KEY, `${protocol}://${GLOBAL.GAME_SERVER_HOST}:${v}/${KEY}`);
+	gameServers[i] = new GameClient(KEY, `${protocol}://127.0.0.2:${v}/${KEY}`);
 });
 function GameClient(id, url){
 	var my = this;
@@ -249,9 +249,9 @@ Server.get("/", function(req, res){
 			'EN_THEME': Const.EN_THEME,
 			'IJP_EXCEPT': Const.IJP_EXCEPT,
 			'ogImage': "http://kkutu.kr/img/kkutu/logo.png",
-			'ogURL': "http://kkutu.kr/",
-			'ogTitle': "글자로 놀자! 끄투 온라인",
-			'ogDescription': "끝말잇기가 이렇게 박진감 넘치는 게임이었다니!"
+			'ogURL': "http://kkutu.ddns.net",
+			'ogTitle': "글자로 놀자! 푸룬끄투!",
+			'ogDescription': "겁나 초보 끄ㅌ<<<<<<<"
 		});
 	}
 });

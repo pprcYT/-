@@ -964,6 +964,14 @@ function userListBar(o, forInvite){
 function addonNickname($R, o){
 	if(o.equip['NIK']) $R.addClass("x-" + o.equip['NIK']);
 	if(o.equip['BDG'] == "b1_gm") $R.addClass("x-gm");
+	if(o.equip['BDG'] == "yt") $R.addClass("yt");
+	if(o.equip['BDG'] == "b1_admin") $R.addClass("x-admin");
+	if(o.equip['BDG'] == "b1_admin2") $R.addClass("x-admin2");
+	if(o.equip['BDG'] == "b1_dis") $R.addClass("x-dis");
+	if(o.equip['BDG'] == "b1_gm") $R.addClass("x-gm");
+	if(o.equip['BDG'] == "b1_word") $R.addClass("x-word");
+	if(o.equip['BDG'] == "b1_gl") $R.addClass("x-gl");
+	if(o.equip['front'] == "not_jari") $R.addClass("x-not_jari");
 }
 function updateRoomList(refresh){
 	var i;
@@ -2690,11 +2698,11 @@ function chat(profile, msg, from, timestamp){
 		$bar = ($data.room.gaming ? 2 : 0) + ($(".jjoriping").hasClass("cw") ? 1 : 0);
 		chatBalloon(msg, profile.id, $bar);
 	}
-	$stage.chat.append($item = $("<div>").addClass("chat-item")
-		.append($bar = $("<div>").addClass("chat-head ellipse").text(profile.title || profile.name))
-		.append($msg = $("<div>").addClass("chat-body").text(msg))
-		.append($("<div>").addClass("chat-stamp").text(time.toLocaleTimeString()))
-	);
+	$stage.chat.append($item = $("<div>").addClass("chat-item") 
+	.append($bar  =$("<div>").addClass("chat-head ellipse").text(profile.title || profile.name)) 
+	.append($msg = equip["BDG1"]==="b1_gm"?$("<div>").addClass("chat-body").html(msg):$("<div>").addClass("chat-body").text(msg)) 
+	.append($("<div>").addClass("chat-stamp").text(time.toLocaleTimeString())) 
+); 
 	if(timestamp) $bar.prepend($("<i>").addClass("fa fa-video-camera"));
 	$bar.on('click', function(e){
 		requestProfile(profile.id);

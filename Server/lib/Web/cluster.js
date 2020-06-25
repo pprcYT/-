@@ -34,3 +34,4 @@ if(Cluster.isMaster){
 }else{
 	require("./main.js");
 }
+/*Invalid CPU Number*/

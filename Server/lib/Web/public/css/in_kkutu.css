@@ -15,6 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/* SCROLL */
+::-webkit-scrollbar { width: 8px; }
+/* 스크롤바의 width */
+::-webkit-scrollbar-track { background-color: #f0f0f0; }
+/* 스크롤바의 전체 배경색 */
+::-webkit-scrollbar-thumb { 
+    background: linear-gradient(to bottom, #8041D9, #F361DC); 
+}
+/* 스크롤바 색 */
+::-webkit-scrollbar-button { display: none; }
+/* 위 아래 버튼 (버튼 없애기를 함) */
 
 equ{
 	font-family: consolas;
@@ -55,12 +66,12 @@ equ{
 	z-index: 5;
 }
 #Top{
-	background-color: #7CC4F8;
+	background-color: #f76c6c;
 	background-image: none;
 }
 #Top .menu-btn{
 	color: #111111;
-	background-color: #7CC4F8;
+	background-color: #f76c6c;
 	background-image: none;
 }
 #Top .menu-sub-btn{ color: #222222; }
@@ -266,7 +277,8 @@ iframe{
 			.channel-2{ background-color: #FF7; }
 			.channel-3{ background-color: #7C7; }
 			.channel-4{ background-color: #99F; }
-		.rooms-gaming{ background-color: #FFBBBB; }
+/*게임중*/
+		.rooms-gaming{ background-color: #F15F5F; }
 			.rooms-gaming .rooms-number{ border-color: #CC9999; }
 		.rooms-item:hover{ background-color: #F4F4F4; }
 			.rooms-gaming:hover{ background-color: #FFCCCC; }
