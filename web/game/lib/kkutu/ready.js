@@ -312,9 +312,10 @@ $(document).ready(function() {
 		if (isOv) ov.show();
 		o.find('#msg-no').hide();
 		o.find('#msg-content').html(msg);
-		showDialog(o);
+		showDialog(o, true);
 		if (timeout) setTimeout(function() {
 			o.hide();
+			ov.hide();
 		}, timeout);
 	};
 	akConfirm = function(msg2, call, isOv) {
@@ -349,7 +350,7 @@ $(document).ready(function() {
 		if (isOv) ov.show();
 		o.find('#msg-no').show();
 		o.find('#msg-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt = function(msg2, call) {
 		var o = $stage.dialog.ask;
@@ -380,7 +381,7 @@ $(document).ready(function() {
 		});
 		o.find('#ask-no').show();
 		o.find('#ask-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt.whichHand = function(msg2, call) {
 		var o = $stage.dialog.whichhand;
@@ -445,7 +446,7 @@ $(document).ready(function() {
 		});
 		o.find('#password-no').show();
 		o.find('#password-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt.item = function(type) {
 		var o = $stage.dialog.selectItem;
@@ -466,7 +467,7 @@ $(document).ready(function() {
 			send(type, { item: "random" });
 		});
 		ov.show();
-		showDialog(o);
+		showDialog(o, true);
 	};
 	$(window).bind("beforeunload", function(e) {
 		return "정말로 게임을 중단하고 나가시겠습니까?";
@@ -1469,10 +1470,15 @@ $(document).ready(function() {
 			if (rws) rws.close();
 			stopAllSounds();
 			loading(ct);
+			isWelcome = false;
 		};
 		ws.onerror = function(e) {
 			console.warn(L['error'], e);
 		};
 	}
-	var sendMsgItvl = window.setInterval(send('stayconnected'), 40000);
+	window._setInterval(function(){
+		if(!isWelcome) return;
+		send('refresh');
+		send('refresh', undefined, true);
+	}, 20000);
 });

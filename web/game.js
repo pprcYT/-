@@ -69,7 +69,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		rules: [{
 			regexp: "^/(cf|dict|gwalli|ranking)",
 			maxWeight: 30,
-			errorData: '429 Too Many Requests'
+			errorData: '<meta charset="utf-8"><h2>[#429] 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.</h2>'
 		},
 			{
 				regexp: ".*",
@@ -172,7 +172,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		require(`./game/routes/${v}`).run(gameServer, WebInit.page);
 	});
 	gameServer.use(function(req, res, next) {
-		res.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' *.cloudflare.com *.kkutu.xyz cdn.jsdelivr.net t1.daumcdn.net *.ad.daum.net static.cloudflareinsights.com aem-collector.daumkakao.io www.google.com www.googletagmanager.com pagead2.googlesyndication.com googleads.g.doubleclick.net www.google-analytics.com *.gstatic.com connect.facebook.net *.facebook.com data: ws:; upgrade-insecure-requests");
+		// res.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' *.cloudflare.com *.kkutu.xyz cdn.jsdelivr.net t1.daumcdn.net *.ad.daum.net static.cloudflareinsights.com aem-collector.daumkakao.io www.google.com www.googletagmanager.com pagead2.googlesyndication.com googleads.g.doubleclick.net www.google-analytics.com www.googletagservices.com tpc.googlesyndication.com adservice.google.com  *.gstatic.com connect.facebook.net *.facebook.com data: ws:; upgrade-insecure-requests");
 		res.header('X-Frame-Options', 'sameorigin');
 		res.header('X-XSS-Protection', '1; mode=block');
 		res.header('X-Download-Options', 'noopen');

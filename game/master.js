@@ -82,6 +82,18 @@ function processAdmin(id, value){
 		return p2;
 	});
 	switch(cmd){
+		case "delroom":
+			if (temp = ROOM[value]) {
+				for(var i in ROOM[value].players){
+					var $c = DIC[ROOM[value].players[i]];
+					if($c) {
+						$c.send('yell', {value: "관리자에 의하여 접속 중이시던 방이 해체되었습니다."});
+						$c.send('roomStuck');
+					}
+				}
+				delete ROOM[value];
+			}
+			return null;
 		case "roomtitle":
 			var q = value.trim().split(" ");
 			if (temp = ROOM[q[0]]) {
@@ -190,7 +202,7 @@ function processAdmin(id, value){
                     a: "ip",
                     rid: t.id,
                     id: id,
-                    msg: t.remoteAddress || "Error occured while requesting client's IP address"
+                    msg: "Error occured while requesting client's IP address"
                 });
 			}
 			return null;
@@ -369,7 +381,7 @@ exports.init = function(_SID, CHAN){
 		
 		MainDB.users.update([ 'server', SID ]).set([ 'server', "" ]).on();
 		Server = new WebSocket.Server({
-			port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'], 
+			port: global.test ? (Const.TEST_PORT + 410) : process.env['KKUTU_PORT'], 
 			perMessageDeflate: false
 		});
 		Server.on('connection', function(socket, info){
@@ -400,7 +412,7 @@ exports.init = function(_SID, CHAN){
 				$c.admin = GLOBAL.ADMIN.indexOf($c.id) != -1;
 				$c.main = GLOBAL.MAIN.indexOf($c.id) != -1;
 				$c.broadcaster = GLOBAL.BROADCASTER.indexOf($c.id) != -1;
-				$c.remoteAddress = info.headers['x-forwarded-for'].replace('::ffff:', '') || info.connection.remoteAddress;
+				$c.remoteAddress = info.headers['x-forwarded-for'] || info.connection.remoteAddress;
 				
 				if(DIC[$c.id]){
 					DIC[$c.id].sendError(408);
@@ -643,6 +655,10 @@ function processClientRequest($c, msg) {
 		case 'setRoom':
 			if($c.broadcaster) msg.roomType = 'broadcast';
 			if($c.admin) msg.roomType = 'admin';
+			if(SID == '6') if (!$c.admin && !msg.id) {
+				$c.sendError(1010);
+				return;
+			};
 
 			if (!msg.title) stable = false;
 			if (!msg.limit) stable = false;
@@ -714,6 +730,8 @@ function processClientRequest($c, msg) {
 }
 
 KKuTu.onClientClosed = function($c, code){
+	if(!DIC[$c.id]) return;
+
 	delete DIC[$c.id];
 	if($c._error != 409) MainDB.users.update([ '_id', $c.id ]).set([ 'server', "" ]).on();
 	if($c.profile) delete DNAME[$c.profile.nick];

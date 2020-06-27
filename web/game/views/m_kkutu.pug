@@ -28,12 +28,12 @@ block Subject
 	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	
 block JS
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_game_kkutu.min.js?v='+L('version'))
+	script(type='text/javascript', src='/js/in_game_kkutu.min.js?v='+L('version'))
 block CSS
 
 block Jungle
 	span#PUBLIC= PUBLIC ? "true" : undefined
-	span#URL= `wss://ws.${locals.HOST}:${locals.PORT}/${locals._id}`
+	span#URL= `wss://ws.kkutu.xyz/g${locals.PORT}/${locals._id}`
 	span#MOREMI_PART= locals.MOREMI_PART.join(',')
 	span#AVAIL_EQUIP= locals.AVAIL_EQUIP.join(',')
 	span#RULE= JSON.stringify(locals.RULE)
@@ -48,12 +48,12 @@ block Jungle
 			<h5>${locals.EN_INJEONG.map(function(item){ return L('theme_' + item); })}</h5>`;
 	
 block Middle
-	- var VERSION = L('version') + " (모바일)";
+	- var VERSION = L('version')
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
 	script(src='https://www.google.com/recaptcha/api.js')
 	div#Intro
 		img#intro(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/m_intro_all.png')
-		div#version= "끄투닷넷 v" + VERSION
+		div#version= L('version')
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
 		button#HelpBtn.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #BBBBBB;')!= L('help')
@@ -256,7 +256,6 @@ block Middle
 		div.dialog-bar#dict-output(style='height: 195px; overflow-y: scroll; color: #BBBBBB; background-color: #111111;')
 		div.dialog-bar.tail-button
 			button#dict-search= L('SEARCH')
-			button#dict-search(href="https://cafe.naver.com/kkutuxyz" target="_blank")= L('injeongReq')
 	+Dialog('InviteDiag', 300, 420, L('invite'))
 		div.invite-board(style='height: 355px; overflow-y: scroll;')
 		div.dialog-bar.tail-button
@@ -400,7 +399,7 @@ block Middle
 	+Dialog('BlockedDiag', 350, 120, "계정 정지 안내", true)
 		div#blocked-content(style='height:60px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:block;')
 		+separator(15)
-		h5(style='text-align:center;') 처벌과 관련된 문의는 <a href="https://cafe.naver.com/kkutuxyz">공식카페</a>를 이용해 주시기 바랍니다.
+		h5(style='text-align:center;') 처벌과 관련된 문의는 <a href="https://forum.kkutu.xyz">공식 포럼</a>을 이용해 주시기 바랍니다.
 	+Dialog('MsgDiag', 300, 150, "끄투닷넷 안내메세지")
 		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
 		div.dialog-bar.tail-button
@@ -546,5 +545,5 @@ block Bottom
 	div#msg-overlay(style='position:absolute;top:0;left:0;width:100%;height:135%;opacity:0.3;background:black;display:none;')
 	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/fabric.min.js?v='+L('version'))
 	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/emojione.min.js?v='+L('version'))
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_m_game_kkutu_shop.css?v='+L('version'))
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/emojione.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_m_game_kkutu_shop.css?v='+L('version'), async)
+	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/emojione.min.css?v='+L('version'), async)

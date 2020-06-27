@@ -90,6 +90,7 @@ var audioContext = window.hasOwnProperty("AudioContext") ? (new AudioContext()) 
 var _WebSocket = window['WebSocket'];
 var _setInterval = setInterval;
 var _setTimeout = setTimeout;
+var isWelcome = false;
 /**
  * Rule the words! KKuTu Online
  * Copyright (C) 2017 JJoriping(op@jjo.kr)
@@ -404,9 +405,10 @@ $(document).ready(function() {
 		if (isOv) ov.show();
 		o.find('#msg-no').hide();
 		o.find('#msg-content').html(msg);
-		showDialog(o);
+		showDialog(o, true);
 		if (timeout) setTimeout(function() {
 			o.hide();
+			ov.hide();
 		}, timeout);
 	};
 	akConfirm = function(msg2, call, isOv) {
@@ -441,7 +443,7 @@ $(document).ready(function() {
 		if (isOv) ov.show();
 		o.find('#msg-no').show();
 		o.find('#msg-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt = function(msg2, call) {
 		var o = $stage.dialog.ask;
@@ -472,7 +474,7 @@ $(document).ready(function() {
 		});
 		o.find('#ask-no').show();
 		o.find('#ask-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt.whichHand = function(msg2, call) {
 		var o = $stage.dialog.whichhand;
@@ -537,7 +539,7 @@ $(document).ready(function() {
 		});
 		o.find('#password-no').show();
 		o.find('#password-content').html(msg2);
-		showDialog(o);
+		showDialog(o, true);
 	};
 	akPrompt.item = function(type) {
 		var o = $stage.dialog.selectItem;
@@ -558,7 +560,7 @@ $(document).ready(function() {
 			send(type, { item: "random" });
 		});
 		ov.show();
-		showDialog(o);
+		showDialog(o, true);
 	};
 	$(window).bind("beforeunload", function(e) {
 		return "정말로 게임을 중단하고 나가시겠습니까?";
@@ -1561,12 +1563,17 @@ $(document).ready(function() {
 			if (rws) rws.close();
 			stopAllSounds();
 			loading(ct);
+			isWelcome = false;
 		};
 		ws.onerror = function(e) {
 			console.warn(L['error'], e);
 		};
 	}
-	var sendMsgItvl = window.setInterval(send('stayconnected'), 40000);
+	window._setInterval(function(){
+		if(!isWelcome) return;
+		send('refresh');
+		send('refresh', undefined, true);
+	}, 20000);
 });
 /**
  * Rule the words! KKuTu Online
@@ -2791,8 +2798,9 @@ function route(func, a0, a1, a2, a3, a4) {
 }
 
 function connectToRoom(chan, rid) {
-	var url = $data.URL.replace(/:(\d+)/, function(v, p1) {
-		return ":" + (Number(p1) + 416 + Number(chan) - 1);
+	$data.URLL = $data.URL;
+	var url = $data.URL.replace(/\/g([0-9]{4})\//, function(v, p1) {
+		return "/g" + (Number(p1) + 410 + Number(chan) - 1) + "/";
 	}) + "&" + chan + "&" + rid;
 
 	if (rws) return;
@@ -3206,107 +3214,112 @@ function onMessage(data) {
 			break;
 		case 'error':
 			i = data.message || "";
-			if (data.code == 401) {
-				/* 로그인
-				$.cookie('preprev', location.href);
-				location.href = "/login?desc=login_kkutu"; */
-			} else if (data.code == (402 || 'full')) {
-				alert(L['error_' + data.code]);
-				break;
-			} else if (data.code == 403) {
-				loading();
-				akAlert("[#403] 비밀번호가 틀렸습니다.", true);
-				break;
-			} else if (data.code == 406) {
-				if ($stage.dialog.quick.is(':visible')) {
-					$data._preQuick = false;
+			switch(data.code) {
+				case 401:
+				case 402:
+				case 'full':
+					alert(L['error_' + data.code]);
 					break;
-				}
-			} else if (data.code == (408 || 443)) {
-				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
-				break;
-			} else if (data.code == 409) {
-				i = L['server_' + i];
-				akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
-				break;
-			} else if (data.code == 416) {
-				// 게임 중
-				akConfirm(L['error_' + data.code], function(resp) {
-					if (!resp) return;
-					stopBGM();
-					$data._spectate = true;
-					$data._gaming = true;
-					send('enter', {
-						id: data.target,
-						password: $data._pw,
-						spectate: true
-					}, true);
-				});
-				return;
-			} else if (data.code == 413) {
-				$stage.dialog.room.hide();
-				$stage.menu.setRoom.trigger('click');
-			} else if (data.code == 429) {
-				playBGM('lobby');
-			} else if (data.code == 430) {
-				$data.setRoom(data.message, null);
-				if ($stage.dialog.quick.is(':visible')) {
-					$data._preQuick = false;
+				case 403:
+				case 2010:
+					loading();
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 					break;
-				}
-			} else if (data.code == 431 || data.code == 432 || data.code == 433) {
-				$stage.dialog.room.show();
-			} else if (data.code == 444) {
-				i = data.message;
-				t = data.time;
-
-				/* if(i.indexOf("생년월일") != -1){
-					alert("생년월일이 올바르게 입력되지 않아 게임 이용이 제한되었습니다. 잠시 후 다시 시도해 주세요.");
+				case 406:
+					if ($stage.dialog.quick.is(':visible')) $data._preQuick = false;
+					loading();
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 					break;
-				} */
-				var blackEnds = new Date(parseInt(t));
-
-				loading();
-				$(".kkutu-menu button").hide();
-				$stage.box.me.show();
-				$stage.box.chat.show().width(790).height(190);
-				$stage.chat.height(120);
-				$stage.box.userList.show();
-				$stage.box.roomList.show();
-				$(".kkutu-menu .for-lobby").show();
-				welcome();
-
-				var o = $stage.dialog.blocked;
-				o.parent().append(ov = $('<div />', {
-					id: 'block-overlay',
-					style: 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'
-				}));
-
-				if (isNaN(blackEnds)) {
-					o.find('#blocked-content').html("<h3><b>운영정책 위반으로 게임 이용이 정지되었습니다.</b></h3><br><b>차단 사유:</b> " + i + "<br><b>차단 기간:</b> 영구 차단");
-					showDialog($stage.dialog.blocked, false);
-				} else {
-					var black = {
-						year: blackEnds.getFullYear(),
-						month: blackEnds.getMonth() + 1,
-						date: blackEnds.getDate(),
-						hour: blackEnds.getHours(),
-						minute: blackEnds.getMinutes(),
-					};
-					o.find('#blocked-content').html("<h3><b>운영정책 위반으로 게임 이용이 정지되었습니다.</b></h3><br><b>차단 사유:</b> " + i + "<br><b>차단 기간:</b> " + black.year + "년 " + black.month + "월 " + black.date + "일 " + black.hour + "시 " + black.minute + "분 까지");
-					showDialog($stage.dialog.blocked, false);
-				}
-				break;
-			} else if (data.code === 447) {
-				akAlert("자동화 봇 방지를 위한 reCAPTCHA 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.", true);
-				break;
-			} else if (data.code == 2010) {
-				akAlert("레벨 50 이상의 계정은 초보 방에 입장하실 수 없습니다.", true);
-				loading();
-				break;
+				case 416:
+					akConfirm(L['error_' + data.code], function(resp) {
+						if (!resp) return;
+						stopBGM();
+						$data._spectate = true;
+						$data._gaming = true;
+						send('enter', {
+							id: data.target,
+							password: $data._pw,
+							spectate: true
+						}, true);
+					});
+					break;
+				case 413:
+					$stage.dialog.room.hide();
+					$stage.menu.setRoom.trigger('click');
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+					break;
+				case 429:
+					playBGM('lobby');
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+					break;
+				case 430:
+					$data.setRoom(data.message, null);
+					if ($stage.dialog.quick.is(':visible')) {
+						$data._preQuick = false;
+						break;
+					}
+				case 431:
+				case 432:
+				case 433:
+					$stage.dialog.room.show();
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+					break;
+				case 444:
+					i = data.message;
+					t = data.time;
+	
+					var blackEnds = new Date(parseInt(t));
+	
+					loading();
+					$(".kkutu-menu button").hide();
+					$stage.box.me.show();
+					$stage.box.chat.show().width(790).height(190);
+					$stage.chat.height(120);
+					$stage.box.userList.show();
+					$stage.box.roomList.show();
+					$(".kkutu-menu .for-lobby").show();
+					welcome();
+	
+					var o = $stage.dialog.blocked;
+					o.parent().append(ov = $('<div />', {
+						id: 'block-overlay',
+						style: 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'
+					}));
+	
+					if (isNaN(blackEnds)) {
+						o.find('#blocked-content').html("<h3><b>운영정책 위반으로 서비스 이용이 정지되었습니다.</b></h3><br><b>차단 사유:</b> " + i + "<br><b>차단 기간:</b> 영구 차단");
+						showDialog($stage.dialog.blocked, false);
+					} else {
+						var black = {
+							year: blackEnds.getFullYear(),
+							month: blackEnds.getMonth() + 1,
+							date: blackEnds.getDate(),
+							hour: blackEnds.getHours(),
+							minute: blackEnds.getMinutes(),
+						};
+						o.find('#blocked-content').html("<h3><b>운영정책 위반으로 서비스 이용이 정지되었습니다.</b></h3><br><b>차단 사유:</b> " + i + "<br><b>차단 기간:</b> " + black.year + "년 " + black.month + "월 " + black.date + "일 " + black.hour + "시 " + black.minute + "분 까지");
+						showDialog($stage.dialog.blocked, false);
+					}
+					break;
+				case 447:
+					alert("[#447] 자동화 봇 방지를 위한 reCAPTCHA 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.");
+					break;
+				case 408:
+				case 409:
+				case 411:
+				case 414:
+				case 415:
+				case 417:
+				case 419:
+				case 437:
+				case 439:
+				case 1010:
+				case 2010:
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+					break;
+				default:
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
 			}
-			if(data.code == (411 || 413 || 414 || 415 || 417 || 419 || 429 || 430 || 437 || 439)) akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
-			else akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
 			break;
 		default:
 			break;
@@ -3332,8 +3345,8 @@ function welcome() {
 	addTimeout(function() {
 		$("#Intro").hide();
 	}, 2000);
-
 	if ($data.admin) console.log("관리자 모드");
+	isWelcome = true;
 }
 
 function getKickText(profile, vote) {

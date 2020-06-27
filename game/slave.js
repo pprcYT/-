@@ -20,7 +20,7 @@ var WebSocket = require('ws');
 var File = require('fs');
 var Const = require("../const");
 var Server = new WebSocket.Server({
-	port: global.test ? (Const.TEST_PORT + 416) : process.env['KKUTU_PORT'],
+	port: global.test ? (Const.TEST_PORT + 410) : process.env['KKUTU_PORT'],
 	perMessageDeflate: false
 });
 var Master = require('./master');
@@ -216,7 +216,6 @@ KKuTu.onClientMessage = function($c, msg){
 		case 'setRoom':
 			if($c.broadcaster) msg.roomType = 'broadcast';
 			if($c.admin) msg.roomType = 'admin';
-			
 			if(!msg.title) stable = false;
 			if(!msg.limit) stable = false;
 			if(!msg.round) stable = false;
@@ -386,6 +385,8 @@ KKuTu.onClientMessage = function($c, msg){
 	}
 };
 KKuTu.onClientClosed = function($c, code){
+	if(!DIC[$c.id]) return;
+
 	delete DIC[$c.id];
 	if($c.profile) delete DNAME[$c.nick];
 	if($c.socket) $c.socket.removeAllListeners();
