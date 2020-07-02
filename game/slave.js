@@ -202,7 +202,7 @@ KKuTu.onClientMessage = function($c, msg){
 					process.send({ type: "tail-report", id: $c.id, chan: CHAN, place: $c.place, msg: msg });
 					msg.whisper.split(',').forEach(v => {
 						if(temp = DIC[DNAME[v]]){
-							temp.send('chat', { from: $c.profile.title || $c.profile.name, profile: $c.profile, value: msg.value });
+							temp.send('chat', { whisper: $c.profile.nick || $c.profile.title, profile: $c.profile, value: msg.value });
 						}else{
 							$c.sendError(424, v);
 						}
@@ -216,6 +216,7 @@ KKuTu.onClientMessage = function($c, msg){
 		case 'setRoom':
 			if($c.broadcaster) msg.roomType = 'broadcast';
 			if($c.admin) msg.roomType = 'admin';
+
 			if(!msg.title) stable = false;
 			if(!msg.limit) stable = false;
 			if(!msg.round) stable = false;
@@ -236,7 +237,12 @@ KKuTu.onClientMessage = function($c, msg){
 			if(stable){
 				if(msg.title.length > 20) stable = false;
 				if(msg.password.length > 20) stable = false;
-				if (!($c.admin || $c.broadcaster) && (msg.limit < 2 || msg.limit > 8)) {
+				if($c.admin || $c.broadcaster) {
+					if(msg.limit < 2 || msg.limit > 24) {
+						msg.code = 461;
+						stable = false;
+					}
+				} else if (msg.limit < 2 || msg.limit > 8) {
 					msg.code = 432;
 					stable = false;
 				}

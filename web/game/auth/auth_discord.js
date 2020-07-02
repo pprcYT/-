@@ -9,6 +9,8 @@ module.exports.config = {
 }
 
 module.exports.strategyConfig = {
+    authorizationURL: 'https://kkutu.xyz/login/discord/redirect',
+    tokenURL: 'https://discordapp.com/api/oauth2/token',
     clientID: config.discord.clientID,
     clientSecret: config.discord.clientSecret,
     callbackURL: config.discord.callbackURL,

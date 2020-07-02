@@ -1,20 +1,35 @@
-/**
- * Rule the words! KKuTu Online
- * Copyright (C) 2017 JJoriping(op@jjo.kr)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+// Created by hatty163 (admin@hatty163.kr)
+
+const winston = require('winston');
+require('winston-daily-rotate-file');
+
+const serverType = process.env['KKT_SV_TYPE'] === undefined ? "game" : process.env['KKT_SV_TYPE'];
+const { combine, timestamp, label, printf } = winston.format;
+const logFormat = printf(({ level, message, label, timestamp }) => {
+	return `${timestamp} [${label}] ${level}: ${message}`;
+});
+
+const transport = new (winston.transports.DailyRotateFile)({
+	filename: 'D:\\logs\\' + serverType + '-%DATE%.log',
+	datePattern: 'YYYY-MM-DD-HH',
+	zippedArchive: true,
+	maxSize: '20m',
+	maxFiles: '14d',
+	format: combine(
+		label({ label: serverType }),
+		timestamp(),
+		logFormat
+	)
+});
+
+let logger = winston.createLogger({
+	transports: [
+		transport
+	],
+	exitOnError: false,
+});
+
+const colors = require('colors');
 
 function callLog(text){
 	var date = new Date();
@@ -26,28 +41,35 @@ function callLog(text){
 		minute: date.getMinutes(),
 		second: date.getSeconds()
 	}, i;
-	
+
 	for(i in o){
 		if(o[i] < 10) o[i] = "0"+o[i];
 		else o[i] = o[i].toString();
 	}
 	console.log("["+o.year+"-"+o.month+"-"+o.date+" "+o.hour+":"+o.minute+":"+o.second+"] "+text);
 }
+
 exports.log = function(text){
+	logger.log({level: 'info',message: text});
 	callLog(text);
 };
 exports.info = function(text){
-	callLog("[INFO] "+text);
+	logger.log({level: 'info',message: text});
+	callLog(text.cyan);
 };
 exports.success = function(text){
-	callLog("[SUCCESS] "+text);
+	logger.log({level: 'info',message: text});
+	callLog(text.green);
 };
 exports.alert = function(text){
-	callLog("[ALERT] "+text);
+	logger.log({level: 'warn',message: text});
+	callLog(text.yellow);
 };
 exports.warn = function(text){
-	callLog("[WARN] "+text);
+	logger.log({level: 'warn',message: text});
+	callLog(text.black.bgYellow);
 };
 exports.error = function(text){
-	callLog("[ERROR] "+text);
+	logger.log({level: 'error',message: text});
+	callLog(text.bgRed);
 };

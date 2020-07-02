@@ -9,11 +9,12 @@ module.exports.config = {
 }
 
 module.exports.strategyConfig = {
+    authorizationURL: 'https://kkutu.xyz/login/facebook/redirect',
     clientID: config.facebook.clientID, // 보안을 위해서입니다.
-        clientSecret: config.facebook.clientSecret, // 이 방법을 사용하는 것을
-        callbackURL: config.facebook.callbackURL, // 적극 권장합니다.
-        profileFields: ['id' ,'name' , 'gender', 'age_range', 'displayName'],
-        passReqToCallback: true
+    clientSecret: config.facebook.clientSecret, // 이 방법을 사용하는 것을
+    callbackURL: config.facebook.callbackURL, // 적극 권장합니다.
+    profileFields: ['id' ,'name' , 'gender', 'age_range', 'displayName'],
+    passReqToCallback: true
 }
 
 module.exports.strategy = (process, MainDB, Ajae) => {

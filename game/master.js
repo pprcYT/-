@@ -87,7 +87,7 @@ function processAdmin(id, value){
 				for(var i in ROOM[value].players){
 					var $c = DIC[ROOM[value].players[i]];
 					if($c) {
-						$c.send('yell', {value: "관리자에 의하여 접속 중이시던 방이 해체되었습니다."});
+						$c.send('notice', {value: "관리자에 의하여 접속 중이시던 방이 해체되었습니다."});
 						$c.send('roomStuck');
 					}
 				}
@@ -95,7 +95,7 @@ function processAdmin(id, value){
 			}
 			return null;
 		case "roomtitle":
-			var q = value.trim().split(" ");
+			var q = value.trim().split(",");
 			if (temp = ROOM[q[0]]) {
 				temp.title = q[1];
 				KKuTu.publish('room', { target: id, room:temp.getData(), modify: true }, temp.password);
@@ -103,6 +103,7 @@ function processAdmin(id, value){
 			return null;
 		case "nick":
 			MainDB.users.update([ '_id', value ]).set([ 'nick', '바른닉네임' + value.replace(/[^0-9]/g, "").substring(0,4) ]).on();
+			MainDB.users.update([ '_id', value ]).set([ 'exordial', '바른닉네임' + value.replace(/[^0-9]/g, "").substring(0,4) ]).on();
 			if(temp = DIC[value]){
 				temp.socket.send('{"type":"error","code":410}');
 				temp.socket.close();
@@ -171,6 +172,9 @@ function processAdmin(id, value){
 		case "broadcast":
 			KKuTu.publish('yell', { value: value });
 			return null;
+		case "notice":
+			KKuTu.publish('notice', { value: value });
+			return null;
 		case "kill":
 			if(temp = DIC[value]){
 				temp.socket.send('{"type":"error","code":410}');
@@ -198,12 +202,20 @@ function processAdmin(id, value){
 			return null;
         case "ip":
             if (t = DIC[value]) {
-                if (DIC[id]) DIC[id].send('tail', {
-                    a: "ip",
-                    rid: t.id,
-                    id: id,
-                    msg: "Error occured while requesting client's IP address"
-                });
+				if(DIC[id]) try {
+					DIC[id].send('tail', {
+						a: "ip",
+						rid: t.id,
+						id: id,
+						msg: t.remoteAddress
+					});
+				} catch (e) {
+					DIC[id].send('tail', {
+						a: "ip",
+						msg: "시스템 오류가 발생하였습니다. 관리자에게 문의하세요."
+					});
+					JLog.error("[IP] ERROR: " + e);
+				}
 			}
 			return null;
 		case "dump":
@@ -548,6 +560,13 @@ function processClientRequest($c, msg) {
 
 			$c.publish('yell', {value: msg.value});
 			break;
+		case 'notice':
+			if (!msg.value) return;
+			if (!$c.admin) return;
+			if (!$c.main) return;
+
+			$c.publish('notice', {value: msg.value});
+			break;
 		case 'refresh':
 			$c.refresh();
 			break;
@@ -564,7 +583,7 @@ function processClientRequest($c, msg) {
 				msg.whisper.split(',').forEach(v => {
 					if (temp = DIC[DNAME[v]]) {
 						temp.send('chat', {
-							from: $c.profile.nick,
+							whisper: $c.profile.nick || $c.profile.title,
 							profile: $c.profile,
 							value: msg.value
 						});
@@ -573,7 +592,7 @@ function processClientRequest($c, msg) {
 					}
 				});
 			} else {
-				if(!isLobby && $c.place == 0) $c.send('yell', { value: "관리자에 의하여 로비 채팅이 일시적으로 비활성화 되었습니다." });
+				if(!isLobby && $c.place == 0) $c.send('notice', { value: "관리자에 의하여 로비 채팅이 일시적으로 비활성화 되었습니다." });
 				else $c.chat(msg.value);
 			}
 			break;
@@ -655,8 +674,9 @@ function processClientRequest($c, msg) {
 		case 'setRoom':
 			if($c.broadcaster) msg.roomType = 'broadcast';
 			if($c.admin) msg.roomType = 'admin';
+
 			if(SID == '6') if (!$c.admin && !msg.id) {
-				$c.sendError(1010);
+				$c.sendError(462);
 				return;
 			};
 
@@ -680,7 +700,12 @@ function processClientRequest($c, msg) {
 			if (stable) {
 				if (msg.title.length > 20) stable = false;
 				if (msg.password.length > 20) stable = false;
-				if (!($c.admin || $c.broadcaster) && (msg.limit < 2 || msg.limit > 8)) {
+				if($c.admin || $c.broadcaster) {
+					if(msg.limit < 2 || msg.limit > 24) {
+						msg.code = 461;
+						stable = false;
+					}
+				} else if (msg.limit < 2 || msg.limit > 8) {
 					msg.code = 432;
 					stable = false;
 				}

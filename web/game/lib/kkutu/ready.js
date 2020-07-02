@@ -147,7 +147,6 @@ $(document).ready(function() {
 			noticeOK: $("notice-ok"),
 			user: $("#UserDiag"),
 			message: $("#MsgDiag"),
-			messageOv: $("#MsgDiagOv"),
 			ask: $("#AskDiag"),
 			blocked: $("#BlockedDiag"),
 			password: $("#PasswordDiag"),
@@ -217,74 +216,74 @@ $(document).ready(function() {
 	$data._soundList = function() {
 		var res = [{
 				key: "k",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/k.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/k.mp3"
 			},
 			{
 				key: "lobby",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedLobbyBGM + "/LobbyBGM.mp3"
 			},
 			{
 				key: "jaqwi",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiBGM.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/JaqwiBGM.mp3"
 			},
 			{
 				key: "jaqwiF",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/JaqwiFastBGM.mp3"
 			},
 			{
 				key: "game_start",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/game_start.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/game_start.mp3"
 			},
 			{
 				key: "round_start",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/round_start.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/round_start.mp3"
 			},
 			{
 				key: "fail",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/fail.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/fail.mp3"
 			},
 			{
 				key: "timeout",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/timeout.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/timeout.mp3"
 			},
 			{
 				key: "lvup",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/lvup.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/lvup.mp3"
 			},
 			{
 				key: "Al",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/Al.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/Al.mp3"
 			},
 			{
 				key: "success",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/success.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/success.mp3"
 			},
 			{
 				key: "missing",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/missing.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/missing.mp3"
 			},
 			{
 				key: "mission",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/mission.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/mission.mp3"
 			},
 			{
 				key: "kung",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/kung.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/kung.mp3"
 			},
 			{
 				key: "horr",
-				value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/horr.mp3?v=" + L['version']
+				value: CDN + "/media/" + $data.selectedBGM + "/horr.mp3"
 			},
 		];
 		for (i = 0; i <= 10; i++) res.push({
 			key: "T" + i,
-			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/T" + i + ".mp3?v=" + L['version']
+			value: CDN + "/media/" + $data.selectedBGM + "/T" + i + ".mp3"
 		}, {
 			key: "K" + i,
-			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/K" + i + ".mp3?v=" + L['version']
+			value: CDN + "/media/" + $data.selectedBGM + "/K" + i + ".mp3"
 		}, {
 			key: "As" + i,
-			value: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/media/" + $data.selectedBGM + "/As" + i + ".mp3?v=" + L['version']
+			value: CDN + "/media/" + $data.selectedBGM + "/As" + i + ".mp3"
 		});
 		return res;
 	}
@@ -292,9 +291,7 @@ $(document).ready(function() {
 		processShop(connect);
 	});
 	akAlert = function(msg, isOv, timeout) {
-		if(isOv) var o = $stage.dialog.messageOv;
-		else var o = $stage.dialog.message;
-
+		var o = $stage.dialog.message;
 		var ov = $('#msg-overlay');
 
 		if (o.data('callback')) {
@@ -319,9 +316,7 @@ $(document).ready(function() {
 		}, timeout);
 	};
 	akConfirm = function(msg2, call, isOv) {
-		if(isOv) var o = $stage.dialog.messageOv;
-		else var o = $stage.dialog.message;
-		
+		var o = $stage.dialog.message;
 		var ov = $('#msg-overlay');
 
 		if (o.data('callback')) {
@@ -924,7 +919,7 @@ $(document).ready(function() {
 				}, true);
 			} else {
 				if (!$data.pexit) {
-					akAlert("중도 퇴장이 불가능한 방입니다. 게임이 끝나면 나가지도록 예약되었습니다.", true);
+					akAlert("중도 퇴장이 불가능한 방입니다. 게임이 끝나면 자동으로 나가지도록 예약되었습니다.", true);
 					$("#ExitBtn").addClass("toggled");
 					$data.pexit = true;
 				} else {
@@ -1153,7 +1148,7 @@ $(document).ready(function() {
 			send('handover', {
 				target: $data._profiled
 			});
-		});
+		}, true);
 	});
 	$stage.dialog.profileKick.on('click', function(e) {
 		send('kick', {
@@ -1242,8 +1237,11 @@ $(document).ready(function() {
 		if (curnick != newnick) {
 			akConfirm('닉네임이 변경되었습니다. 정말로 바꾸시겠습니까?', function(resp) {
 				$stage.dialog.dressOK.attr('disabled', false);
-
 				if (!resp) return;
+				if (newnick.match(ADVBAD)) {
+					akAlert("닉네임에 사용 불가능한 문자가 포함되어 있습니다.", true);
+					return;
+				}
 				$.post("/dressnick", obj, function(res) {
 					if (res.error) return fail(res.error);
 
@@ -1267,6 +1265,11 @@ $(document).ready(function() {
 			}, true);
 		} else {
 			$(e.currentTarget).attr('disabled', true);
+			if (obj.data.match(ADVBAD)) {
+				akAlert("소개 한마디에 사용 불가능한 문자가 포함되어 있습니다.", true);
+				$(e.currentTarget).attr('disabled', false);
+				return;
+			}
 			$.post("/exordial", obj, function(res) {
 				$stage.dialog.dressOK.attr('disabled', false);
 				if (res.error) return fail(res.error);
@@ -1308,7 +1311,7 @@ $(document).ready(function() {
 				updateMe();
 				drawCharFactory();
 			});
-		});
+		}, true);
 	});
 	$("#room-injeong-pick").on('click', function(e) {
 		var rule = RULE[MODE[$("#room-mode").val()]];
@@ -1465,7 +1468,7 @@ $(document).ready(function() {
 			onMessage(JSON.parse(e.data));
 		};
 		ws.onclose = function(e) {
-			var ct = L['closed'] + " (#" + e.code + ")";
+			var ct = "[#" + e.code + "] " + L['closed'];
 
 			if (rws) rws.close();
 			stopAllSounds();
@@ -1477,8 +1480,9 @@ $(document).ready(function() {
 		};
 	}
 	window._setInterval(function(){
-		if(!isWelcome) return;
-		send('refresh');
-		send('refresh', undefined, true);
-	}, 20000);
+		if(isWelcome) {
+			send('refresh');
+			if($data.room) send('refresh', undefined, true);
+		}
+	}, 18000);
 });

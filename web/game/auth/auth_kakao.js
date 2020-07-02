@@ -9,6 +9,7 @@ module.exports.config = {
 }
 
 module.exports.strategyConfig = {
+    authorizationURL: 'https://kkutu.xyz/login/kakao/redirect',
     clientID: config.kakao.clientID, // 보안을 위해서입니다.
     clientSecret: config.kakao.clientSecret,
     callbackURL: config.kakao.callbackURL,  // 이 방법을 사용하는 것을

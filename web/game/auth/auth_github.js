@@ -9,6 +9,7 @@ module.exports.config = {
 }
 
 module.exports.strategyConfig = {
+    authorizationURL: 'https://kkutu.xyz/login/github/redirect',
     clientID: config.github.clientID, // 보안을 위해서입니다.
     clientSecret: config.github.clientSecret, // 이 방법을 사용하는 것을
     callbackURL: config.github.callbackURL, // 적극 권장합니다.

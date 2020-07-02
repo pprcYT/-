@@ -266,13 +266,12 @@ function onMessage(data) {
 			$data._okg = data.okg;
 			$data._gaming = false;
 			$data.box = data.box;
-			if (data.test) akAlert(L['welcomeTestServer']);
+			if (data.test) akAlert(L['welcomeTestServer'], true);
 			if (location.hash[1]) tryJoin(location.hash.slice(1));
 			updateUI(undefined, true);
 			welcome();
 			if (data.caj) checkAge();
 			updateCommunity();
-			if (data.guest) akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 계정으로 로그인 시 더욱 즐거운 플레이가 가능합니다.", true);
 			if ($data.nick == "nonick") {
 				var o = $stage.dialog.newnick;
 				o.parent().append(ov = $('<div />', {
@@ -283,16 +282,19 @@ function onMessage(data) {
 					var newnick = $("#newnick-input").val();
 					newnick = newnick !== undefined ? newnick.trim() : "";
 					if (newnick.length < 2) {
-						akAlert("닉네임은 두글자 이상으로 해주세요!");
+						akAlert("닉네임은 두글자 이상으로 해주세요!", true);
 						$(e.currentTarget).attr('disabled', false);
 						return;
 					} else if (newnick.length > 15) {
-						akAlert("닉네임은 15글자 이하로 해주세요!");
+						akAlert("닉네임은 15글자 이하로 해주세요!", true);
 						$(e.currentTarget).attr('disabled', false);
 						return;
 					} else if (newnick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(newnick)) {
-						akAlert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!");
+						akAlert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!", true);
 						$(e.currentTarget).attr('disabled', false);
+						return;
+					} else if (newnick.match(ADVBAD)) {
+						akAlert("닉네임에 사용 불가능한 문자가 포함되어 있습니다.", true);
 						return;
 					}
 					var obj = {
@@ -309,8 +311,9 @@ function onMessage(data) {
 							nick: newnick
 						}, true);
 						send('refresh');
-						akAlert("닉네임 설정이 완료되었습니다! 궁금하신 점이 있으시다면 좌측 상단 물음표 아이콘을 클릭하여 도움말을 열어보세요.");
+						akAlert("닉네임 설정이 완료되었습니다! 궁금하신 점이 있으시다면 좌측 상단 물음표 아이콘을 클릭하여 도움말을 열어보세요.", true);
 						updateUserList(true);
+						requestProfile($data.id);
 						o.hide();
 						ov.hide();
 					});
@@ -319,7 +322,9 @@ function onMessage(data) {
 				ov.show();
 			}
 			var akDate = new Date();
-			if (!$.cookie('isChecked') || ($.cookie('isChecked') != akDate.getDate())) {
+			if (data.guest) {
+				akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 계정으로 로그인 시 더욱 즐거운 플레이가 가능합니다.", true);
+			} else if (!$.cookie('isChecked') || ($.cookie('isChecked') != akDate.getDate())) {
 				var no = $stage.dialog.notice;
 				$("#notice-board").attr('src', "/kkutu/announcement");
 				no.find('#notice-ok').off('click').click(function(e) {
@@ -377,7 +382,7 @@ function onMessage(data) {
 			} else {
 				chat(data.profile || {
 					title: L['robot']
-				}, data.value, data.from, data.timestamp);
+				}, data.value, data.whisper, data.timestamp);
 			}
 			break;
 		case 'drawCanvas':
@@ -546,6 +551,12 @@ function onMessage(data) {
 		case 'blocked':
 			notice(L['blocked']);
 			break;
+		case 'notice':
+			notice(data.value, L['yell']);
+			break;
+		case 'alert':
+			akAlert(data.value, data.overlay);
+			break;
 		case 'test':
 			if ($data._test = !$data._test) {
 				$data._testt = addInterval(function() {
@@ -578,11 +589,6 @@ function onMessage(data) {
 		case 'error':
 			i = data.message || "";
 			switch(data.code) {
-				case 401:
-				case 402:
-				case 'full':
-					alert(L['error_' + data.code]);
-					break;
 				case 403:
 				case 2010:
 					loading();
@@ -664,24 +670,15 @@ function onMessage(data) {
 						showDialog($stage.dialog.blocked, false);
 					}
 					break;
-				case 447:
-					alert("[#447] 자동화 봇 방지를 위한 reCAPTCHA 인증에 실패했습니다. 메인 화면에서 다시 시도해 주세요.");
-					break;
-				case 408:
-				case 409:
-				case 411:
-				case 414:
-				case 415:
-				case 417:
-				case 419:
-				case 437:
-				case 439:
-				case 1010:
-				case 2010:
-					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
+				case 416:
+				case 434:
+				case 435:
+				case 436:
+				case 438:
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
 					break;
 				default:
-					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i);
+					akAlert("[#" + data.code + "] " + L['error_' + data.code] + i, true);
 			}
 			break;
 		default:
@@ -708,7 +705,6 @@ function welcome() {
 	addTimeout(function() {
 		$("#Intro").hide();
 	}, 2000);
-	if ($data.admin) console.log("관리자 모드");
 	isWelcome = true;
 }
 
@@ -849,7 +845,7 @@ function processRoom(data) {
 		$target = $data.users[data.target];
 		if (data.kickVote) {
 			notice(getKickText($target.profile, data.kickVote));
-			if ($target.id == data.id) akAlert(L['hasKicked']);
+			if ($target.id == data.id) akAlert(L['hasKicked'], true);
 		}
 		if (data.room.players.indexOf($data.id) == -1) {
 			if ($data.room)
@@ -1213,14 +1209,41 @@ function userListBar(o, forInvite) {
 
 function addonNickname($R, o) {
 	if (o.equip['NIK']) $R.addClass("x-" + o.equip['NIK']);
-	if (o.equip['BDG'] == "b1_gm") $R.addClass("x-gm");
-	if (o.equip['BDG'] == "b1_plan") $R.addClass("x-plan");
-	if (o.equip['BDG'] == "b1_ad") $R.addClass("x-ad");
-	if (o.equip['BDG'] == "b1_user") $R.addClass("x-user");
-	if (o.equip['BDG'] == "b1_word") $R.addClass("x-word");
-	if (o.equip['BDG'] == "b1_dev") $R.addClass("x-dev");
-	if (o.equip['BDG'] == "b1_music") $R.addClass("x-music");
-	if (o.equip['BDG'] == "b1_design") $R.addClass("x-design");
+	switch(o.equip['BDG']) {
+		case 'b1_gm':
+			$R.addClass('x-gm');
+			break;
+		case 'b1_personnel':
+			$R.addClass('x-personnel');
+			break;
+		case 'b1_mod':
+			$R.addClass('x-mod');
+			break;
+		case 'b1_word':
+			$R.addClass('x-word');
+			break;
+		case 'b1_dev':
+			$R.addClass('x-dev');
+			break;
+		case 'b1_media':
+			$R.addClass('x-media');
+			break;
+		case 'b1_ad':
+			$R.addClass('x-ad');
+			break;
+		case 'b1_forum':
+			$R.addClass('x-forum');
+			break;
+		case 'b1_bj':
+			$R.addClass('x-bj');
+			break;
+		case 'b1_yt':
+			$R.addClass('x-yt');
+			break;
+		case 'b1_tw':
+			$R.addClass('x-tw');
+			break;
+	}
 }
 
 function updateRoomList(refresh) {
@@ -1325,7 +1348,7 @@ function miniGameUserBar(o) {
 function getAIProfile(level) {
 	return {
 		title: L['aiLevel' + level] + ' ' + L['robot'],
-		image: "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/robot.png"
+		image: CDN + "/img/kkutu/robot.png"
 	};
 }
 
@@ -1422,7 +1445,7 @@ function onMasterSubJamsu() {
 	notice(L['subJamsu']);
 	$data._jamsu = addTimeout(function() {
 		send('leave');
-		akAlert(L['masterJamsu']);
+		akAlert(L['masterJamsu'], true);
 	}, 30000);
 }
 
@@ -1590,7 +1613,7 @@ function drawMyGoods(avGroup) {
 					drawMyDress($data._avGroup);
 					updateUI(false);
 				});
-			});
+			}, true);
 		} else if (AVAIL_EQUIP.indexOf(item.group) != -1) {
 			if (item.group == "Mhand") {
 				akPrompt.whichHand(L['dressWhichHand'], function(resp) {
@@ -1615,7 +1638,7 @@ function drawMyGoods(avGroup) {
 					drawMyDress($data._avGroup);
 					updateMe();
 				});
-			});
+			}, true);
 		}
 	});
 }
@@ -1653,7 +1676,7 @@ function requestEquip(id, isLeft, verify) {
 					updateUI(false);
 				});
 			}
-		});
+		}, true);
 	}
 }
 
@@ -1838,13 +1861,13 @@ function updateCommunity() {
 		var id = $(e.currentTarget).parent().parent().attr('id').slice(4);
 		var memo = $data.friends[id];
 
-		if ($data._friends[id].server) return fail(455);
+		if (memo.server) return fail(455);
 		akConfirm(memo + "(#" + id.substr(0, 5) + ")\n" + L['friendSureRemove'], function(resp) {
 			if (!resp) return;
 			send('friendRemove', {
 				id: id
 			}, true);
-		});
+		}, true);
 	}
 	$("#CommunityDiag .dialog-title").html(L['communityText'] + " (" + len + " / 100)");
 }
@@ -2000,7 +2023,7 @@ function requestInvite(id) {
 			send('invite', {
 				target: id
 			});
-		});
+		}, true);
 	} else send('invite', {
 		target: id
 	});
@@ -3290,8 +3313,7 @@ function chat(profile, msg, from, timestamp) {
 	if (link = msg.match(/https?:\/\/[\w\.\?\/&#%=-_\+]+/g)) {
 		msg = $msg.html();
 		link.forEach(function(item) {
-			msg = msg.replace(item, "<font color='#2222FF'>[링크 삭제됨]</font>");
-			msg = msg.replace(item, "<a href='#' style='color: #2222FF;' onclick='if(confirm(\"" + L['linkWarning'] + "\")) window.open(\"" + item + "\");'>" + item + "</a>");
+			msg = msg.replace(item, "<a href='#' style='color: #2222FF;' onclick='" + 'linkConfirm("' + item + '");' + "'>" + item + "</a>");
 		});
 		$msg.html(msg);
 	}
@@ -3380,10 +3402,10 @@ function iImage(key, sObj) {
 	};
 	obj = $data.shop[key] || sObj;
 	gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
-	if (obj.group.slice(0, 3) == "BDG") return "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/badge/" + obj._id + gif;
+	if (obj.group.slice(0, 3) == "BDG") return CDN + "/img/kkutu/moremi/badge/" + obj._id + gif;
 	return (obj.group.charAt(0) == 'M') ?
-		"https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif :
-		"https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/shop/" + obj._id + ".png";
+		CDN + "/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif :
+		CDN + "/img/kkutu/shop/" + obj._id + ".png";
 }
 
 function iDynImage(group, data) {
@@ -3459,7 +3481,7 @@ function renderMoremi(target, equip) {
 		);
 	}
 	$obj.children(".moremi-back").after($("<img>").addClass("moremies moremi-body")
-		.attr('src', equip.robot ? "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/robot.png" : "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/body.png")
+		.attr('src', equip.robot ? CDN + "/img/kkutu/moremi/robot.png" : CDN + "/img/kkutu/moremi/body.png")
 		.css({
 			'width': "100%",
 			'height': "100%"
@@ -3498,4 +3520,11 @@ function yell(msg) {
 			$stage.yell.hide();
 		}, 3000);
 	}, 1000);
+}
+
+function linkConfirm(item) {
+	akConfirm(L['linkWarning'], function(resp) {
+		if(!resp) return;
+		window.open(item);
+	}, true);
 }

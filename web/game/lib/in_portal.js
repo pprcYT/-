@@ -31,7 +31,7 @@
 		};
 
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/alphakkutu.png)",
+			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/kkutudotnet.png)",
 			'background-size': "200px 200px"
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){
@@ -81,7 +81,7 @@
 				}
 				$stage.list.append($e = $("<div>").addClass("server").attr('id', "server-" + i)
 					.append($("<div>").addClass("server-status ss-" + status))
-					.append($("<div>").addClass("server-name").html('<b>' + L['server_' + i] + '</b> 서버입장'))
+					.append($("<div>").addClass("server-name").html('<b>' + L['server_' + i] + '</b> 채널입장'))
 					.append($("<div>").addClass("server-stats st-" + status).html('<b>' + people + '</b> ' + L['ss_' + status]))
 				);
 				if (status != "x") $e.on('click', function (e) {

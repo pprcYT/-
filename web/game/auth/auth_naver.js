@@ -9,6 +9,7 @@ module.exports.config = {
 }
 
 module.exports.strategyConfig = {
+    authorizationURL: 'https://kkutu.xyz/login/naver/redirect',
     clientID: config.naver.clientID, // 보안을 위해서입니다.
     clientSecret: config.naver.clientSecret, // 이 방법을 사용하는 것을
     callbackURL: config.naver.callbackURL, // 적극 권장합니다.

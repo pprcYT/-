@@ -371,7 +371,10 @@ exports.Client = function(socket, profile, sid){
 			if(my.blocked){
 				if(st < Const.BLOCKED_LENGTH){
 					if(++my.numSpam >= Const.KICK_BY_SPAM){
-						if(Cluster.isWorker) process.send({ type: "kick", target: my.id });
+						if(Cluster.isWorker) {
+							my.send('alert', { value: "시스템 정책으로 인하여 연결이 끊어졌습니다.", overlay: true });
+							process.send({ type: "kick", target: my.id });
+						}
 						return my.socket.close();
 					}
 					return my.send('blocked');
@@ -541,14 +544,14 @@ exports.Client = function(socket, profile, sid){
 				return my.sendError(430, room.id);
 			}
 			if ($room.opts.onlybeginner && (my.getLevel() > 50 || my.guest) && !my.admin) {
-				if (my.guest) return my.sendError(2000);
-				else return my.sendError(2010);
+				if (my.guest) return my.sendError(470);
+				else return my.sendError(472);
 			}
 			if (!spec){
 				if ($room.gaming) return my.send('error', { code: 416, target: $room.id });
 				else if (!GUEST_PERMISSION.enter) return my.sendError(401);
 			}
-			if ($room.opts.noguest && my.guest) return my.sendError(2001);
+			if ($room.opts.noguest && my.guest) return my.sendError(471);
 			
 			if($room.players.length >= $room.limit + (spec ? Const.MAX_OBSERVER : 0)){
 				return my.sendError(429);
@@ -604,11 +607,11 @@ exports.Client = function(socket, profile, sid){
 				}
 				$room = new exports.Room(room, getFreeChannel());
 				if ($room.opts.onlybeginner && (my.getLevel() > 50 || my.guest) && !my.admin) {
-					if (my.guest) return my.sendError(2000);
-					else return my.sendError(2010);
+					if (my.guest) return my.sendError(470);
+					else return my.sendError(472);
 				}
 				// console.log(my);
-				if ($room.opts.noguest && my.guest) return my.sendError(2001);
+				if ($room.opts.noguest && my.guest) return my.sendError(471);
 				process.send({ type: "room-new", target: my.id, room: $room.getData() });
 				ROOM[$room.id] = $room;
 				spec = false;
@@ -641,7 +644,7 @@ exports.Client = function(socket, profile, sid){
 	};
 	my.setTeam = function(team){
 		my.team = team;
-		my.publish('user', my.getData());
+		my.publish('user', my.getData(), true);
 	};
 	my.kick = function(target, kickVote){
 		var $room = ROOM[my.place];

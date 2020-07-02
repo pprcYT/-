@@ -27,7 +27,7 @@ function updateLanguage(){
 	var i, src;
 	
 	for(i in Language){
-		src = `../Web/lang/${i}.json`;
+		src = `../web/lang/${i}.json`;
 		
 		delete require.cache[require.resolve(src)];
 		Language[i] = require(src);
@@ -54,7 +54,7 @@ function page(req, res, file, data){
 	}else{
 		req.session.createdAt = new Date();
 	}
-	var addr = req.ip || "";
+	var addr = req.headers['x-forwarded-for'] === undefined ? 'client' : req.headers['x-forwarded-for'];
 	var sid = req.session.id || "";
 	
 	data.published = global.isPublic;
@@ -83,19 +83,22 @@ function page(req, res, file, data){
 		data.page = file;
 	}
 	
-	JLog.log(`${addr.slice(7)}@${sid.slice(0, 10)} ${data.page}, ${JSON.stringify(req.params)}`);
+	JLog.log(`${addr}@${sid.slice(0, 10)} ${data.page}, ${JSON.stringify(req.params)}`);
 	res.render(data.page, data, function(err, html){
 		if(err) res.send(err.toString());
 		else res.send(html);
 	});
 }
 exports.init = function(Server, shop){
-	Server.get("/language/:page/:lang", function(req, res){
+	Server.get("/language/:page/:lang.js", function(req, res){
+		res.set('Content-Type', 'text/javascript');
+
 		var page = req.params.page.replace(/_/g, "/");
 		var lang = req.params.lang;
 		
 		if(page.substr(0, 2) == "m/") page = page.slice(2);
 		if(page == "portal") page = "kkutu";
+		
 		res.send("window.L = "+JSON.stringify(getLanguage(lang, page, shop))+";");
 	});
 	Server.get("/language/flush", function(req, res){

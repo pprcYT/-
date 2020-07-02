@@ -28,6 +28,8 @@ block Subject
 	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 block JS
 	script(type='text/javascript', src='/js/in_game_kkutu.min.js?v='+L('version'))
+	script.
+		if (/MSIE|Trident/.test(window.navigator.userAgent)) window.location = "https://kkutu.xyz/browserunsupport";
 block CSS
 
 block Jungle
@@ -50,8 +52,6 @@ block Jungle
 block Middle
 	- var VERSION = L('version');
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
-	script.
-		if (/MSIE|Trident/.test(window.navigator.userAgent)) window.location = "https://kkutu.xyz/browserunsupport";
 	div#Intro
 		img#intro(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/intro_all.png')
 		div#version= L('version')
@@ -404,8 +404,8 @@ block Middle
 		div.dialog-bar#obtain-name(style='text-align: center;')
 		div.dialog-bar.tail-button
 			button#obtain-ok= L('OK')
-	+Dialog('HelpDiag', 550, 400, L('helpText'))
-		iframe#help-board(width=550, height=375)
+	+Dialog('HelpDiag', 600, 400, L('helpText'))
+		iframe#help-board(width=600, height=375)
 	+Dialog('NoticeDiag', 560, 400, L('bulletin'))
 		iframe#notice-board(width=560, height=340)
 		+separator(5)
@@ -459,11 +459,6 @@ block Middle
 		+separator(15)
 		h5(style='text-align:center;') 처벌과 관련된 문의는 <a href="https://forum.kkutu.xyz">공식 포럼</a>을 이용해 주시기 바랍니다.
 	+Dialog('MsgDiag', 300, 150, "끄투닷넷 안내메세지")
-		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
-		div.dialog-bar.tail-button
-			button#msg-no= L('NO')
-			button#msg-ok= L('OK')
-	+Dialog('MsgDiagOv', 300, 150, "끄투닷넷 안내메세지")
 		div#msg-content(style='height:80px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
 		div.dialog-bar.tail-button
 			button#msg-no= L('NO')
