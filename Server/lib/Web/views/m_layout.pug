@@ -46,14 +46,6 @@ html
 			block Preload
 		block CSS
 		block JS
-
-	body(style='min-width: 200px;')
-		div#Top
-			+MMenu()
-			div#global-notice
-				div#gn-content
-					include ../public/global_notice.html
-			block Top
 		div#Jungle
 			span#mobile= locals.mobile
 			span#summonerID= DATA._id

@@ -14,36 +14,39 @@
 
 	You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
-extends layout
+extends m_layout
 
 block Subject
 	title= L('title')
 
 block CSS
 	link(rel='stylesheet', href='/css/in_game_kkutu.css')
+	link(rel='stylesheet', href='/css/in_portal.css')
+
+block JS
+	script(type='text/javascript', src='/js/in_portal.min.js')
+	if PUBLIC && false
+		script(async, src='//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+		script (adsbygoogle = window.adsbygoogle || []).push({google_ad_client: "ca-pub-3784210391085906", enable_page_level_ads: true});
 
 block Middle
 	+separator(5)
-	div(style='float: left; width: 200px;')
-		div.logo(style='float: center; margin-top: 0px; width: 0px;')
-				img#logo(src='/img/kkutu/short_logo.png')
-		div.jjoriping(style='margin-top: 0px;')
+	div(style='margin-left: calc(40% - 170px);')
+		div(style='float: left; padding-left: 100px;')
+			img#logo(src='/img/kkutu/short_logo.png')
+		div.jjoriping(style='margin-top: 20px;')
 				button#game-start.jjo-display= L('gameStart')
-	div(style='float: center; margin-top: 100px; width: 200px;')
+	div(style='float: left; margin-left: calc(50% - 167px);')
 		div.server-list-box
 			h3.server-list-title
 				a#server-refresh
 					+FA('refresh')
 					+Expl(L('serverRefresh'))
 				label= L('serverList')
-				label#server-total(style='color: #AAA; font-size: 12px;')
+				label#server-total(style='color: #AAA; font-size: 13px;')
 			div#server-list
-	div(style='float: left; width: calc(306px - 4px); border: 1px solid #000; margin-top: -200px; background-color: #EEE;')
-		iframe#check(width='300px', height='300px', src='portal/update.html')
-	div(style='float: left; width: calc(338px - 4px); border: 1px solid #000; margin-top: 50px; background-color: #EEE;')
-		iframe#check(width='330px', height='232px', src='portal/discord.html')
-	div(style='float: left; width: calc(280px - 4px); border: 1px solid #000; margin-top: 50px; background-color: #EEE;')
-		iframe#check(width='280px', height='232px', src='portal/GM_list.html')
+	div(style='float: left; width: calc(100% - 4px); border: 2px solid #CCC; margin-top: 10px; background-color: #EEE;')
+		iframe#kkutu-bulletin(width='100%', height='400px', src='/kkutu_bulletin.html')
 	+separator(10)
 
 block Bottom

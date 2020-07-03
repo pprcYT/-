@@ -232,7 +232,7 @@ exports.Client = function(socket, profile, sid){
 	}else{
 		gp = guestProfiles[Math.floor(Math.random() * guestProfiles.length)];
 		
-		my.id = "guest__" + sid;
+		my.id = "G" + sid;
 		my.guest = true;
 		my.isAjae = false;
 		my.profile = {
@@ -645,10 +645,8 @@ exports.Client = function(socket, profile, sid){
 				if($room.kickVote.Y >= $room.kickVote.N) $m.kick($room.kickVote.target, $room.kickVote);
 				else $m.publish('kickDeny', { target: $room.kickVote.target, Y: $room.kickVote.Y, N: $room.kickVote.N }, true);
 				
-				$room.kickVote = null;
+					}		$room.kickVote = null;
 			}
-		}
-		clearTimeout(client.kickTimer);
 	};
 	my.toggle = function(){
 		var $room = ROOM[my.place];
