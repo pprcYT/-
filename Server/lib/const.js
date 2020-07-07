@@ -42,11 +42,11 @@ exports.OPTIONS = {
 	'k32': { name: "Sami" },
 	'no2': { name: "No2" }
 };
-exports.MOREMI_PART = [ 'back', 'eye', 'mouth', 'shoes', 'clothes', 'head', 'lhand', 'rhand', 'front' ];
-exports.CATEGORIES = [ "all", "spec", "skin", "badge", "head", "eye", "mouth", "clothes", "hs", "back" ];
+exports.MOREMI_PART = [ 'back', 'body','eye', 'mouth', 'shoes', 'clothes', 'head', 'lhand', 'rhand', 'front' ];
+exports.CATEGORIES = [ "all", "spec", "skin", "badge", "head", "eye", "mouth", "clothes", "hs", "back", "body" ];
 exports.AVAIL_EQUIP = [
 	"NIK", "BDG1", "BDG2", "BDG3", "BDG4",
-	"Mhead", "Meye", "Mmouth", "Mhand", "Mclothes", "Mshoes", "Mback"
+	"Mhead", "Meye", "Mmouth", "Mhand", "Mclothes", "Mshoes", "Mback", "Mbody"
 ];
 exports.GROUPS = {
 	'spec': [ "PIX", "PIY", "PIZ", "CNS" ],
@@ -58,7 +58,8 @@ exports.GROUPS = {
 	'clothes': [ "Mclothes" ],
 	'hs': [ "Mhand", "Mshoes" ],
 	'back': [ "Mback", "Mfront" ],
-	'skin': [ "Mskin" ]
+	'skin': [ "Mskin" ],
+	'body': [ "Mbody" ]
 };
 exports.RULE = {
 /*
@@ -123,7 +124,7 @@ exports.RULE = {
 		rule: "Typing",
 		opts: [ "prv" ],
 		time: 1,
-		ai: false,
+		ai: true,
 		big: false,
 		ewq: false
 	},
