@@ -10,9 +10,9 @@
 		
 		R = R.toString();
 		for(i=1; arguments[i]; i++) R = R.replace(new RegExp("{V"+i+"}", 'g'), arguments[i]);
-		return R.replace(/FA\{[^\}]+\}/g, _L_Replace);
+		return R.replace(/KD\{[^\}]+\}/g, _L_Replace);
 	}
-	function _L_Replace(seq){ return "<i class='fas fa-"+seq.slice(3, seq.length-1)+"'></i>"; }
+	function _L_Replace(seq){ return "<i class='kd kd-"+seq.slice(3, seq.length-1)+"'></i>"; }
 	
 	function zeroPadding(num, len){ var s = num.toString(); return "000000000000000".slice(0, Math.max(0, len - s.length)) + s; }
 	function strcmp(s1, s2){ return (s1 == s2) ? 0 : ((s1 > s2) ? 1 : -1); }
@@ -27,8 +27,8 @@ mixin Menu()
 	nav.navbar.navbar-default.navbar-fixed-top
 		.container
 			.navbar-header
-				a.navbar-brand-sub(href='https://kkutu.xyz',style='margin-left:10px;')
-					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/logo/wh_fullname_en.svg', width='73.6px', height='40px')
+				a.navbar-brand-sub(href='https://kkutu.xyz')
+					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_line_a_white.png', height='40px')
 			ul.nav.navbar-nav.navbar-right
 				div#account
 					span#profile= SESSION.profile ? JSON.stringify(SESSION.profile) : '{}'
@@ -41,7 +41,7 @@ mixin MMenu()
 		.container
 			.navbar-header
 				a.navbar-brand-sub(href='https://kkutu.xyz',style='margin-left:10px;')
-					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/logo/wh_fullname_en.svg', width='73.6px', height='40px')
+					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_line_a_white.png', height='40px')
 			ul.nav.m.navbar-nav.navbar-right
 				div#account
 					span#profile= SESSION.profile ? JSON.stringify(SESSION.profile) : '{}'
@@ -51,18 +51,16 @@ mixin Image(c, url)
 		if block
 			block
 
-mixin FA(id)
-	i(class="fas fa-"+id)
+mixin KD(id)
+	i(class="kd kd-"+id)
 
 mixin separator(len)
 	div(style="float: left; width: 100%; margin-top: "+len+"px;")
 	
 mixin PageHead(min)
-	link(rel='shortcut icon', type='image/jpg' href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/logo/gr_symbol.svg')
+	script(data-search-pseudo-elements="true", defer="true", src='https://use.fortawesome.com/a7659c8c.js')
 	if !min
 		link(rel='stylesheet', href=(locals.mobile && !locals.as_pc) ? 'https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/m_style.css?v='+L('version') : 'https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/style.css?v='+L('version'))
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/fontawesome.min.css')
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/solid.min.css')
 		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/expl.css')
 	script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js')
 	script(type='text/javascript', src='https://kkutu.xyz/language/'+locals.page.replace("/", "_")+'/'+locals.lang+'.js?v='+L('version'))

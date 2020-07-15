@@ -295,9 +295,16 @@ exports.Client = function(socket, profile, sid){
 		if(!my) return;
 		if(!msg) return;
 		
-		try{ JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${msg}`); }catch(e){ JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${msg}`); }
-		try{ data = JSON.parse(msg); }catch(e){ data = { error: 400 }; }
-		if(Cluster.isWorker) process.send({ type: "tail-report", id: my.id, chan: channel, place: my.place, msg: data.error ? msg : data });
+		try{
+			data = JSON.parse(msg);
+			if(data.type != 'refresh' && data.type != 'drawingCanvas') {
+				JLog.log(`[${my.remoteAddress}] Chan @${channel} Msg #${my.id}: ${msg}`);
+				if(Cluster.isWorker) process.send({ type: "tail-report", id: my.id, chan: channel, place: my.place, msg: data.error ? msg : data });
+			}
+		}catch(e){
+			data = { error: 400 };
+			if(Cluster.isWorker) process.send({ type: "tail-report", id: my.id, chan: channel, place: my.place, msg: data.error ? msg : data });
+		}
 		
 		exports.onClientMessage(my, data);
 	});

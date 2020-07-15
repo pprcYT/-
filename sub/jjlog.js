@@ -1,4 +1,4 @@
-// Created by hatty163 (admin@hatty163.kr)
+// Created by hatty163 (op@kdh.io)
 
 const winston = require('winston');
 require('winston-daily-rotate-file');
@@ -10,11 +10,12 @@ const logFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 const transport = new (winston.transports.DailyRotateFile)({
-	filename: 'D:\\logs\\' + serverType + '-%DATE%.log',
+	filename: './logs/' + serverType + '/%DATE%.log',
 	datePattern: 'YYYY-MM-DD-HH',
 	zippedArchive: true,
-	maxSize: '20m',
-	maxFiles: '14d',
+	maxSize: 1024 * 1024 * 15,
+	maxFiles: '21d',
+	tailable: true,
 	format: combine(
 		label({ label: serverType }),
 		timestamp(),

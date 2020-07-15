@@ -50,11 +50,9 @@
 			}
 		});
 		$stage.ref.on('click', function(e){
-			if($stage.refi.hasClass("fa-sync-alt")){
-				return alert(L['serverWait']);
-			}
-			$stage.refi.addClass("fa-sync-alt");
-			setTimeout(seekServers, 1000);
+			if($stage.refi.hasClass("kd-spin")) return;
+			$stage.refi.addClass("kd-spin");
+			setTimeout(seekServers, 3000);
 		});
 		setInterval(function(){
 			$stage.ref.trigger('click');
@@ -89,7 +87,7 @@
 				}); else $e.children(".server-enter").html("-");
 			});
 			$stage.total.html("&nbsp;▼ " + sum + "명 접속 중");
-			$stage.refi.removeClass("fa-sync-alt fa-spin");
+			$stage.refi.removeClass("kd-spin");
 			$stage.start.prop('disabled', false);
 		});
 	}

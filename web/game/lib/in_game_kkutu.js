@@ -762,7 +762,7 @@ $(document).ready(function() {
 	}
 	$stage.menu.refresh.on('click', function(e) {
 		$stage.menu.refresh.addClass("toggled");
-		// akAlert("<i class='fas fa-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", true);
+		// akAlert("<i class='kd kd-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", true);
 		send('refresh');
 		updateUI(undefined, true);
 		$stage.menu.refresh.removeClass("toggled");
@@ -895,7 +895,7 @@ $(document).ready(function() {
 			return;
 		}
 		$("#QuickDiag>.dialog-body").find("*").prop('disabled', true);
-		$stage.dialog.quickOK.addClass("searching").html("<i class='fa fa-spinner fa-spin'></i> " + L['NO']).prop('disabled', false);
+		$stage.dialog.quickOK.addClass("searching").html("<i class='kd kd-spinner fa-spin'></i> " + L['NO']).prop('disabled', false);
 		$data._quickn = 0;
 		$data._quickT = addInterval(quickTick, 1000);
 
@@ -1221,7 +1221,7 @@ $(document).ready(function() {
 		if (t.length < 2) return;
 
 		$("#wp-input").val("");
-		$(e.currentTarget).addClass("searching").html("<i class='fa fa-spin fa-spinner'></i>");
+		$(e.currentTarget).addClass("searching").html("<i class='kd kd-spin fa-spinner'></i>");
 		send('wp', {
 			value: t
 		});
@@ -1361,6 +1361,7 @@ $(document).ready(function() {
 			$(e.currentTarget).attr('disabled', true);
 			if (obj.data.match(ADVBAD)) {
 				akAlert("소개 한마디에 사용 불가능한 문자가 포함되어 있습니다.", true);
+				$(e.currentTarget).attr('disabled', false);
 				return;
 			}
 			$.post("/exordial", obj, function(res) {
@@ -1572,7 +1573,7 @@ $(document).ready(function() {
 			console.warn(L['error'], e);
 		};
 	}
-	window._setInterval(function(){
+	_setInterval(function(){
 		if(isWelcome) {
 			send('refresh');
 			if($data.room) send('refresh', undefined, true);
@@ -3803,7 +3804,7 @@ function updateUserList(refresh) {
 
 		for (i in $data.users) len++;
 	}
-	$stage.lobby.userListTitle.html("<i class='fa fa-users'></i>" +
+	$stage.lobby.userListTitle.html("<i class='kd kd-users'></i>" +
 		"&lt;<b>" + L['server_' + $data.server] + "</b>&gt; " +
 		L['UserList'].replace("FA{users}", "") +
 		" [" + len + L['MN'] + "]");
@@ -3901,8 +3902,8 @@ function updateRoomList(refresh) {
 			len++;
 		}
 	}
-	$stage.lobby.roomListTitle.html("<i class='fas fa-bars'></i>전체 게임방 목록 [" + len + L['GAE'] + "]");
-	// $stage.lobby.roomSortTitle.roomRefreshTitle.html("<i class='fas fa-sync-alt'></i>새로고침");
+	$stage.lobby.roomListTitle.html("<i class='kd kd-bars'></i>전체 게임방 목록 [" + len + L['GAE'] + "]");
+	// $stage.lobby.roomSortTitle.roomRefreshTitle.html("<i class='kd kd-sync-alt'></i>새로고침");
 	if (len) {
 		//if($data.opts.istheme)
 		$(".rooms-gaming").css('display', $data.opts.ow ? "none" : "")
@@ -3936,7 +3937,7 @@ function roomListBar(o) {
 			.append($("<div>").addClass("rooms-round").html(L['rounds'] + " " + o.round))
 			.append($("<div>").addClass("rooms-time").html(o.time + L['SECOND']))
 		)
-		.append($("<div>").addClass("rooms-lock").html(o.password ? "<i class='fas fa-lock'></i>" : "<i class='fas fa-unlock-alt'></i>"))
+		.append($("<div>").addClass("rooms-lock").html(o.password ? "<i class='kd kd-lock'></i>" : "<i class='kd kd-unlock-alt'></i>"))
 		.on('click', function(e) {
 			if (e.target == $ch.get(0)) return;
 			tryJoin($(e.currentTarget).attr('id').slice(5));
@@ -4480,8 +4481,8 @@ function updateCommunity() {
 			.append($("<div>").addClass("cfi-name ellipse").html(p ? (p.title || p.name) : L['hidden']))
 			.append($("<div>").addClass("cfi-memo ellipse").text(memo))
 			.append($("<div>").addClass("cfi-menu")
-				.append($("<i>").addClass("fas fa-edit").on('click', requestEditMemo))
-				.append($("<i>").addClass("fas fa-user-times").on('click', requestRemoveFriend))
+				.append($("<i>").addClass("kd kd-pencil kd-fw").on('click', requestEditMemo))
+				.append($("<i>").addClass("kd kd-account-remove kd-fw").on('click', requestRemoveFriend))
 			)
 		);
 	}
@@ -4519,7 +4520,7 @@ function requestRoomInfo(id) {
 
 	$data._roominfo = id;
 	$("#RoomInfoDiag .dialog-title").html(id + L['sRoomInfo']);
-	$("#ri-title").html((o.password ? "<i class='fas fa-lock'></i>&nbsp;" : "") + o.title);
+	$("#ri-title").html((o.password ? "<i class='kd kd-lock'></i>&nbsp;" : "") + o.title);
 	$("#ri-mode").html(L['mode' + MODE[o.mode]]);
 	$("#ri-round").html(o.round + ", " + o.time + L['SECOND']);
 	$("#ri-limit").html(o.players.length + " / " + o.limit);
@@ -5114,7 +5115,7 @@ function roundEnd(result, data) {
 			)
 			.append($("<div>").addClass("result-board-reward").html(r.reward.score ? ("+" + commify(r.reward.score)) : "-"))
 			.append($("<div>").addClass("result-board-lvup").css('display', lvUp ? "block" : "none")
-				.append($("<i>").addClass("fa fa-arrow-up"))
+				.append($("<i>").addClass("kd kd-arrow-up"))
 				.append($("<div>").html(L['lvUp']))
 			)
 		);
@@ -5259,7 +5260,7 @@ function drawRanking(ranks) {
 			.append($("<div>").addClass("result-board-score").html(commify(r.score) + L['PTS']))
 			.append($("<div>").addClass("result-board-reward").html(""))
 			.append($v = $("<div>").addClass("result-board-lvup").css('display', me ? "block" : "none")
-				.append($("<i>").addClass("fa fa-arrow-up"))
+				.append($("<i>").addClass("kd kd-arrow-up"))
 				.append($("<div>").html(ranks.prev - r.rank))
 			)
 		);
@@ -5944,7 +5945,7 @@ function chat(profile, msg, from, timestamp) {
 		.append($msg = $("<div>").addClass("chat-body").text(msg))
 		.append($("<div>").addClass("chat-stamp").text(time.toLocaleTimeString()))
 	);
-	if (timestamp) $bar.prepend($("<i>").addClass("fa fa-video-camera"));
+	if (timestamp) $bar.prepend($("<i>").addClass("kd kd-video-camera"));
 	$bar.on('click', function(e) {
 		requestProfile(profile.id);
 	});

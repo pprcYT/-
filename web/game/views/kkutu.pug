@@ -39,8 +39,8 @@ block Jungle
 	span#AVAIL_EQUIP= locals.AVAIL_EQUIP.join(',')
 	span#RULE= JSON.stringify(locals.RULE)
 	span#OPTIONS= JSON.stringify(locals.OPTIONS)
-	div#Yell
 	div#Loading= L('LOADING')
+	div#Yell
 	div#Balloons(style='position: absolute;')
 	-
 		LANG['explInjeong'] = `<h5>${L('explInjeong')}</h5>\
@@ -57,11 +57,11 @@ block Middle
 		div#version= L('version')
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
-		button#RefreshBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #ffd9d8;') <i class="fas fa-sync-alt"></i>
+		button#RefreshBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #ffd9d8;'): +KD('sync-alt')
 		button#HelpBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #e47676;')!= L('help')
-		button#SettingBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #f2bebe;')!= L('settings')
-		button#CommunityBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #cc6162;')!= L('community')
-		button#LeaderboardBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #d68d8f;') <i class="fas fa-trophy"></i>
+		button#SettingBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #f2bebe;'): +KD('cog')
+		button#CommunityBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #cc6162;'): +KD('user-plus')
+		button#LeaderboardBtn.tiny-menu.for-lobby.for-master.for-normal.for-gaming(style='display: none; background-color: #d68d8f;'): +KD('trophy')
 		button#SpectateBtn.for-master.for-normal(style='display: none; background-color: #D19DFF;')= L('spectate')
 		button#SetRoomBtn.for-master(style='display: none; background-color: #B0D2F3;')= L('setRoom')
 		button#NewRoomBtn.for-lobby(style='display: none; background-color: #8EC0F3;')= L('newRoom')
@@ -437,14 +437,14 @@ block Middle
 			h3 계속하면 아래 약관에 동의하는 것으로 간주합니다.
 		+separator(5)
 		h4
-			b 운영정책
-			|  2019-09-11 업데이트
+			b 제 18차 운영정책
+			|  2020-7-7 개정
 		div(style='float: right; width: 100%; background-color: #FFFFFF;')
 			iframe#kkutu-bulletin(width='100%', height='90px', src='/operation.html')
 		+separator(10)
 		h4
-			b 개인정보취급방침
-			|  2019-09-11 업데이트
+			b 제 14차 개인정보취급방침
+			|  2020-7-7 개정
 		div(style='float: right; width: 100%; background-color: #FFFFFF;')
 			iframe#kkutu-bulletin(width='100%', height='90px', src='/privacy.html')
 		+separator(5)

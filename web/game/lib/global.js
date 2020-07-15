@@ -111,7 +111,7 @@ var L;
 			$.cookie('test', "");
 		}
 		if(gn.length > 1) $gn.show();
-		$gn.on('click', function(e){ $gn.hide(); });
+		$("#click-here-to-close").on('click', function(e){ $gn.hide(); });
 		
 		$(window).on('resize', function(e){
 			size = [ $(window).width(), $(window).height() ];
@@ -123,15 +123,6 @@ var L;
 			$(".expl-active").css({ 'left': Math.min(e.clientX + 5, size[0] - explSize[0] - 12), 'top': Math.min(e.clientY + 23, size[1] - explSize[1] - 12) });
 		}).trigger('resize');
 		
-		$("#quick-search-btn").on('click', function(e){
-			var v;
-			
-			if($("#quick-search-btn").hasClass("searching")) return;
-			if(v = $(".autocomp-select").html()) $("#quick-search-tf").val(v);
-			$("#quick-search-btn").addClass("searching").html($("<i>").addClass("fas fa-spin fa-spinner"));
-			location.href = "http://jjo.kr?q=" + encodeURI($("#quick-search-tf").val());
-		}).hotkey($("#quick-search-tf"), 13);
-	
 	// 계정
 		if($.cookie('lc') == "") $.cookie('lc', "ko_KR");
 		

@@ -10,17 +10,13 @@ block JS
 block Middle
 	+separator(5)
 	div(style='display:inline-block; float: left; width: 200px;')
-		div(style='width:200px;height:140px;background-color:rgba(0, 0, 0, 0.5);float:left;display:inline-block;')
-			h3#holder(style='padding-top:30px;')
-			img#logo(style='width:90%;padding-left:5%;margin:0 auto;', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/logo/wh_fullname_ko.svg', title='끄투닷넷 로고 - 끄투 온라인')
+		div(style='width:200px;height:200px;background-color:rgba(0, 0, 0, 0.5);float:left;display:inline-block;')
+			h3#holder(style='padding-top:10px;')
+			img#logo(style='display:block;height:180px;margin:0 auto;', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_main_a_white.png', title='끄투닷넷 로고 - 끄투 온라인')
 		button#game-start.jjo-display(style='float:left;') 게임 시작
 	div#container-slides(style='float: left; background-color: #ccc; display: inline-block; width: 60%; margin-left: 15px;')
-		a(href='https://forum.kkutu.xyz', target='_blank')
-			img.slide.showing(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/banner/forum.png', title='끄투닷넷 포럼 오픈 안내')
-		a(href='https://broadcast.kkutu.xyz', target='_blank')
-			img.slide(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/banner/broadcast.png', title='끄투닷넷 방송인 휘장 신청 안내')
-		a(href='https://recruit.kkutu.xyz/498', target='_blank')
-			img.slide(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/banner/recruit.png', title='끄투닷넷 관리자 모집 안내')
+		img.slide.showing(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/banner/main.png', title='끄투닷넷')
+		// a(href='https://recruit.kkutu.xyz/498', target='_blank')
 	script.
 		var slides = document.querySelectorAll('#container-slides .slide');
 		var currentSlide = 0;
@@ -30,48 +26,49 @@ block Middle
 			currentSlide = (currentSlide+1)%slides.length;
 			slides[currentSlide].className = 'slide showing';
 		}
-	div#container-black(style='float: right; background-color: #ccc; display: inline-block; width: 795px; height: 226px;')
-		div#container-social(style='float: right; background-color: #004c5c; width: 189px; height: 226px;')
+	div#container-black(style='float: right; background-color: #ccc; display: inline-block; width: 795px; height: 286px;')
+		div#container-social(style='float: right; background-color: #004c5c; width: 189px; height: 286px;')
 			div#container-social-ribbon(style='float: left; margin-left: 10px; width: 4px; height: 100%; background-color: #fff;')
-			a#social(href='https://blog.kkutu.xyz' target='_blank') <i class="fab fa-blogger-b fa-fw"></i> 네이버 블로그
-			a#social(href='https://cafe.naver.com/kkutuxyz' target='_blank') <i class="fas fa-coffee fa-fw"></i> 네이버 카페
-			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="fab fa-discord fa-fw"></i> 디스코드
-			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="fab fa-facebook fa-fw"></i> 페이스북
-			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="fas fa-sms fa-fw"></i> 카카오톡
-			a#social(href='https://forum.kkutu.xyz' target='_blank') <i class="fas fa-comments fa-fw"></i> 공식 포럼
+			a#social(style='margin-top:2.5px;' href='https://blog.kkutu.xyz' target='_blank') <i class="kd kd-blog kd-fw"></i> 네이버 블로그
+			a#social(href='https://cafe.naver.com/kkutuxyz' target='_blank') <i class="kd kd-local-cafe kd-fw"></i> 네이버 카페
+			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="kd kd-discord kd-fw"></i> 디스코드
+			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="kd kd-facebook kd-fw"></i> 페이스북
+			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="kd kd-chat kd-fw"></i> 카카오톡
+			a#social(href='https://forum.kkutu.xyz' target='_blank') <i class="kd kd-comment kd-fw"></i> 공식 포럼
 	+separator(5)
 	div(style='float: left;')
 		div.server-list-box
 			h3.server-list-title(style='height:20px;')
 				label#server-total(style='color:#fff;font-size:14px;vertical-align:middle;') ▼ 0명 접속 중
-				a#server-refresh(style='background-color:cornflowerblue;padding:2px;float:right;font-size:14px;') <i class="fas fa-redo"></i> 새로고침
+				a#server-refresh(style='background-color:cornflowerblue;padding:2px;float:right;font-size:14px;') <i class="kd kd-sync-alt"></i> 새로고침
 			div#server-list(style='height:282.5px;')
 	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 240px; background-color: rgba(0, 0, 0, 0.5); margin-left: 6px;')
-		div#btl <i class="fas fa-list-ul fa-fw" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
+		div#btl <i class="kd kd-history-mdi kd-fw" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
 		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='220px', src='https://kkutu.xyz/docs/bulletin.html')
-	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 140px; background-color: rgba(0, 0, 0, 0.5);')
-		div#btl <i class="fas fa-info-circle fa-fw" style="margin-left:5px;padding-top:2px;"></i> 공지사항
-		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='105px', src='https://kkutu.xyz/docs/notice.html')
-	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 95px; background-color: rgba(0, 0, 0, 0.5); margin-top: 5px;')
-		div#btl <i class="fas fa-hands-helping fa-fw" style="margin-left:5px;padding-top:2px;"></i> 제휴 서비스 목록
-		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='80px', src='https://kkutu.xyz/docs/alliance.html')
-	table.tg(style='border-collapse:collapse;border-spacing:0;border-color:#bbb;float:left;width:calc(40% - 9px);height:65px;margin-left:15px;margin-top:5px;')
-		tbody
-			tr
-				th#info.bold 제명
-				th#info 알파끄투
-				th#info.bold 상호
-				th#info 김도훈
-			tr
-				td#info.bold 이용등급
-				td#info 전체이용가
-				td#info.bold 등급분류번호
-				td#info CC-NP-191023-001
-			tr
-				td#info.bold 등급분류일자
-				td#info 19. 10. 23.
-				td#info.bold(style='font-size:12px;') 제작·배급업신고번호
-				td#info(style='font-size:11px;') 양천구청 제 2020-000002호
+	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 130px; background-color: rgba(0, 0, 0, 0.5);')
+		div#btl <i class="kd kd-info-circle kd-fw" style="margin-left:5px;padding-top:2px;"></i> 공지사항
+		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='120px', src='https://kkutu.xyz/docs/notice.html')
+	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 105px; background-color: rgba(0, 0, 0, 0.5); margin-top: 5px;')
+		div#btl <i class="kd kd-hands-helping kd-fw" style="margin-left:5px;padding-top:2px;"></i> 제휴 서비스 목록
+		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='95px', src='https://kkutu.xyz/docs/alliance.html')
+	a(href="https://www.gcrb.or.kr/Statistics/Popup/Pop_StatisticsDetails.aspx?app=SU4t205CTaY=&type=xl/kTOU3dYU=" target="_blank" title='전체이용가')
+		table.tg(style='border-collapse:collapse;border-spacing:0;border-color:#bbb;float:left;width:calc(40% - 9px);height:65px;margin-left:15px;margin-top:5px;')
+			tbody
+				tr
+					th#info.bold 제명
+					th#info 끄투닷넷
+					th#info.bold 상호
+					th#info 큐브시티
+				tr
+					td#info.bold 이용등급
+					td#info 전체이용가
+					td#info.bold 등급분류번호
+					td#info(style='font-size:11px;') GC-CC-NP-200710-009
+				tr
+					td#info.bold 등급분류일자
+					td#info 20. 07. 10.
+					td#info.bold(style='font-size:12px;') 제작·배급업신고번호
+					td#info(style='font-size:11px;') 양천구청 제 2020-000002호
 	div(style='display:table;vertical-align:middle;float:right;width:calc(40% - 9px);height:65px;background:#ccc;margin-top:5px;text-align:center;color:#000;')
 		div(style='display:table-cell;vertical-align:middle;') <b>광고 문의:</b> admin@kkutu.xyz
 	+separator(10)
@@ -85,4 +82,3 @@ block Bottom
 		기본적인 게임 방식은 차례를 이어 나가며 점수를 획득하고, 가장 많이 획득한 순서대로 순위가 매겨지는 간단한 방식입니다.
 		현재는 원작자가 개발을 중단하여 프리 서버 게임으로 변경된 상태입니다. 그리고 그 서버 중 대표적인 서버가 바로 끄투닷넷입니다.
 	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/notice.css?v='+L('version'), async)
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/brands.min.css', async)

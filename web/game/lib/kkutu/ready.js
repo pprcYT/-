@@ -668,7 +668,7 @@ $(document).ready(function() {
 	}
 	$stage.menu.refresh.on('click', function(e) {
 		$stage.menu.refresh.addClass("toggled");
-		// akAlert("<i class='fas fa-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", true);
+		// akAlert("<i class='kd kd-sync-alt'></i> 접속자, 게임방 목록을 새로고침 하였습니다.<br>", true);
 		send('refresh');
 		updateUI(undefined, true);
 		$stage.menu.refresh.removeClass("toggled");
@@ -801,7 +801,7 @@ $(document).ready(function() {
 			return;
 		}
 		$("#QuickDiag>.dialog-body").find("*").prop('disabled', true);
-		$stage.dialog.quickOK.addClass("searching").html("<i class='fa fa-spinner fa-spin'></i> " + L['NO']).prop('disabled', false);
+		$stage.dialog.quickOK.addClass("searching").html("<i class='kd kd-spinner fa-spin'></i> " + L['NO']).prop('disabled', false);
 		$data._quickn = 0;
 		$data._quickT = addInterval(quickTick, 1000);
 
@@ -1127,7 +1127,7 @@ $(document).ready(function() {
 		if (t.length < 2) return;
 
 		$("#wp-input").val("");
-		$(e.currentTarget).addClass("searching").html("<i class='fa fa-spin fa-spinner'></i>");
+		$(e.currentTarget).addClass("searching").html("<i class='kd kd-spin fa-spinner'></i>");
 		send('wp', {
 			value: t
 		});
@@ -1479,7 +1479,7 @@ $(document).ready(function() {
 			console.warn(L['error'], e);
 		};
 	}
-	window._setInterval(function(){
+	_setInterval(function(){
 		if(isWelcome) {
 			send('refresh');
 			if($data.room) send('refresh', undefined, true);
