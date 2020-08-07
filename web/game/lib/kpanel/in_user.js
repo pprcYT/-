@@ -42,7 +42,6 @@
 						.append($("<td>").append(putter("ud-" + item._id + "-black", 'g', item.black)))
 						.append($("<td>").append(putter("ud-" + item._id + "-time", 'g', item.time)))
 						.append($("<td>").append(putter("ud-" + item._id + "-friends", 'g', JSON.stringify(item.friends || {}))))
-						.append($("<td>").append(putter("ud-" + item._id + "-warnings", 'g', item.warnings)));
 				});
 			});
 		});

@@ -19,23 +19,71 @@
 (function(){
 	var WIDTH = { 'y': 50, 't': 50, 'g': 100, 'l': 200, 'm': 600 };
 	var $temp = {};
-	
+
 	$(document).ready(function(){
+
+		$("#db-en-theme").hide();
+		$("#noinj-en-theme").hide();
+	
+		$("#db-lang").on('change', function(){
+			if($("#db-lang").val() == 'ko') {
+				$("#db-ko-theme").show();
+				$("#noinj-ko-theme").show();
+				$("#db-en-theme").hide();
+				$("#noinj-en-theme").hide();
+			}else{
+				$("#db-en-theme").show();
+				$("#noinj-en-theme").show();
+				$("#db-ko-theme").hide();
+				$("#noinj-ko-theme").hide();
+			}
+		});
+
 	// 끄투 DB에 단어 추가하기
 		$("#db-ok").on('click', function(e){
-			var forView = $("#db-theme").val().charAt() == "~";
-			
+			var forView = $("#db-search").is(':checked');
+			var dLang = $("#db-lang").val();
+			var th = $("#db-" + dLang + "-theme").val() === undefined ? $("#db-ko-theme").val() : $("#db-" + dLang + "-theme").val();
+			if(!th) return alert('올바르지 않은 요청입니다.');
+
 			if(forView){
 				$("#db-list").val("");
-				$.get("/kpanel/kkututheme?theme=" + $("#db-theme").val().slice(1) + "&lang=" + $("#db-lang").val(), function(res){
+				$.get("/kpanel/kkututheme?theme=" + th + "&lang=" + dLang, function(res){
 					$("#db-list").val(res.list.join('\n'));
 				});
 			}else{
 				$.post("/kpanel/kkutudb", {
 					pw: $("#db-password").val(),
-					lang: $("#db-lang").val(),
-					theme: $("#db-theme").val(),
+					lang: dLang,
+					theme: th,
 					list: $("#db-list").val()
+				}, function(res){
+					alert(res);
+				});
+			}
+		});
+	// 비 어인정 단어 추가하기
+		$("#noinj-ok").on('click', function(e){
+			var forView = $("#noinj-search").is(':checked');
+			var dLang = $("#db-lang").val();
+			var th = $("#noinj-" + dLang + "-theme").val() === undefined ? $("#noinj-ko-theme").val() : $("#noinj-" + dLang + "-theme").val();
+			var flag = $("#noinj-flag").val();
+			var pum = $("#noinj-pum").val();
+			if(!th || !flag || !pum) return alert('올바르지 않은 요청입니다.');
+
+			if(forView){
+				$("#noinj-list").val("");
+				$.get("/kpanel/kkututheme?theme=" + th + "&lang=" + dLang, function(res){
+					$("#noinj-list").val(res.list.join('\n'));
+				});
+			}else{
+				$.post("/kpanel/noinj", {
+					pw: $("#db-password").val(),
+					lang: dLang,
+					flag: flag,
+					theme: th,
+					list: $("#noinj-list").val(),
+					pum: pum
 				}, function(res){
 					alert(res);
 				});

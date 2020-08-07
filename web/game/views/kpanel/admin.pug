@@ -20,13 +20,16 @@ block Subject
 	title 끄투닷넷 매니지먼트 콘솔 (관리자)
 
 block JS
-	script(type="text/javascript", src='https://kkutu.xyz/js/kpanel/in_admin.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://kkutu.xyz/language/kkutu/'+locals.lang+'.js?v='+L('version'))
+	script(type="text/javascript", src='https://cdn.kkutu.xyz/js/kpanel/in_admin.min.js?p=true&v='+L('version'))
 	
 block Middle
 	fieldset
 		legend 자격 증명
 		input#db-password(type='password', placeholder='암호')
-		input#db-lang(placeholder='테이블')
+		select#db-lang(style='width:163.5px;')
+			option(value='ko', selected) 한국어 (ko)
+			option(value='en') 영어 (en)
 	fieldset
 		legend 상점 데이터베이스 다루기
 		div
@@ -70,6 +73,7 @@ block Middle
 						td 최근 로그인
 						td 차단
 						td 차단 시간
+						td 경고
 						td 친구
 					tbody#user-data
 			button#user-apply 적용
@@ -85,32 +89,6 @@ block Middle
 						td 닉네임
 						td 서버
 					tbody#gamsi-data
-	fieldset
-		legend 끄투 단어 데이터베이스 다루기
-		div
-			input#db-word(placeholder='단어')
-			button#db-go 조회
-			div#word-data
-				div#wd-id
-				input#wd-flag
-				table
-					thead: tr
-						td #
-						td type
-						td theme
-						td mean
-						td 행동
-					tbody#wd-data
-			div#word-flag
-			div#word-hit
-			button#word-add 추가
-			button#db-apply 적용
-	fieldset
-		legend 끄투 데이터베이스에 단어 추가하기
-		div
-			input#db-theme(placeholder='주제 (~부터 적으면 검색)')
-			textarea#db-list(rows=20, cols=100)
-			button#db-ok 확인
 	fieldset
 		legend 끄투 데이터베이스에 단어 삭제하기
 		div

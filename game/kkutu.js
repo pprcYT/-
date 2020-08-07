@@ -36,7 +36,7 @@ var channel = process.env['CHANNEL'] || 0;
 var kkutudotnet = require("../sub/kkutudotnet");
 
 const NUM_SLAVES = 4;
-const GUEST_IMAGE = "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/guest.png";
+const GUEST_IMAGE = "https://cdn.kkutu.xyz/img/kkutu/guest.png";
 const MAX_OKG = 18;
 const PER_OKG = 600000;
 

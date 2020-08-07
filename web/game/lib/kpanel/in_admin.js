@@ -199,6 +199,7 @@
 						.append($("<td>").append(putter("ud-" + item._id + "-lastLogin", 't', item.lastLogin)))
 						.append($("<td>").append(putter("ud-" + item._id + "-black", 'g', item.black)))
 						.append($("<td>").append(putter("ud-" + item._id + "-time", 'g', item.time)))
+						.append($("<td>").append(putter("ud-" + item._id + "-warnings", 'g', JSON.stringify(item.warnings || {}))))
 						.append($("<td>").append(putter("ud-" + item._id + "-friends", 'g', JSON.stringify(item.friends || {}))));
 				});
 			});
@@ -221,7 +222,8 @@
 					lastLogin: $data.get(8).value,
 					black: $data.get(9).value,
 					time: $data.get(10).value,
-					friends: $data.get(11).value
+					warnings: $data.get(11).value,
+					friends: $data.get(12).value
 				});
 			});
 			$.post("/kpanel/users", {

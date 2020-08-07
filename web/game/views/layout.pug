@@ -5,7 +5,7 @@ include module
 doctype html
 html
 	head
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_game_kkutu.css?v='+L('version'))
+		link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu.css?v='+L('version'))
 		block Subject
 		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
@@ -44,6 +44,7 @@ html
 		h2(hidden) 지금 끄투닷넷에서 친구들과 함께 끝말잇기를 즐겨보세요.
 		div#Top(style='z-index:6;')
 			+Menu()
+			+ConfirmLogOut()
 			div#global-notice
 				div#gn-content
 					include ../public/kkutu_head.html
@@ -64,7 +65,7 @@ html
 					div.l3(style='color: #b1b1b1; letter-spacing: -1px;') 대표번호: 070-7918-9999  /  이메일: help@kkutu.xyz  /  팩스: 0504-190-1865  /  호스트서버소재지: 큐브시티
 					div.l4(style='color: #b1b1b1; letter-spacing: -1px;') © 끄투닷넷  /  Korean © 국립국어원  /  <a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a> 3.0 © Princeton University  /  어인정 © 끄투닷넷
 				div.right(style='text-align: right;')
-					div.c1(style='color: #b1b1b1; letter-spacing: -1px;') <a target='_blank' href='https://kkutu.xyz/policy/operation'>운영정책</a> · <a target='_blank' href='https://kkutu.xyz/policy/privacy'>개인정보처리방침</a> · <a target='_blank' href='https://kkutu.xyz/policy/word'>단어 등재 규정</a>
+					div.c1(style='color: #b1b1b1; letter-spacing: -1px;') <a target='_blank' href='https://kkutu.xyz/policy/operation'>서비스 이용약관</a> · <a target='_blank' href='https://kkutu.xyz/policy/privacy'>개인정보처리방침</a> · <a target='_blank' href='https://kkutu.xyz/policy/word'>단어 등재 규정</a>
 					div.c2(style='color: #b1b1b1; letter-spacing: -1px;') 본 제품은 어떠한 형태의 보증도 제공되지 않으며 배포 규정을 만족시키는 조건 하에 자유롭게 재배포할 수 있습니다.
 					div.c3(style='color: #b1b1b1; letter-spacing: -1px;') 이에 대한 자세한 사항은 다음 레포지토리에서 확인하십시오: <a target='_blank' href='https://github.com/KKuTuDotNet/KKuTu/tree/production'>https://github.com/KKuTuDotNet/KKuTu</a>
 			block Bottom

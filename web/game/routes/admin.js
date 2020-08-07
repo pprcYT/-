@@ -17,10 +17,11 @@
  */
 
 var File	 = require("fs");
-var MainDB	 = require("../../database");
+var MainDB	 = require("../../database.js");
 var GLOBAL	 = require("../../../sub/global.json");
-var JLog	 = require("../../../sub/jjlog");
+var JLog	 = require("../../../sub/jjlog.js");
 var Lizard	 = require("../../../sub/lizard.js");
+var Const = require("../../../const.js");
 
 exports.run = function(Server, page){
 
@@ -28,7 +29,12 @@ Server.get("/kpanel/daneo", function(req, res){
 	if(!checkDaneo(req, res)) return;
 	
 	req.session.daneo = true;
-	page(req, res, "kpanel/daneo");
+	page(req, res, "kpanel/daneo", {
+		'KO_INJEONG': Const.KO_INJEONG,
+		'EN_INJEONG': Const.EN_INJEONG,
+		'KO_THEME': Const.KO_THEME,
+		'EN_THEME': Const.EN_THEME,
+	});
 });
 Server.get("/kpanel/user", function(req, res){
 	if(!checkUser(req, res)) return;
@@ -40,7 +46,12 @@ Server.get("/kpanel/admin", function(req, res){
 	if(!checkAdmin(req, res)) return;
 	
 	req.session.admin = true;
-	page(req, res, "kpanel/admin");
+	page(req, res, "kpanel/admin", {
+		'KO_INJEONG': Const.KO_INJEONG,
+		'EN_INJEONG': Const.EN_INJEONG,
+		'KO_THEME': Const.KO_THEME,
+		'EN_THEME': Const.EN_THEME,
+	});
 });
 
 Server.get("/kpanel/injeong", function(req, res){
@@ -103,8 +114,7 @@ Server.get("/kpanel/users", function(req, res){
 	}
 });
 Server.get("/checkuser", function(req, res){
-	// if(!checkAdmin(req, res)) return;
-	
+	if(!checkAdmin(req, res)) return;
 	if(req.query.name){
 		MainDB.session.find([ 'profile.title', req.query.name ]).on(function($u){
 			if($u) return onSession($u);
@@ -113,11 +123,13 @@ Server.get("/checkuser", function(req, res){
 				res.sendStatus(404);
 			});
 		});
-	}else{
+	}else if(req.query.id){
 		MainDB.users.findOne([ '_id', req.query.id ]).on(function($u){
 			if($u) return res.send({ list: [ $u ] });
 			res.sendStatus(404);
 		});
+	}else {
+		res.sendStatus(404);
 	}
 	function onSession(list){
 		var board = {};
@@ -201,6 +213,7 @@ Server.post("/kpanel/injeong", function(req, res){
 	res.sendStatus(200);
 });
 Server.post("/kpanel/kkutudb", onKKuTuDB);
+Server.post("/kpanel/noinj", onNoInj);
 function onKKuTuDB(req, res){
 	if(!checkDaneo(req, res)) return;
 
@@ -236,6 +249,48 @@ function onKKuTuDB(req, res){
 		});
 	});
 	if(!req.body.nof) res.sendStatus(200);
+}
+function onNoInj(req, res){
+	if(!checkDaneo(req, res)) return;
+
+	if(req.body.pw != GLOBAL.PASS) return res.sendStatus(400);
+	
+	var theme = req.body.theme;
+	var flag = req.body.flag;
+	var list = req.body.list;
+	var TABLE = MainDB.kkutu[req.body.lang];
+	
+	if(list) list = list.split(/[,\r\n]+/);
+	else return res.sendStatus(400);
+	if(!TABLE) res.sendStatus(400);
+	if(!TABLE.insert) res.sendStatus(400);
+
+	noticeAdmin(req, theme, list.length);
+
+	try {
+		list.forEach(function(item){
+			if(!item) return;
+			item = item.trim();
+			if(!item.length) return;
+			TABLE.findOne([ '_id', item ]).on(function($doc){
+				if(!$doc) return TABLE.insert([ '_id', item ], [ 'type', "1" ], [ 'theme', theme ], [ 'mean', "＂1＂" ], [ 'flag', flag ]).on();
+				var means = $doc.mean.split(/＂[0-9]+＂/g).slice(1);
+				var len = means.length;
+				
+				if($doc.theme.indexOf(theme) == -1){
+					$doc.type += "," + theme;
+					$doc.theme += "," + theme;
+					$doc.mean += `＂${len+1}＂`;
+					TABLE.update([ '_id', item ]).set([ 'type', $doc.type ], [ 'theme', $doc.theme ], [ 'mean', $doc.mean ]).on();
+				}else{
+					JLog.warn(`Word '${item}' already has the theme '${theme}'!`);
+				}
+			});
+		});
+		if(!req.body.nof) res.sendStatus(200);
+	} catch(e) {
+		res.sendStatus(400);
+	}
 }
 Server.post("/kpanel/kkutudel", function(req, res) {
 	if(!checkAdmin(req, res)) return;

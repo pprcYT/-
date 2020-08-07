@@ -17,18 +17,18 @@
 extends ./ext
 
 mixin Img(name, w, h)
-	- var path = "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/help/" + name + ".png";
+	- var path = "https://cdn.kkutu.xyz/img/kkutu/help/" + name + ".png";
 	- if(h)
 		img(src=path, width=w, height=h)
 	- else
 		img(src=path)
 
 block JS
-	script(src='https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js')
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_game_kkutu_help.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/jquery-3.5.1.min.js?p=true')
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_game_kkutu_help.min.js?v='+L('version'))
 
 block CSS
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_game_kkutu_help.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu_help.css?v='+L('version'))
 
 block Middle
 	div#index
@@ -90,7 +90,7 @@ block Middle
 		div#page-head
 		div.page-body#intro(style='display: block;')
 			center
-				img(src="https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_profile_main.png", width='50%', height='50%')
+				img(src="https://cdn.kkutu.xyz/img/bi/ci_profile_main.png", width='50%', height='50%')
 				h3 내 작은 글자 놀이터, 끄투닷넷에 오신 것을 환영합니다.
 				h4 끄투닷넷에 대한 궁금한 점을 왼쪽 목차에서 골라 풀어 보세요.
 		div.page-body#box-c1
@@ -393,7 +393,7 @@ block Middle
 					- var curr, integ = 0;
 					- for(var lv=1; lv<=MAX_LEVEL; lv++)
 						tr
-							// td: img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/lv/lv' + zeroPadding(lv, 4) + '.png')
+							// td: img(src='https://cdn.kkutu.xyz/img/kkutu/lv/lv' + zeroPadding(lv, 4) + '.png')
 							td= lv
 							td= curr = (lv == MAX_LEVEL) ? "-" : getRequiredScore(lv)
 							td= (lv == MAX_LEVEL) ? "-" : integ += curr

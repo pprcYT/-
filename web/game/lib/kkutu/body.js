@@ -322,16 +322,17 @@ function onMessage(data) {
 				ov.show();
 			}
 			var akDate = new Date();
-			if (data.guest) {
-				akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 계정으로 로그인 시 더욱 즐거운 플레이가 가능합니다.", true);
-			} else if (!$.cookie('isChecked') || ($.cookie('isChecked') != akDate.getDate())) {
-				var no = $stage.dialog.notice;
-				$("#notice-board").attr('src', "/kkutu/announcement");
-				no.find('#notice-ok').off('click').click(function(e) {
+			if (!$.cookie('isChecked') || ($.cookie('isChecked') != akDate.getDate())) {
+				var po = $("#PolicyDiag");
+				$("#service-operation").attr('src', "/policy/operation");
+				$("#service-privacy").attr('src', "/policy/privacy");
+				
+				po.find('#policy-ok').off('click').click(function(e) {
+					if(data.guest) akAlert("환영합니다. 현재 손님 계정 접속 상태입니다. 우측 상단 로그인 단추 클릭 후 네이버, 구글 등의 계정으로 로그인 시 더욱 즐거운 플레이가 가능합니다.", true);
 					$.cookie('isChecked', akDate.getDate());
-					no.hide();
+					po.hide();
 				});
-				no.show();
+				po.show();
 			}
 			break;
 		case 'conn':
@@ -3048,10 +3049,10 @@ function getLevelImage(score) {
 	var lX = (lv % 25) * -100;
 	var lY = Math.floor(lv * 0.04) * -100;
 
-	if (score < 0) return getImage(`https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/lv/gm.png?v=${L['version']}`);
+	if (score < 0) return getImage(`https://cdn.kkutu.xyz/img/kkutu/lv/gm.png?v=${L['version']}`);
 	return $("<div>").css({
 		'float': "left",
-		'background-image': `url('https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/lv/newlv.png?v=${L['version']}')`,
+		'background-image': `url('https://cdn.kkutu.xyz/img/kkutu/lv/newlv.png?v=${L['version']}')`,
 		'background-position': lX + "% " + lY + "%",
 		'background-size': "2560%"
 	});

@@ -20,13 +20,15 @@ block Subject
 	title 끄투닷넷 매니지먼트 콘솔 (단어부)
 
 block JS
-	script(type="text/javascript", src='https://kkutu.xyz/js/kpanel/in_daneo.min.js?v='+L('version'))
-	
+	script(type="text/javascript", src='https://cdn.kkutu.xyz/js/kpanel/in_daneo.min.js?v='+L('version'))
+
 block Middle
 	fieldset
 		legend 자격 증명
 		input#db-password(type='password', placeholder='암호')
-		input#db-lang(placeholder='테이블')
+		select#db-lang(style='width:163.5px;')
+			option(value='ko', selected) 한국어 (ko)
+			option(value='en') 영어 (en)
 	fieldset
 		legend 끄투 단어 데이터베이스 다루기
 		div
@@ -48,8 +50,72 @@ block Middle
 			button#word-add 추가
 			button#db-apply 적용
 	fieldset
-		legend 끄투 데이터베이스에 단어 추가하기
-		div
-			input#db-theme(placeholder='주제 (~부터 적으면 검색)')
-			textarea#db-list(rows=20, cols=100)
-			button#db-ok 확인
+		legend 비 어인정 단어 추가하기
+		div.dialog-bar
+			select#noinj-ko-theme(style="width: 140px;")
+				option(value='' disabled selected)= '한국어 주제 선택'
+				- locals.KO_THEME.forEach(function(item){
+					option(value=item)= L('theme_'+item)
+				- });
+			select#noinj-en-theme(style="width: 140px;")
+				option(value='' disabled selected)= '영어 주제 선택'
+				- locals.EN_THEME.forEach(function(item){
+					option(value=item)= L('theme_'+item)
+				- });
+			select#noinj-flag(style="width: 140px;")
+				option(value='' disabled selected)= '단어 종류'
+				option(value='1')= '외래어'
+				option(value='2')= '어인정'
+				option(value='4')= '본래 띄어쓰기가 있는 어휘'
+				option(value='8')= '방언'
+				option(value='16')= '옛말'
+				option(value='32')= '문화어'
+			select#noinj-pum(style="width: 140px;")
+				option(value='' disabled selected)= '품사'
+				option(value='1') 명
+				option(value='2') 대명
+				option(value='3') 수
+				option(value='4') 조
+				option(value='5') 동
+				option(value='6') 형
+				option(value='7') 관
+				option(value='8') 부
+				option(value='9') 감
+				option(value='10') 접
+				option(value='11') 의명
+				option(value='12') 조동
+				option(value='13') 조형
+				option(value='14') 어
+				option(value='15') 관·명
+				option(value='16') 수·관
+				option(value='17') 명·부
+				option(value='18') 감·명
+				option(value='19') 대·부
+				option(value='20') 대·감
+				option(value='21') 동·형
+				option(value='22') 관·감
+				option(value='23') 부·감
+				option(value='24') 의명·조
+				option(value='25') 수·관·명
+				option(value='26') 대·관
+			input(type='checkbox' id='noinj-search' style='margin-left: 10px; margin-top: 3px; width: 15px;')
+			label(for='noinj-search')= '검색'
+		textarea#noinj-list(rows=20, cols=100)
+		button#noinj-ok 확인
+	fieldset
+		legend 어인정 단어 추가하기
+		div.dialog-bar
+			select#db-ko-theme(style="width: 140px;")
+				option(value='' disabled selected)= '한국어 주제 선택'
+				- locals.KO_INJEONG.forEach(function(item){
+					option(value=item)= L('theme_'+item)
+				- });
+			select#db-en-theme(style="width: 140px;")
+				option(value='' disabled selected)= '영어 주제 선택'
+				- locals.EN_INJEONG.forEach(function(item){
+					option(value=item)= L('theme_'+item)
+				- });
+			input(type='checkbox' id='db-search' style='margin-left: 10px; margin-top: 3px; width: 15px;')
+			label(for='db-search')= '검색'
+		textarea#db-list(rows=20, cols=100)
+		button#db-ok 확인

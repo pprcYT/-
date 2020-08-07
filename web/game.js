@@ -67,7 +67,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 		maxWeight: 12,
 		checkInterval: 10000,
 		rules: [{
-			regexp: "^/(cf|dict|gwalli|ranking)",
+			regexp: "^/(cf|dict|kpanel|ranking)",
 			maxWeight: 30,
 			errorData: '<meta charset="utf-8"><h2>[#429] 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.</h2>'
 		},
@@ -220,7 +220,7 @@ module.exports = function(gameServer, REDIS_SESSION, GLOBAL) {
 				'KO_THEME': Const.KO_THEME,
 				'EN_THEME': Const.EN_THEME,
 				'IJP_EXCEPT': Const.IJP_EXCEPT,
-				'ogImage': "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/logo.png",
+				'ogImage': "https://cdn.kkutu.xyz/img/kkutu/logo.png",
 				'ogURL': "https://kkutu.xyz/",
 				'ogTitle': "끄투닷넷",
 				'ogDescription': "내 작은 글자 놀이터, 끄투닷넷! / 끄투 온라인, 끝말잇기, 쿵쿵따, 초성퀴즈, 자음퀴즈, 타자대결, 단어대결, 십자말풀이, 그림퀴즈"

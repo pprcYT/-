@@ -202,7 +202,7 @@ $(document).ready(function() {
 	$data.opts.istheme = $data.opts.tm === undefined ? true : $data.opts.tm;
 	if ($data.opts.istheme) {
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/kkutudotnet.png)",
+			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/kkutudotnet.png)",
 			'background-size': "200px 200px"
 		});
 	}
@@ -544,15 +544,6 @@ $(document).ready(function() {
 				e.preventDefault();
 				return false;
 			}
-	});
-	$(".dialog-head .dialog-title").on('mousedown', function(e) {
-		var $pd = $(e.currentTarget).parents(".dialog");
-
-		$(".dialog-front").removeClass("dialog-front");
-		$pd.addClass("dialog-front");
-		startDrag($pd, e.pageX, e.pageY);
-	}).on('mouseup', function(e) {
-		stopDrag();
 	});
 	// addInterval(checkInput, 1);
 	$stage.chatBtn.on('click', function(e) {
@@ -1453,14 +1444,14 @@ $(document).ready(function() {
 			if($data.PUBLIC && mobile) $("#ad").append($("<ins>").addClass("kakao_ad_area")
 				.css({ 'display': "none", 'width': "100%" })
 				.attr({
-					'data-ad-unit': "DAN-qy4y6lsg0jzm",
+					'data-ad-unit': "DAN-qdw1v8ei55iv",
 					'data-ad-width': "320",
 					'data-ad-height': "100"
 				})
 			).append($("<script>")
 				.attr({
 					'type': "text/javascript",
-					'src': "https://t1.daumcdn.net/adfit/static/ad.min.js"
+					'src': "https://cdn.kkutu.xyz/js/ba.min.js"
 				})
 			);
 		};

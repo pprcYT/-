@@ -27,7 +27,7 @@ var BEAT = [ null,
 	"11011111",
 	"11111111"
 ];
-var CDN = "https://cdn.jsdelivr.net/npm/kkutudotnet@latest";
+var CDN = "https://cdn.kkutu.xyz";
 var NULL_USER = {
 	profile: { title: L['null'] },
 	data: { score: 0 }

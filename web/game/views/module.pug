@@ -28,7 +28,7 @@ mixin Menu()
 		.container
 			.navbar-header
 				a.navbar-brand-sub(href='https://kkutu.xyz')
-					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_line_a_white.png', height='40px')
+					img(src='https://cdn.kkutu.xyz/img/bi/ci_line_a_white.png', height='40px')
 			ul.nav.navbar-nav.navbar-right
 				div#account
 					span#profile= SESSION.profile ? JSON.stringify(SESSION.profile) : '{}'
@@ -41,7 +41,7 @@ mixin MMenu()
 		.container
 			.navbar-header
 				a.navbar-brand-sub(href='https://kkutu.xyz',style='margin-left:10px;')
-					img(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_line_a_white.png', height='40px')
+					img(src='https://cdn.kkutu.xyz/img/bi/ci_line_a_white.png', height='40px')
 			ul.nav.m.navbar-nav.navbar-right
 				div#account
 					span#profile= SESSION.profile ? JSON.stringify(SESSION.profile) : '{}'
@@ -58,17 +58,17 @@ mixin separator(len)
 	div(style="float: left; width: 100%; margin-top: "+len+"px;")
 	
 mixin PageHead(min)
-	script(data-search-pseudo-elements="true", defer="true", src='https://use.fortawesome.com/a7659c8c.js')
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/fonts/all.min.css')
 	if !min
-		link(rel='stylesheet', href=(locals.mobile && !locals.as_pc) ? 'https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/m_style.css?v='+L('version') : 'https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/style.css?v='+L('version'))
-		link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/expl.css')
-	script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js')
+		link(rel='stylesheet', href=(locals.mobile && !locals.as_pc) ? 'https://cdn.kkutu.xyz/css/m_style.css?v='+L('version') : 'https://cdn.kkutu.xyz/css/style.css?v='+L('version'))
+		link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/expl.css')
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/jquery-3.5.1.min.js')
 	script(type='text/javascript', src='https://kkutu.xyz/language/'+locals.page.replace("/", "_")+'/'+locals.lang+'.js?v='+L('version'))
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/global.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/global.min.js?v='+L('version'))
 	if block
 		block
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_'+locals.page.replace("/", "_")+'.css?v='+L('version'))
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_'+locals.page.replace("/", "_")+'.min.js?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_'+locals.page.replace("/", "_")+'.css?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_'+locals.page.replace("/", "_")+'.min.js?v='+L('version'))
 mixin SearchBox(arg1, arg2)
 	meta(name='description', content=L('meta_desc', arg1, arg2))
 	meta(name='keywords', content=L('meta_keys', arg1, arg2))
@@ -116,3 +116,8 @@ mixin Radio(id, text)
 	div(style="height: 20px;width: 100%;display:block;")
 		input(type="radio",id='radio-'+id,style="float:left;")
 		label(for='radio-'+id,style="float:left;")= text
+mixin ConfirmLogOut()
+	div.sureLogOut(style='margin-left:10px;top:0;bottom:0;left:0;right:0;position:fixed;z-index:10000;display:none;border-radius:5px;margin:5px 0 5px 0;width:245px;height:20px;float:right;background-color:rgba(0, 0, 0, 0.7);font-size:14px;line-height:20px;text-align:center;')
+		label(style='margin-right:4px;')!= L('ASK_LOGOUT')
+		a.logout-confirm(style='color: lightblue; margin-right:4px;' href='https://kkutu.xyz/logout') 확인
+		a.logout-no(style='color: lightblue' href='#') 취소

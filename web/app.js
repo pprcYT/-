@@ -21,8 +21,6 @@ const fs = require('fs');
 let express = require('express');
 
 let gameServer = express();
-let gitServer = express();
-let redirectServer = express();
 let app = express();
 
 let Exession = require("express-session");

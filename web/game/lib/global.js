@@ -127,8 +127,24 @@ var L;
 		if($.cookie('lc') == "") $.cookie('lc', "ko_KR");
 		
 		if(global.profile.token){
+			$(".logout-no").on('click', function(e){
+				$(".sureLogOut").animate({
+					'display': 'block',
+					'opacity': 0
+				}, 1000);
+				_setTimeout(function() {
+					$(".sureLogOut").hide();
+				}, 1000);
+			});
 			$("#account-info").html(global.profile.title || global.profile.name).on('click', function(e){
-				if(confirm(L['ASK_LOGOUT'])) requestLogout(e);
+				$(".sureLogOut").css({
+					'opacity': 0
+				}).animate({
+					'opacity': 1
+				}, 1000);
+				_setTimeout(function() {
+					$(".sureLogOut").show();
+				}, 1000);
 			});
 		}else{
 			if(window['FB']){
@@ -163,15 +179,6 @@ var L;
 		
 		// $.cookie('preprev', location.href);
 		location.href = "/login";
-	}
-	function requestLogout(e){
-		/*if(location.host == "kkutu.kr"){
-			// $.cookie('forlogout', "true");
-			location.href = "/logout";
-			return;
-		}*/
-		//볕뉘 수정 구문 삭제(161~167, facebook js SDK 대응코드 삭제)
-		location.href = "/logout";
 	}
 	function onWatchInput($o, prev){
 		var cid = $o.attr('id');
@@ -266,8 +273,8 @@ var L;
                     obj = spart || part;
                     gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
                     img = (obj.group.charAt(0) == 'M')
-                        ? "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
-                        : "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/shop/" + obj._id + ".png";
+                        ? "https://cdn.kkutu.xyz/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
+                        : "https://cdn.kkutu.xyz/img/kkutu/shop/" + obj._id + ".png";
                     Icss = { 'width': "25px", 'height': "25px", 'z-index': 100+parseInt(i) }
                     if (key.slice(1) == "rhand") Icss.transform = "scaleX(-1)"
                     $obj.append($("<img>")
@@ -278,9 +285,10 @@ var L;
                 };
             });
             $obj.append($("<img>").addClass("moremies moremi-body")
-                .attr('src', "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/moremi/body.png")
+                .attr('src', "https://cdn.kkutu.xyz/img/kkutu/moremi/body.png")
                 .css({ 'width': "25px", 'height': "25px", 'z-index': 100 })
             );
         });
-    };
+	};
+	
 })();

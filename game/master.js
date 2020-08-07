@@ -66,6 +66,25 @@ const ENABLE_FORM = exports.ENABLE_FORM = [ "S", "J" ];
 const MODE_LENGTH = exports.MODE_LENGTH = Const.GAME_TYPE.length;
 const PORT = process.env['KKUTU_PORT'];
 
+const webHook = require('discord-webhook-node');
+const hook = new webHook.Webhook(GLOBAL['SANCTION_WEBHOOK']);
+const reason = [
+	"[#900] 게임 내 명칭 정책 위반",
+	"[#901] 다른 회원에게 불쾌감과 모욕감을 주는 행위",
+	"[#902] 게임 이용 방해",
+	"[#903] 운영자 사칭 및 업무 방해",
+	"[#904] 현금거래 및 홍보",
+	"[#905] 친목 행위",
+	"[#906] 사기 및 사칭",
+	"[#907] 시스템(버그) 악용",
+	"[#908] 어뷰징",
+	"[#909] 허위 신고",
+	"[#910] 불법 프로그램 사용",
+	"[#911] 계정 도용/해킹/개인정보 유출",
+	"[#912] 기타 운영정책 위반 행위"
+];
+
+
 process.on('uncaughtException', function(err){
 	var text = `:${PORT} [${new Date().toLocaleString()}] ERROR: ${err.toString()}\n${err.stack}\n`;
 	
@@ -101,6 +120,7 @@ function processAdmin(id, value){
 				KKuTu.publish('room', { target: id, room:temp.getData(), modify: true }, temp.password);
 			}
 			return null;
+		/*
 		case "nick":
 			MainDB.users.update([ '_id', value ]).set([ 'nick', '바른닉네임' + value.replace(/[^0-9]/g, "").substring(0,4) ]).on();
 			MainDB.users.update([ '_id', value ]).set([ 'exordial', '바른닉네임' + value.replace(/[^0-9]/g, "").substring(0,4) ]).on();
@@ -132,6 +152,239 @@ function processAdmin(id, value){
 				temp.socket.close();
 			}
 			return null;
+		*/
+		case "sanction":
+			try {
+				const obj = value.split(" ");
+				const code = parseInt(obj[1]);
+				const blackReason = reason[code];
+
+				MainDB.users.findOne([ '_id', obj[0] ]).on(function($user){
+					const oldNick = $user.nick;
+
+					let warn = $user.warnings;
+					let blackDate = null;
+					let blackNum = null;
+
+					if(!warn) warn = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0};
+					
+					switch(code){
+						case 0:
+							const nick = '바른닉네임' + obj[0].replace(/[^0-9]/g, "").substring(0,4);
+							
+							MainDB.users.update([ '_id', obj[0] ]).set([ 'nick', nick ]).on();
+							MainDB.users.update([ '_id', obj[0] ]).set([ 'exordial', nick ]).on();
+
+							if(warn['0']) MainDB.users.update([ '_id', obj[0] ]).set([ 'nonickchange', true ]).on();
+							warn['0'] += 1;
+
+							blackNum = warn['0'];
+							break;
+						case 1:
+							console.log(warn['1']);
+							if(!warn['1']) {
+								// 7일
+								blackDate = addDate(7);
+							} else {
+								switch(warn['1']) {
+									case 1:
+										// 14일
+										blackDate = addDate(14);
+										break;
+									case 2:
+										// 30일
+										blackDate = addDate(30);
+										break;
+									case 3:
+									default:
+										// 90일
+										blackDate = addDate(90);
+								}
+							}
+							warn['1'] += 1;
+
+							blackNum = warn['1'];
+							break;
+						case 2:
+							if(!warn['2']) {
+								// 1일
+								blackDate = addDate(1);
+							} else {
+								switch(warn['2']) {
+									case 1:
+										// 3일
+										blackDate = addDate(3);
+										break;
+									case 2:
+										// 7일
+										blackDate = addDate(7);
+										break;
+									case 3:
+									default:
+										// 14일
+										blackDate = addDate(14);
+								}
+							}
+							warn['2'] += 1;
+
+							blackNum = warn['2'];
+							break;
+						case 3:
+							blackDate = addDate(365 * 40); // 40년 후
+							warn['3'] += 1;
+
+							blackNum = warn['3'];
+							break;
+						case 4:
+							blackDate = addDate(365 * 40); // 40년 후
+							warn['4'] += 1;
+
+							blackNum = warn['4'];
+							break;
+						case 5:
+							if(!warn['5']) {
+								// 7일
+								blackDate = addDate(7);
+							} else {
+								switch(warn['5']) {
+									case 1:
+										// 14일
+										blackDate = addDate(14);
+										break;
+									case 2:
+										// 30일
+										blackDate = addDate(30);
+										break;
+									case 3:
+									default:
+										blackDate = addDate(365 * 40); // 40년 후
+								}
+							}
+							warn['5'] += 1;
+
+							blackNum = warn['5'];
+							break;
+						case 6:
+							if(!warn['6']) {
+								// 30일
+								blackDate = addDate(30);
+							} else {
+								switch(warn['6']) {
+									case 1:
+										// 90일
+										blackDate = addDate(90);
+										break;
+									case 2:
+									default:
+										blackDate = addDate(365 * 40); // 40년 후
+								}
+							}
+							warn['6'] += 1;
+
+							blackNum = warn['6'];
+							break;
+						case 7:
+							blackDate = addDate(365 * 40); // 40년 후
+							warn['7'] += 1;
+
+							blackNum = warn['7'];
+							break;
+						case 8:
+							let money = $user.money;
+							let kkt = $user.kkutu;
+
+							if(!warn['8']) {
+								// 재화 10% 차감, 7일
+								money = Math.floor(money * 0.9);
+								kkt.score = Math.floor(kkt.score * 0.9);
+								blackDate = addDate(7);
+							} else {
+								switch(warn['8']) {
+									case 1:
+										// 재화 25% 차감, 14일
+										money = Math.floor(money * 0.75);
+										kkt.score = Math.floor(kkt.score * 0.75);
+										blackDate = addDate(14);
+										break;
+									case 2:
+										// 재화 50% 차감, 30일
+										money = Math.floor(money * 0.5);
+										kkt.score = Math.floor(kkt.score * 0.5);
+										blackDate = addDate(30);
+										break;
+									case 3:
+									default:
+										// 재화 75% 차감, 90일
+										money = Math.floor(money * 0.25);
+										kkt.score = Math.floor(kkt.score * 0.25);
+										blackDate = addDate(90);
+								}
+							}
+							MainDB.users.update([ '_id', obj[0] ]).set([ 'money', money ]).on();
+							MainDB.users.update([ '_id', obj[0] ]).set([ 'kkutu', JSON.stringify(kkt) ]).on();
+							warn['8'] += 1;
+
+							blackNum = warn['8'];
+							break;
+						case 9:
+							if(!warn['9']) {
+								// 1일
+								blackDate = addDate(1);
+							} else {
+								switch(warn['9']) {
+									case 1:
+										// 3일
+										blackDate = addDate(3);
+									case 2:
+										// 7일
+										blackDate = addDate(7);
+									case 3:
+									default:
+										// 14일
+										blackDate = addDate(14);
+								}
+							}
+							warn['9'] += 1;
+
+							blackNum = warn['9'];
+							break;
+						case 10:
+							blackDate = addDate(365 * 40); // 40년 후
+							warn['10'] += 1;
+
+							blackNum = warn['10'];
+							break;
+						case 11:
+							blackDate = addDate(365 * 40); // 40년 후
+							warn['11'] += 1;
+
+							blackNum = warn['11'];
+							break;
+						case 12:
+							blackDate = addDate(parseInt(obj[2]) * 40);
+							
+							blackNum = 1;
+					}
+
+					if(code) {
+						MainDB.users.update([ '_id', obj[0] ]).set([ 'black', blackReason ]).on();
+						MainDB.users.update([ '_id', obj[0] ]).set([ 'time', blackDate ]).on();
+					}
+
+					hook.info(`**${oldNick}** (${obj[0]})`, `제재 사유: ${blackReason}`, `**처벌: **${blackNum}차`);
+					MainDB.users.update([ '_id', obj[0] ]).set([ 'warnings', JSON.stringify(warn) ]).on();
+					JLog.info(`[SANCTION] #${obj[0]} banned`);
+
+					if(temp = DIC[obj[0]]){
+						temp.socket.send('{"type":"error","code":410}');
+						temp.socket.close();
+					}
+				});
+			} catch (e) {
+				JLog.warn("[SANCTION] Error: " + e);
+			}
+			return null;
+		/*
 		case "ban":
 			var target = value.split(",")[0];
 			var reason = value.split(",")[1];
@@ -164,6 +417,7 @@ function processAdmin(id, value){
 				temp.socket.close();
 			}
 			return null;
+		*/
 		case "unban":
 			MainDB.users.update([ '_id', value ]).set([ 'black', null ]).on();
 			MainDB.users.update([ '_id', value ]).set([ 'time', Number(null) ]).on();
@@ -236,6 +490,12 @@ function processAdmin(id, value){
 			return null;
 	}
 	return value;
+}
+function addDate(num){
+	var date = parseInt(num);
+	if(isNaN(date)) return;
+
+	return Date.now() + date * 24 * 60 * 60 * 1000;
 }
 function checkTailUser(id, place, msg){
 	var temp;
@@ -428,7 +688,7 @@ exports.init = function(_SID, CHAN){
 				
 				if(DIC[$c.id]){
 					DIC[$c.id].sendError(408);
-					DIC[$c.id].socket.close();
+					setTimeout(() => $c.socket.close(), 50);
 				}
 				if(DEVELOP && !Const.TESTER.includes($c.id)){
 					$c.sendError(500);
@@ -438,7 +698,7 @@ exports.init = function(_SID, CHAN){
 				if($c.guest){
 					if(SID != "0"&&SID != "1"){
 						$c.sendError(402);
-						$c.socket.close();
+						setTimeout(() => $c.socket.close(), 50);
 						return;
 					}
 					if(KKuTu.NIGHT){
@@ -485,7 +745,7 @@ exports.init = function(_SID, CHAN){
 						if (!ref.time) $c.send('error', { code: ref.result, message: ref.black });
 						else $c.send('error', { code: ref.result, message: ref.black, time: ref.time });
 						$c._error = ref.result;
-						$c.socket.close();
+						setTimeout(() => $c.socket.close(), 50);
 						// JLog.info("Black user #" + $c.id);
 					}
 				});
@@ -639,6 +899,10 @@ function processClientRequest($c, msg) {
 				if ($body.nick != msg.nick) {
 					return;
 				}
+				else if(!!$body.nonickchange) {
+					$c.sendError(490);
+					return;
+				}
 				$c.refresh().then(function(ref){
 					if(ref.result == 200){
 						MainDB.users.update([ '_id', $c.id ]).set([ 'server', SID ]).on();
@@ -656,6 +920,11 @@ function processClientRequest($c, msg) {
 				if ($body.nick != msg.nick) {
 					return;
 				}
+				else if(!!$body.nonickchange) {
+					$c.sendError(490);
+					return;
+				}
+				console.log($body.nonickchange);
 				$c.refresh().then(function(ref){
 					if(ref.result == 409){
 						JLog.info("Nickchange "+msg.id+" "+msg.nick);

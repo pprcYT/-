@@ -187,17 +187,24 @@ Server.post("/dressnick", function (req, res) {
 			res.send({ error: 400 });
 			return;
 		}
-		MainDB.users.findOne([ 'nick', nick ]).on(function($res){
-			text = text.slice(0, 100).trim();
-			nick = nick.trim();
-			MainDB.users.update(['_id', req.session.profile.id]).set({
-				'exordial': text,
-				'nick': nick
-			}).on(function ($res) {
-				MainDB.session.findOne(['_id', req.session.id]).limit(['profile', true]).on(function ($ses) {
-					$ses.profile.title = nick;
-					MainDB.session.update(['_id', req.session.id]).set(['profile', $ses.profile]).on(function ($body) {
-						res.send({text: text});
+		MainDB.users.findOne([ '_id', req.session.profile.id]).on(function ($body) {
+			if(!!$body.nonickchange) {
+				res.json({ error: 490 });
+				return;
+			}
+			MainDB.users.findOne([ 'nick', nick ]).on(function($res){
+				text = text.slice(0, 100).trim();
+				nick = nick.trim();
+				
+				MainDB.users.update(['_id', req.session.profile.id]).set({
+					'exordial': text,
+					'nick': nick
+				}).on(function ($res) {
+					MainDB.session.findOne(['_id', req.session.id]).limit(['profile', true]).on(function ($ses) {
+						$ses.profile.title = nick;
+						MainDB.session.update(['_id', req.session.id]).set(['profile', $ses.profile]).on(function ($body) {
+							res.send({text: text});
+						});
 					});
 				});
 			});
@@ -208,9 +215,15 @@ Server.post("/exordial", function(req, res){
 	let text = req.body.data || "";
 	
 	if(req.session.profile && !text.match(bad)) {
-		text = text.slice(0, 100);
-		MainDB.users.update([ '_id', req.session.profile.id ]).set([ 'exordial', text ]).on(function($res){
-			res.send({ text: text });
+		MainDB.users.findOne([ '_id', req.session.profile.id]).on(function ($body) {
+			if(!!$body.nonickchange) {
+				res.json({ error: 490 });
+				return;
+			}
+			text = text.slice(0, 100);
+			MainDB.users.update([ '_id', req.session.profile.id ]).set([ 'exordial', text ]).on(function($res){
+				res.send({ text: text });
+			});
 		});
 	} else res.send({ error: 400 });
 });
@@ -223,18 +236,24 @@ Server.post("/newnick", (req, res) => {
 			res.send({error: 400});
 			return;
 		}
-		MainDB.users.findOne([ 'nick', nick ]).on(function($res){
-			if(!$res) {
-				MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
-					if($body.nick!="nonick"&&$body.nick) {
-						res.send({ error: 400 });
-						return;
-					}
-					MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
-					req.session.nick = nick;
-					MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
-				});
-			} else res.send({ error: 460 });
+		MainDB.users.findOne([ '_id', req.session.profile.id]).on(function ($body) {
+			if(!!$body.nonickchange) {
+				res.json({ error: 490 });
+				return;
+			}
+			MainDB.users.findOne([ 'nick', nick ]).on(function($res){
+				if(!$res) {
+					MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
+						if($body.nick!="nonick"&&$body.nick) {
+							res.send({ error: 400 });
+							return;
+						}
+						MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
+						req.session.nick = nick;
+						MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
+					});
+				} else res.send({ error: 460 });
+			});
 		});
 	} else res.send({ error: 400 });
 });

@@ -44,7 +44,8 @@ Pub.ready = function(isPub){
         user: GLOBAL.PG_USER,
         password: GLOBAL.PG_PASSWORD,
         port: GLOBAL.PG_PORT,
-        database: GLOBAL.PG_DATABASE
+		database: GLOBAL.PG_DATABASE,
+		max: 100
     });
 	Redis.on('connect', function(){
 		connectPg();

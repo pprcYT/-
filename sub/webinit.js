@@ -67,6 +67,9 @@ function page(req, res, file, data){
 	data.season_pre = GLOBAL.SEASON_PRE;
 	
 	data.locale = getLanguage(data.lang, data._page || file.split('_')[0], data._shop);
+	if(file.split('/')[0] == 'kpanel') {
+		data.locale = getLanguage(data.lang, 'kkutu', data._shop);
+	}
 	data.session = req.session;
 	if((/mobile/i).test(req.get('user-agent')) || req.query.mob){
 		data.mobile = true;
@@ -97,6 +100,7 @@ exports.init = function(Server, shop){
 		var lang = req.params.lang;
 		
 		if(page.substr(0, 2) == "m/") page = page.slice(2);
+		if(page.substr(0, 6) == "kpanel/") page = "kkutu";
 		if(page == "portal") page = "kkutu";
 		
 		res.send("window.L = "+JSON.stringify(getLanguage(lang, page, shop))+";");

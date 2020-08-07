@@ -28,7 +28,7 @@ block Subject
 	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	
 block JS
-	script(type='text/javascript', src='/js/in_game_kkutu.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_game_kkutu.min.js?v='+L('version'))
 block CSS
 
 block Jungle
@@ -52,7 +52,7 @@ block Middle
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
 	script(src='https://www.google.com/recaptcha/api.js')
 	div#Intro
-		img#intro(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/m_intro_all.png')
+		img#intro(src='https://cdn.kkutu.xyz/img/kkutu/m_intro_all.png')
 		div#version= L('version')
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
@@ -361,41 +361,46 @@ block Middle
 		<b>1. 가장 적합한 신고 사유를 선택하여 주십시오.</b>
 		select#rsl(style='width:100%;margin-top:5px;margin-bottom:5px;')
 			option(disabled) 가장 적합한 신고 사유를 선택하여 주십시오.
-			option(selected) [#901] 비속어 사용 등 불건전한 채팅
-			option [#902] 게임 진행 방해 (고의 중도퇴장 등)
-			option [#903] 비 인가 프로그램(핵 등) 사용 의심
-			option [#904] 홍보성 채팅
-			option [#905] 부적절한 별명 또는 프로필 설명
-			option [#906] 운영진 등 사칭
-			option [#907] 친목 행위
-			option [#908] 기타 운영정책 위반 행위
+			option(selected) [#900] 게임 내 명칭 정책 위반
+			option [#901] 다른 회원에게 불쾌감과 모욕감을 주는 행위
+			option [#902] 게임 이용 방해
+			option [#903] 운영자 사칭 및 업무 방해
+			option [#904] 현금거래 및 홍보
+			option [#905] 친목 행위
+			option [#906] 사기 및 사칭
+			option [#907] 시스템(버그) 악용
+			option [#908] 어뷰징
+			option [#909] 허위 신고
+			option [#910] 불법 프로그램 사용
+			option [#911] 계정 도용/해킹/개인정보 유출
+			option [#912] 기타 운영정책 위반 행위
 		<b>2. 신고 사유를 구체적으로 입력해 주십시오.</b>
 		textarea#rst(style="width:calc(100% - 12px);height:115px;margin-top:5px;",placeholder="신고 사유를 250자 이내로 자세히 입력해주세요. 자세하게 입력하실수록 빠른 처리가 가능해집니다.",maxlength=250)
 		div.dialog-bar.tail-button
 			button#report-ok 신고 접수
-	+Dialog('NewNickDialog', 350, 400, "닉네임 설정하기", true)
+	+Dialog('NewNickDialog', 310, 135, "닉네임 설정하기", true)
 		div.dialog-bar
-			h3 환영합니다. 우선 닉네임을 설정하겠습니다.
-			h3 계속하면 아래 운영정책에 동의하는 것으로 간주합니다.
-		+separator(5)
-		h4
-			b 제 18차 운영정책
-			|  2020-7-7 개정
-		div(style='float: right; width: 100%; background-color: #FFFFFF;')
-			iframe#kkutu-bulletin(width='100%', height='90px', src='/operation.html')
-		+separator(10)
-		h4
-			b 제 14차 개인정보취급방침
-			|  2020-7-7 개정
-		div(style='float: right; width: 100%; background-color: #FFFFFF;')
-			iframe#kkutu-bulletin(width='100%', height='90px', src='/privacy.html')
-		+separator(5)
+			h3 사용하실 닉네임을 15자 이내로 입력해주세요. 
+			h3 영문, 한글, 숫자, 공백 사용 가능합니다.
 		div.dialog-bar
-			h3 2~15글자, 영문/한글/숫자/공백 사용 가능
-		div.dialog-bar
-			input(type='text', placeholder="닉네임 입력", style='width: 338px;', maxlength=15, id="newnick-input")
+			input(type='text', placeholder="닉네임 입력", style='width: 298px;', maxlength=15, id="newnick-input")
 		div.dialog-bar.tail-button
 			button#newnick-ok= L('OK')
+	+Dialog('PolicyDiag', 350, 412, "서비스 이용약관 및 개인정보처리방침 안내")
+		h4
+			b 서비스 이용약관
+		div(style='float: right; width: 100%; background-color: #FFFFFF;')
+			iframe#service-operation(width='100%', height='120px')
+		+separator(10)
+		h4
+			b 개인정보처리방침
+		div(style='float: right; width: 100%; background-color: #FFFFFF;')
+			iframe#service-privacy(width='100%', height='120px')
+		+separator(5)
+		div.dialog-bar
+			p(style='font-size: 11px; margin: 0;') 계속 진행하실 경우 서비스 이용약관 및 개인정보처리방침에 동의하는 것으로 간주되며, 서비스 이용약관을 따르지 못해 발생하는 일에 대해서는 당사가 책임지지 않습니다.<br>서비스 이용약관 및 개인정보처리방침은 사이트 하단에 명시되어 있습니다.
+		div.dialog-bar.tail-button
+			button#policy-ok= L('OK')
 	+Dialog('BlockedDiag', 350, 120, "계정 정지 안내", true)
 		div#blocked-content(style='height:60px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:block;')
 		+separator(15)
@@ -421,6 +426,18 @@ block Middle
 		div.dialog-bar.tail-button
 			button#password-no= L('NO')
 			button#password-ok= L('OK')
+	+Dialog('WhichHandDiag', 300, 115, "장착할 손 선택")
+		div#hand-content(style='height:50px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;')
+		div.dialog-bar.tail-button
+			button#hand-no= L('NO')
+			button#hand-left 왼쪽
+			button#hand-right 오른쪽
+	+Dialog('SelectItemDiag', 300, 89, "사용할 아이템 선택")
+		div#item-content(style='height:24px;text-align:center;padding:0px 12px 0px 12px;word-break:keep-all;vertical-align:middle;display:table-cell;') 사용하실 아이템을 선택해주세요.
+		div.dialog-bar.tail-button
+			button#item-skip 건너뛰기
+			button#item-reverse 반대로
+			button#item-random 랜덤
 	+Product('UserList')
 		div 불러오는 중...
 	+Product('RoomList')
@@ -448,9 +465,9 @@ block Middle
 				input#cw-q-input(placeholder=L('inputHere'), style='width: 313px; height: 20px; font-size: 15px;')
 				div.cw-q-body
 			div.jjoriping
-				img.jjoObj.jjoEyeL(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/jjoeyeL.png')
-				img.jjoObj.jjoNose(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/jjonose.png')
-				img.jjoObj.jjoEyeR(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/jjoeyeR.png')
+				img.jjoObj.jjoEyeL(src='https://cdn.kkutu.xyz/img/jjoeyeL.png')
+				img.jjoObj.jjoNose(src='https://cdn.kkutu.xyz/img/jjonose.png')
+				img.jjoObj.jjoEyeR(src='https://cdn.kkutu.xyz/img/jjoeyeR.png')
 				div.jjoDisplayBar
 					div.jjo-display
 					+GraphBar('jjo-turn-time')
@@ -538,7 +555,7 @@ block Middle
 	div#ad
 block Bottom
 	div#msg-overlay(style='position:absolute;top:0;left:0;width:100%;height:135%;opacity:0.3;background:black;display:none;')
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/fabric.min.js?v='+L('version'))
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/emojione.min.js?v='+L('version'))
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_m_game_kkutu_shop.css?v='+L('version'), async)
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/emojione.min.css?v='+L('version'), async)
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/fabric.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/emojione.min.js?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_m_game_kkutu_shop.css?v='+L('version'), async)
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/emojione.min.css?v='+L('version'), async)

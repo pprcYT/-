@@ -4,18 +4,18 @@ block Subject
 	title 끄투닷넷 - 내 작은 글자 놀이터, 끄투닷넷! 끄투 온라인
 	link(rel='canonical' href='https://kkutu.xyz')
 block CSS
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/in_game_kkutu.css?v='+L('version'))
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/in_game_kkutu.css?v='+L('version'))
 block JS
-	script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/in_kkutu.min.js?v='+L('version'))
+	script(type='text/javascript', src='https://cdn.kkutu.xyz/js/in_kkutu.min.js?v='+L('version'))
 block Middle
 	+separator(5)
 	div(style='display:inline-block; float: left; width: 200px;')
 		div(style='width:200px;height:200px;background-color:rgba(0, 0, 0, 0.5);float:left;display:inline-block;')
 			h3#holder(style='padding-top:10px;')
-			img#logo(style='display:block;height:180px;margin:0 auto;', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/bi/ci_main_a_white.png', title='끄투닷넷 로고 - 끄투 온라인')
+			img#logo(style='display:block;height:180px;margin:0 auto;', src='https://cdn.kkutu.xyz/img/bi/ci_main_a_white.png', title='끄투닷넷 로고 - 끄투 온라인')
 		button#game-start.jjo-display(style='float:left;') 게임 시작
 	div#container-slides(style='float: left; background-color: #ccc; display: inline-block; width: 60%; margin-left: 15px;')
-		img.slide.showing(src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/banner/main.png', title='끄투닷넷')
+		img.slide.showing(src='https://cdn.kkutu.xyz/img/banner/main.png', title='끄투닷넷')
 		// a(href='https://recruit.kkutu.xyz/498', target='_blank')
 	script.
 		var slides = document.querySelectorAll('#container-slides .slide');
@@ -30,10 +30,10 @@ block Middle
 		div#container-social(style='float: right; background-color: #004c5c; width: 189px; height: 286px;')
 			div#container-social-ribbon(style='float: left; margin-left: 10px; width: 4px; height: 100%; background-color: #fff;')
 			a#social(style='margin-top:2.5px;' href='https://blog.kkutu.xyz' target='_blank') <i class="kd kd-blog kd-fw"></i> 네이버 블로그
-			a#social(href='https://cafe.naver.com/kkutuxyz' target='_blank') <i class="kd kd-local-cafe kd-fw"></i> 네이버 카페
-			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="kd kd-discord kd-fw"></i> 디스코드
-			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="kd kd-facebook kd-fw"></i> 페이스북
-			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="kd kd-chat kd-fw"></i> 카카오톡
+			a#social(href='https://cafe.naver.com/kkutuxyz' target='_blank') <i class="kd kd-coffee kd-fw"></i> 네이버 카페
+			a#social(href='https://discord.gg/rnCSBWj' target='_blank') <i class="kdb kd-discord kd-fw"></i> 디스코드
+			a#social(href='https://fb.me/KKuTuDotNet' target='_blank') <i class="kdb kd-facebook kd-fw"></i> 페이스북
+			a#social(href='https://pf.kakao.com/_gxcsxeT' target='_blank') <i class="kd kd-comments kd-fw"></i> 카카오톡
 			a#social(href='https://forum.kkutu.xyz' target='_blank') <i class="kd kd-comment kd-fw"></i> 공식 포럼
 	+separator(5)
 	div(style='float: left;')
@@ -43,7 +43,7 @@ block Middle
 				a#server-refresh(style='background-color:cornflowerblue;padding:2px;float:right;font-size:14px;') <i class="kd kd-sync-alt"></i> 새로고침
 			div#server-list(style='height:282.5px;')
 	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 240px; background-color: rgba(0, 0, 0, 0.5); margin-left: 6px;')
-		div#btl <i class="kd kd-history-mdi kd-fw" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
+		div#btl <i class="kd kd-history kd-fw" style="margin-left:5px;padding-top:2px;"></i> 업데이트 내역
 		iframe#kkutu-bulletin(style='margin-bottom:0px', width='100%', height='220px', src='https://kkutu.xyz/docs/bulletin.html')
 	div(style='float: right; width: calc(40% - 9.5px); vertical-align:middle; height: 130px; background-color: rgba(0, 0, 0, 0.5);')
 		div#btl <i class="kd kd-info-circle kd-fw" style="margin-left:5px;padding-top:2px;"></i> 공지사항
@@ -73,12 +73,12 @@ block Middle
 		div(style='display:table-cell;vertical-align:middle;') <b>광고 문의:</b> admin@kkutu.xyz
 	+separator(10)
 	div#ad(style='height:90px;width:1010px;background-color:#cccccc;text-align:center;display:inline-block;text-align: center;')
-		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-vb9lq0e1ie02', data-ad-width='728', data-ad-height='90')
-		script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/js/ba.min.js', async)
+		ins.kakao_ad_area(style='display:none;', data-ad-unit='DAN-1iyhrekvzax4o', data-ad-width='728', data-ad-height='90')
+		script(type='text/javascript', src='https://cdn.kkutu.xyz/js/ba.min.js', async)
 	+separator(30)
 block Bottom
 	p(hidden).
 		글자로 놀자! 끄투 온라인은 쪼리핑(JJoriping)의 1인 개발 온라인 오픈 소스 끝말잇기 게임입니다. 한국어 끝말잇기, 쿵쿵따, 타자 대결, 단어 대결, 십자말풀이, 그림퀴즈, 영어 끝말잇기, 끄투, 솎솎 등 다양한 게임 모드 (미니 게임으로 생각하면 편합니다.)를 지원하는 것이 특징입니다.
 		기본적인 게임 방식은 차례를 이어 나가며 점수를 획득하고, 가장 많이 획득한 순서대로 순위가 매겨지는 간단한 방식입니다.
 		현재는 원작자가 개발을 중단하여 프리 서버 게임으로 변경된 상태입니다. 그리고 그 서버 중 대표적인 서버가 바로 끄투닷넷입니다.
-	link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/kkutudotnet@latest/css/notice.css?v='+L('version'), async)
+	link(rel='stylesheet', href='https://cdn.kkutu.xyz/css/notice.css?v='+L('version'), async)

@@ -31,7 +31,7 @@
 		};
 
 		$("#Background").attr('src', "").addClass("jt-image").css({
-			'background-image': "url(https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/kkutudotnet.png)",
+			'background-image': "url(https://cdn.kkutu.xyz/img/kkutu/kkutudotnet.png)",
 			'background-size': "200px 200px"
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){

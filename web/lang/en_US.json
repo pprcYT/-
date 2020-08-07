@@ -1,6 +1,6 @@
 {
 	"GLOBAL": {
-		"version": "20.7.10.1",
+		"version": "20.8.2",
 		
 		"SETTING":	"설정",
 		"OG_IMAGE": "https://cdn.jsdelivr.net/npm/kkutudotnet@latest/img/kkutu/intro.png",
@@ -218,6 +218,7 @@
 		"error_483": "관리자에 의하여 서비스 연결이 종료되었습니다.",
 		"error_484": "관리자에 의하여 현재 계정에 경고가 부여되었습니다.",
 		"error_485": "관리자에 의하여 서비스 이용이 정지되었습니다.",
+		"error_490": "게임 내 명칭 정책 위반으로 닉네임 변경을 이용하실 수 없습니다.",
 		"error_500": "채널 점검 혹은 업데이트가 진행 중입니다.",
 		"error_555": "공사 중입니다! ㅠㅠ",
 		"turnError_402": "첫 차례 한방 금지",
@@ -237,7 +238,7 @@
 		"UserList": "채널 접속자",
 		"RoomList": "전체 게임방",
 		"Shop": "KD{shopping-bag}<b>상점</b>",
-		"Chat": "KD{chat-entypo}<b>채팅</b>",
+		"Chat": "KD{comment}<b>채팅</b>",
 		"Room": "<b>방</b>",
 		"Game": "<b>게임</b>",
 		"Me": "KD{bell}<b>내 정보</b>",
