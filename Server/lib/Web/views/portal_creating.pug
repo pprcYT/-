@@ -17,7 +17,7 @@
 extends layout
 
 block Subject
-	title= L('title')
+	title 글자로 놀자 푸룬끄투!
 
 block CSS
 	link(rel='stylesheet', href='/css/in_game_kkutu.css')
@@ -25,11 +25,11 @@ block CSS
 block Middle
 	+separator(5)
 	div(style='float: left; width: 100%;')
-		div.logo(style='float: center; margin-top: 0px; width: 0px;')
+		div.logo(style='float: center; margin-top: 15px; width: 0px;')
 				img#logo(src='/img/kkutu/short_logo.png')
-		div.jjoriping(style='margin-top: -20px;')
+		div.jjoriping(style='margin-top: -20px; width: 0px;')
 				button#game-start.jjo-display= L('gameStart')
-	div(style='float: center; margin-top: 161px; width: 322.5px;')
+	div(style='float: center; margin-top: 0px; width: 1000px;')
 		div.server-list-box
 			h3.server-list-title
 				a#server-refresh
@@ -38,6 +38,10 @@ block Middle
 				label= L('serverList')
 				label#server-total(style='color: #AAA; font-size: 12px;')
 			div#server-list
+	div(style='float: left; width: calc(350px - 4px); border: 1px solid #000; margin-top: 10px; background-color: #EEE;')
+		iframe#check(width='348px', height='215px', src='sns.html')
+	div(style='float: left; width: calc(306px - 4px); border: 1px solid #000; margin-top: 70px; background-color: #EEE;')
+		iframe#check(width='300px', height='300px', src='update.html')
 	+separator(10)
 
 block Bottom

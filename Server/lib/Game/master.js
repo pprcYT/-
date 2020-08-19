@@ -80,7 +80,7 @@ function processAdmin(id, value){
 		case "yell":
 			KKuTu.publish('yell', { value: value });
 			return null;
-		case "kill":
+		case "kick":
 			if(temp = DIC[value]){
 				temp.socket.send('{"type":"error","code":410}');
 				temp.socket.close();

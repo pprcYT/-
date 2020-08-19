@@ -1435,10 +1435,12 @@ function getRewards(mode, score, bonus, rank, all, ss){
 		* (0.77 + 0.05 * (all - rank) * (all - rank)) // 순위
 		* 1.25 / (1 + 1.25 * sr * sr) // 점차비(양학했을 수록 ↓)
 	;
-	rw.money = 1 + rw.score * 0.01;
+	//핑 배율 늘리기
+	rw.money = 3 + rw.score * 1;
+	//경험치 배율 늘리기
 	if(all < 2){
-		rw.score = rw.score * 0.05;
-		rw.money = rw.money * 0.05;
+		rw.score = rw.score * 1;
+		rw.money = rw.money * 1;
 	}else{
 		rw.together = true;
 	}

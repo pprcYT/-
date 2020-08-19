@@ -38,7 +38,7 @@ mixin SettingOption(id, text, st)
 		label(for=id)= text
 
 block Subject
-	title= L('title')
+	title 글자로 놀자 푸룬끄투!
 
 block JS
 	script(type='text/javascript', src='/js/in_game_kkutu.min.js')
@@ -460,6 +460,9 @@ block Middle
 		input#Talk(maxlength=1000)
 		button#ChatBtn= L('send')
 	+Product('AD')
+	a(href='https://www.youtube.com/channel/UCEnp6olUAroQVQd3iaDU_tA')
+		img(src='https://lh3.googleusercontent.com/7b9Fjt5mvz4jLYcWtCsFygGUt6pHNevTKzz6ho_bCCxMwp31UOno0-SpDL4IjBiTBp9aojA9a3Dbo7cg8751p8qKWbdsxtvH81_8wkwTkefDLBAESb6qeQ6WEvpdbsKRXn2JdX7lOnUTRi1Be6YdbPvPE6bU9rduyQqX8Ni1qS5tX07_LSUx1t3xr66YKP_xxCbtWE32KzYEMs7hE3us2yp0GFFpMvVk2Lf9by4CysKNvB0CtTSTgsgZtLRQBhQw7UE7qSr2GvOoneOFOWI24iysdFyID30ov1T-7rZo7z7ci2AeH7yryB_rhy1coY3MezAgPWdw_WYbAkeD0qH3yhFkN7k-WbmZ60PWu9TUPKPvlOrO44kFlEIxEgWgBMJBLyoE2A519vAhjCoLsPw2ElQxikDlTz95a3bpSqbkfwEdm-iZj_esOjXQl0AoHk-o4_ipL7WhP0pIj4M2emOoTxD56X8nqSelIh0AT33wbcL6klTQLeCCMOtlDQhjr_tlsJoKEq_JD4CyOrp5Y6_j57_enHny-wGg9hrncmmqxIA_b2pa39JeDecAN--PcxwVrIOjeK-17EOVW_HmjLOoqCJYJdOv5t0f2Jn7O6lxyFnAxk8UQ2tvmvSt0IJFWPuC21Y7y9cK_5zD-DBIHs8QLMWvmjPL1ENlz-forrwS3lxN-PmoNIBmbYsyB-q9tDfn6HCxUw=w1920-h979-ft')
+  			
 block Bottom
 	div.bottom-legal!= L('dictionarySupport')
 	div.bottom-legal!= L('etcSupport')

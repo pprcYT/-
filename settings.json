@@ -1,6 +1,6 @@
 {
 	"server-name": "푸룬끄투",
-	"web-num-cpu": 1,
+	"web-num-cpu": 2,
 	"game-num-cpu": 1,
 	"game-num-inst": 1
 }
